@@ -5,9 +5,10 @@ from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
 
-simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=10, amp=5.0, waist=0.4, tracking=True, feedback=0.5)
+simulation_orb = TrackingSim(numpoints=1000000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True, feedback=0.1)
+simulation_orb = TrackingSim(numpoints=1000000, method='minflux', freq=12.5, amp=80.0, L=0.05, tracking=True, feedback=0.1)
 
-diffs = np.logspace(-9, 5, 18)
+diffs = np.logspace(-13, 0, 18)
 
 
 def parr_func(i, D, method):
@@ -26,7 +27,11 @@ param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
 print(param[0], param[1])
 tracked = fitfunc(diffs, param[0], param[1])
 
+cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
+cutoff = np.pi * 0.025 ** 2 * 0.1
+
 plt.loglog(diffs, errs, '-o')
-# plt.loglog(diffs, untracked, '--', 'gray')
-plt.loglog(diffs, tracked, '--', 'black')
+plt.loglog(diffs, untracked, '--', color='gray')
+plt.loglog(diffs, tracked, '--', color='black')
+plt.axvline(cutoff)
 plt.show()
