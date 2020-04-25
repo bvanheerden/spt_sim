@@ -11,7 +11,7 @@ class PositionMethod:
         self.x, self.x0, self.y, self.y0, self.amp, self.fwhm, self.a, self.sigma = \
             sp.symbols('r x0 y y0 amp fwhm a sigma')
         self.r = sp.sqrt((self.x - self.x0) ** 2 + (self.y - self.y0) ** 2)
-        self.L, self.N = sp.symbols('L, N')
+        self.L, self.N, self.sigma_n = sp.symbols('L, N, sigma_N')
         self.pvector = None
         self.filename = filename
 
@@ -46,7 +46,9 @@ class PositionMethod:
         self.pickle_lambda(crb_lambda)
 
     def lambdify(self, crb):
-        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
+        print('hier2')
+        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb, ['numpy', 'sympy'])
+        print('hier3')
         return crb_lambda
 
     def pickle_lambda(self, crb_lambda):
@@ -55,23 +57,34 @@ class PositionMethod:
         fileobject.close()
 
     def calculate_diffs(self):
-        xdiff = [p.diff(self.x) for p in self.pvector]
-        ydiff = [p.diff(self.y) for p in self.pvector]
-        # xdiff = [r.subs(L, 50) for r in xdiff]
-        # ydiff = [y.subs(L, 50) for y in ydiff]
-        # print(xdiff)
-        sum1 = 0
-        sum2 = 0
-        sum3 = 0
-        sum4 = 0
-        for i, p in enumerate(self.pvector):
-            prec = 1 / p
-            sum1 += prec * (xdiff[i] ** 2 + ydiff[i] ** 2)
-            sum2 += prec * xdiff[i] ** 2
-            sum3 += prec * ydiff[i] ** 2
-            sum4 += prec * ydiff[i] * xdiff[i]
-        crb = (1 / sp.sqrt(self.N)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
-        return crb
+        pvec = self.pvector
+        xdiff = [p.diff(self.x) for p in pvec]
+        ydiff = [p.diff(self.y) for p in pvec]
+
+        # setup Fisher information matrix
+        a = 1 / (self.sigma_n ** 2) - 1 / self.N
+        b = np.sum([xdiff[i] * (1 / pvec[-1] - 1 / pvec[i]) for i in range(len(pvec) - 1)])
+        c = np.sum([ydiff[i] * (1 / pvec[-1] - 1 / pvec[i]) for i in range(len(pvec) - 1)])
+        d = np.sum([xdiff[i] * (1 / pvec[i]) for i in range(len(pvec) - 1)])
+        e = self.N * np.sum([xdiff[i] ** 2 / p ** 2 for i, p in enumerate(self.pvector)])
+        f = self.N * np.sum([xdiff[i] * ydiff[i] / p ** 2 for i, p in enumerate(self.pvector)])
+        g = np.sum([ydiff[i] * (1 / pvec[i]) for i in range(len(pvec) - 1)])
+        h = f
+        i = self.N * np.sum([ydiff[i] ** 2 / p ** 2 for i, p in enumerate(self.pvector)])
+        fish = sp.Matrix([[a, b, c], [d, e, f], [g, h, i]])
+
+        # invert (only diagonal is needed)
+        A = e * i - f * h
+        E = a * i - c * g
+        I = a * e - b * d
+        B = - (d * i - f * g)
+        C = b * f - c * e
+        det = a * A + b * B + c * C
+        E = E / det
+        I = I / det
+        crb = np.mean([E, I])
+        print('hier')
+        return fish
 
     def plotshape(self):
         pass
@@ -97,7 +110,8 @@ class MinFlux(PositionMethod):
 
     def __init__(self, filename):
         super().__init__(filename)
-        self.shape = self.doughnut(self.amp, self.r, self.fwhm)
+        # self.shape = self.doughnut(self.amp, self.r, self.fwhm)
+        self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
 
@@ -113,7 +127,7 @@ class MinFlux(PositionMethod):
         self.param_vector()
 
     def lambdify(self, crb):
-        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp],
+        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n],
                                  crb, ['numpy', 'sympy'])
         return crb_lambda
 
