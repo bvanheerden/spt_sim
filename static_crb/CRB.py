@@ -62,29 +62,18 @@ class PositionMethod:
         ydiff = [p.diff(self.y) for p in pvec]
 
         # setup Fisher information matrix
-        a = 1 / (self.sigma_n ** 2) - 1 / self.N
-        b = np.sum([xdiff[i] * (1 / pvec[-1] - 1 / pvec[i]) for i in range(len(pvec) - 1)])
-        c = np.sum([ydiff[i] * (1 / pvec[-1] - 1 / pvec[i]) for i in range(len(pvec) - 1)])
-        d = np.sum([xdiff[i] * (1 / pvec[i]) for i in range(len(pvec) - 1)])
-        e = self.N * np.sum([xdiff[i] ** 2 / p ** 2 for i, p in enumerate(self.pvector)])
-        f = self.N * np.sum([xdiff[i] * ydiff[i] / p ** 2 for i, p in enumerate(self.pvector)])
-        g = np.sum([ydiff[i] * (1 / pvec[i]) for i in range(len(pvec) - 1)])
-        h = f
-        i = self.N * np.sum([ydiff[i] ** 2 / p ** 2 for i, p in enumerate(self.pvector)])
-        fish = sp.Matrix([[a, b, c], [d, e, f], [g, h, i]])
-
-        # invert (only diagonal is needed)
-        A = e * i - f * h
-        E = a * i - c * g
-        I = a * e - b * d
-        B = - (d * i - f * g)
-        C = b * f - c * e
-        det = a * A + b * B + c * C
-        E = E / det
-        I = I / det
-        crb = np.mean([E, I])
-        print('hier')
-        return fish
+        sum1 = 0
+        sum2 = 0
+        sum3 = 0
+        sum4 = 0
+        for i, p in enumerate(self.pvector[:]):
+            prec = 1 / p ** 2
+            sum1 += prec * (xdiff[i] ** 2 + ydiff[i] ** 2)
+            sum2 += prec * xdiff[i] ** 2
+            sum3 += prec * ydiff[i] ** 2
+            sum4 += prec * ydiff[i] * xdiff[i]
+        crb = (self.sigma_n / (self.N - self.sigma_n)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+        return crb
 
     def plotshape(self):
         pass
