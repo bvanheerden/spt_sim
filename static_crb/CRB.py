@@ -7,13 +7,14 @@ dill.settings['recurse'] = True
 
 class PositionMethod:
 
-    def __init__(self, filename):
+    def __init__(self, filename, iscat=False):
         self.x, self.x0, self.y, self.y0, self.amp, self.fwhm, self.a, self.sigma = \
             sp.symbols('r x0 y y0 amp fwhm a sigma')
         self.r = sp.sqrt((self.x - self.x0) ** 2 + (self.y - self.y0) ** 2)
         self.L, self.N, self.sigma_n = sp.symbols('L, N, sigma_N')
         self.pvector = None
         self.filename = filename
+        self.iscat = iscat
 
     def parameter(self, xpos, ypos):
         """calculate parameter vector for beam center at xpos, ypos"""
@@ -46,9 +47,10 @@ class PositionMethod:
         self.pickle_lambda(crb_lambda)
 
     def lambdify(self, crb):
-        print('hier2')
-        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb, ['numpy', 'sympy'])
-        print('hier3')
+        if self.iscat:
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb, ['numpy', 'sympy'])
+        else:
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
         return crb_lambda
 
     def pickle_lambda(self, crb_lambda):
@@ -67,12 +69,18 @@ class PositionMethod:
         sum3 = 0
         sum4 = 0
         for i, p in enumerate(self.pvector[:]):
-            prec = 1 / p ** 2
+            if self.iscat:
+                prec = 1 / p ** 2
+            else:
+                prec = 1 / p
             sum1 += prec * (xdiff[i] ** 2 + ydiff[i] ** 2)
             sum2 += prec * xdiff[i] ** 2
             sum3 += prec * ydiff[i] ** 2
             sum4 += prec * ydiff[i] * xdiff[i]
-        crb = (self.sigma_n / (self.N - self.sigma_n)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+        if self.iscat:
+            crb = (self.sigma_n / (self.N - self.sigma_n)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+        else:
+            crb = (1 / sp.sqrt(self.N)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
         return crb
 
     def plotshape(self):
@@ -123,8 +131,8 @@ class MinFlux(PositionMethod):
 
 class Orbital(PositionMethod):
 
-    def __init__(self, filename):
-        super().__init__(filename)
+    def __init__(self, filename, iscat=False):
+        super().__init__(filename, iscat)
         self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
@@ -141,8 +149,8 @@ class Orbital(PositionMethod):
 
 class Knight(PositionMethod):
 
-    def __init__(self, filename, spacing):
-        super().__init__(filename)
+    def __init__(self, filename, spacing, iscat=False):
+        super().__init__(filename, iscat)
         # self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.shape = self.doughnut(self.amp, self.r, self.fwhm)
         self.spacing = spacing

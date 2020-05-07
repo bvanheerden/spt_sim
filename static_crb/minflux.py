@@ -4,7 +4,7 @@ from static_crb.CRB import *
 matplotlib.rcParams.update({'font.size': 14})
 
 dill.settings['recurse'] = True
-file_minflux = 'crb_lambda_minflux'
+file_minflux = 'pickles/crb_lambda_minflux'
 
 # minflux = MinFlux(file_minflux)
 # print('minflux')
