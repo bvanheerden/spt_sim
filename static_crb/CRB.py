@@ -15,6 +15,7 @@ class PositionMethod:
         self.pvector = None
         self.filename = filename
         self.iscat = iscat
+        self.sbr = 2
 
     def parameter(self, xpos, ypos):
         """calculate parameter vector for beam center at xpos, ypos"""
@@ -35,6 +36,10 @@ class PositionMethod:
         pvec = []
         for i, pos in enumerate(xpositions):
             pvec.append(self.parameter(xpositions[i], ypositions[i]) / sumi)
+
+        sbr = self.sbr
+        k = len(pvec)
+        pvec = [(sbr / (sbr + 1)) * param + 1 / ((sbr + 1) * k) for param in pvec]
 
         self.pvector = pvec
 

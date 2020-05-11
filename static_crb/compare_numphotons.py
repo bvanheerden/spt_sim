@@ -36,17 +36,23 @@ crb_lambda_orbital_iscat = dill.load(fileobject_orbital_iscat)
 # fileobject_camera = open(file_camera, 'rb')
 # crb_lambda_camera = dill.load(fileobject_camera)
 
-contrast = 0.03
-n = np.logspace(2, 6, num=20)
+contrast = 0.0003
+contrast2 = 0.003
+n = np.logspace(3, 8, num=20)
 nsigma = np.sqrt(2 * n / contrast)
+nsigma2 = np.sqrt(2 * n / contrast2)
 
-crborb = crb_lambda_orbital(0, 1, 566, n, 400, 1)
+crborb = crb_lambda_orbital(0, 1, 566, n/300, 400, 1)
 crborb_iscat = crb_lambda_orbital_iscat(0, 1, 566, n, 400, 1, nsigma)
+crborb_iscat2 = crb_lambda_orbital_iscat(0, 1, 566, n, 400, 1, nsigma2)
 
 plt.figure(figsize=[7.0, 5.5])
 plt.yscale('log')
-plt.loglog(n, crborb, label='Orbital (Fluorescence)')
+# plt.loglog(n, crborb, label='Orbital (Fluorescence)')
 plt.loglog(n, crborb_iscat, label='Orbital (iScat)')
+plt.loglog(n, crborb_iscat2, label='Orbital (iScat)')
+# plt.axvline(670000)
+plt.axhline(0.5)
 # plt.ylim(None, 100)
 plt.legend(loc='lower right')
 plt.xlabel('Number of photons')
