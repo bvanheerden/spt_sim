@@ -196,12 +196,13 @@ class Camera(PositionMethod):
 
 class OneDimPositionMethod:
 
-    def __init__(self, filename):
+    def __init__(self, filename, iscat=False):
         self.x, self.x0, self.amp, self.fwhm, self.a, self.sigma = sp.symbols('r x0 amp fwhm a sigma')
-        self.L, self.N = sp.symbols('L, N')
+        self.L, self.N, self.sigma_n = sp.symbols('L, N, sigma_N')
         self.r = sp.sqrt((self.x - self.x0) ** 2)
         self.pvector = None
         self.filename = filename
+        self.iscat = iscat
 
     def parameter(self, xpos):
         """calculate parameter vector for beam center at xpos, ypos"""
@@ -233,7 +234,10 @@ class OneDimPositionMethod:
         self.pickle_lambda(crb_lambda)
 
     def lambdify(self, crb):
-        crb_lambda = sp.lambdify([self.x, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'math'])
+        if self.iscat:
+            crb_lambda = sp.lambdify([self.x, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb, ['numpy', 'math'])
+        else:
+            crb_lambda = sp.lambdify([self.x, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'math'])
         return crb_lambda
 
     def pickle_lambda(self, crb_lambda):
@@ -244,7 +248,10 @@ class OneDimPositionMethod:
     def calculate_diffs(self):
         xdiff = [p.diff(self.x) for p in self.pvector]
         p = self.pvector[0]
-        crb = (1 / sp.sqrt(self.N)) * (sp.sqrt(p * (1 - p)) / sp.Abs(xdiff[0]))
+        if self.iscat:
+            crb = (self.sigma_n / (self.N - self.sigma_n)) * ((p * (1 - p)) / (sp.sqrt(1 - 2 * p + 2 * p ** 2) * sp.Abs(xdiff[0])))
+        else:
+            crb = (1 / sp.sqrt(self.N)) * (sp.sqrt(p * (1 - p)) / sp.Abs(xdiff[0]))
         return crb
 
     def plotshape(self, ampval, fwhmval, plotrange, L, ax=None):
@@ -329,8 +336,8 @@ class OneDimPositionMethod:
 
 class MinFlux1D(OneDimPositionMethod):
 
-    def __init__(self, filename, shapename):
-        super().__init__(filename)
+    def __init__(self, filename, shapename, iscat=False):
+        super().__init__(filename, iscat)
         self.shapename = shapename
         self.shapes = {'doughnut': self.doughnut, 'quadratic': self.quad, 'linear': self.linear,
                        'gaussian': self.gaussian, 'cubic': self.cubic, 'quartic': self.quartic, 'piecewise': self.piece}

@@ -6,10 +6,16 @@ import warnings
 from basic_sim import *
 
 
+def scat_intensity(x, y, x0, y0, amp, waist):
+    r = np.linalg.norm([x - x0, y - y0])
+    retint = amp * np.exp(-4 * np.log(2) * ((r / waist) ** 2))
+    return retint
+
+
 class TrackingSim:
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50):
+                 feedback=50, iscat=False):
 
         self.numpoints = numpoints
         self.method = method
@@ -23,6 +29,8 @@ class TrackingSim:
 
         self.tracking = tracking
         self.feedback = feedback
+
+        self.iscat = iscat
 
     def main_tracking(self, D):
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
@@ -127,9 +135,16 @@ class TrackingSim:
                         posnum += 1
                 int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
 
-            int_ms = 50 * int_iter + 0  # SBR = 50
-            int_ms = np.random.poisson(int_ms)
-            intvals[i] = int_ms
+            if self.iscat:
+                int_ms = 1 * int_iter
+                int_ms = np.random.poisson(int_ms)
+                bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
+                contrast = int_ms / bg_ms
+                intvals[i] = contrast
+            else:
+                int_ms = 50 * int_iter + 0  # SBR = 50
+                int_ms = np.random.poisson(int_ms)
+                intvals[i] = int_ms
 
             if i % cycle_steps == 0:
                 integral = np.sum(intvals[i - cycle_steps:i])
@@ -143,7 +158,8 @@ class TrackingSim:
                     if i != 0:
                         kt_intensities = intvals[i-cycle_steps:i].reshape((40, kt_steps)).sum(axis=1)
                         kt_intensities = kt_intensities / np.sum(kt_intensities)
-                        weighted_positions = [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(kt_positions)]
+                        weighted_positions = \
+                            [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(kt_positions)]
                         sumpos = tuple(np.sum(weighted_positions, axis=0))
                         measx, measy = sumpos
                     else:
@@ -182,4 +198,4 @@ class TrackingSim:
             measy_vals[i] = ys
 
         err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
-        return err, measx_vals, truex_vals, measy_vals, truey_vals
+        return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
