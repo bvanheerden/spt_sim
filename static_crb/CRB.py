@@ -37,9 +37,9 @@ class PositionMethod:
         for i, pos in enumerate(xpositions):
             pvec.append(self.parameter(xpositions[i], ypositions[i]) / sumi)
 
-        sbr = self.sbr
-        k = len(pvec)
-        pvec = [(sbr / (sbr + 1)) * param + 1 / ((sbr + 1) * k) for param in pvec]
+        # sbr = self.sbr
+        # k = len(pvec)
+        # pvec = [(sbr / (sbr + 1)) * param + 1 / ((sbr + 1) * k) for param in pvec]
 
         self.pvector = pvec
 
@@ -156,8 +156,8 @@ class Knight(PositionMethod):
 
     def __init__(self, filename, spacing, iscat=False):
         super().__init__(filename, iscat)
-        # self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
-        self.shape = self.doughnut(self.amp, self.r, self.fwhm)
+        self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
+        # self.shape = self.doughnut(self.amp, self.r, self.fwhm)
         self.spacing = spacing
         self.get_pvector()
         self.return_lambda()

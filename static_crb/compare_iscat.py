@@ -4,26 +4,19 @@ from static_crb.CRB import *
 matplotlib.rcParams.update({'font.size': 14})
 
 dill.settings['recurse'] = True
-file_minflux = 'pickles/crb_lambda_minflux'
 file_orbital = 'pickles/crb_lambda_orbital'
 file_knight = 'pickles/crb_lambda_knight'
-file_camera = 'pickles/crb_lambda_camera'
+file_orbital_iscat = 'pickles/crb_lambda_orbital_iscat'
+file_knight_iscat = 'pickles/crb_lambda_knight_iscat'
 
-# minflux = MinFlux(file_minflux)
-# print('minflux')
 # orbital = Orbital(file_orbital)
 # print('orbital')
-# knight = Knight(file_knight)
+# knight = Knight(file_knight, 300)
 # print('knight')
-# camera = Camera(file_camera)
-# print('camera')
-# return_lambda('orbital', file_orbital)
-# return_lambda('minflux', file_minflux)
-# return_lambda('knight', file_knight)
-# return_lambda('camera', file_camera)
-
-fileobject_minflux = open(file_minflux, 'rb')
-crb_lambda_minflux = dill.load(fileobject_minflux)
+# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+# print('orbital')
+# knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
+# print('knight')
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
@@ -31,8 +24,11 @@ crb_lambda_orbital = dill.load(fileobject_orbital)
 fileobject_knight = open(file_knight, 'rb')
 crb_lambda_knight = dill.load(fileobject_knight)
 
-# fileobject_camera = open(file_camera, 'rb')
-# crb_lambda_camera = dill.load(fileobject_camera)
+fileobject_orbital_iscat = open(file_orbital_iscat, 'rb')
+crb_lambda_orbital_iscat = dill.load(fileobject_orbital_iscat)
+
+fileobject_knight_iscat = open(file_knight_iscat, 'rb')
+crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
 x = np.linspace(-200, 200, num=100)
 y = np.linspace(-400, 400, num=100)
@@ -54,17 +50,26 @@ r = x
 # plt.savefig('../out/comp_mf_small.png')
 # plt.show()
 
-crbknight = crb_lambda_knight(0, y, 50, 100, 400, 1,)
+contrast = 0.005
+n = 10000
+nscat = 1 * n
+
+nsigma = np.sqrt(2 * nscat / contrast)
+crbknight = crb_lambda_knight(0, y, 50, n, 400, 1)
+crbknight_iscat = crb_lambda_knight_iscat(0, y, 50, nscat, 400, 1, nsigma)
 # crbmf_large = crb_lambda_minflux(0, y, 566, 100, 800, 1)
 # crbmf = crb_lambda_minflux(0, y, 50, 100, 800, 1)
-crborb = crb_lambda_orbital(0, y, 566, 100, 400, 1)
+crborb = crb_lambda_orbital(0, y, 566, n, 400, 1)
+crborb_iscat = crb_lambda_orbital_iscat(0, y, 566, nscat, 400, 1, nsigma)
 
 plt.figure(figsize=[7.0, 5.5])
-plt.yscale('log')
+# plt.yscale('log')
 plt.plot(y, crbknight, label="Knight's Tour")
+plt.plot(y, crbknight_iscat, label="Knight's Tour (iscat)")
 # plt.plot(y, crbmf, label='MINFLUX L=50')
 # plt.plot(y, crbmf_large, label='MINFLUX L=566')
 plt.plot(y, crborb, label='Orbital')
+plt.plot(y, crborb_iscat, label='Orbital (iscat)')
 # plt.ylim(None, 100)
 plt.legend(loc='lower right')
 plt.xlabel('x (nm)')

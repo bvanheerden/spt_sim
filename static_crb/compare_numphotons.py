@@ -41,10 +41,16 @@ crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 # fileobject_camera = open(file_camera, 'rb')
 # crb_lambda_camera = dill.load(fileobject_camera)
 
-contrast = 0.005
+contrast = 4.47e-6  # LHCII
+contrast = 0.0011  # PB
+contrast = 6.39e-7  # EGFP
+contrast = 2.97e-4  # HIV-QD
 # contrast2 = 0.003
 n = np.logspace(0.1, 9, num=20)
-nscat = 10 * n
+nscat = 106 * n  # LHCII
+nscat = 118 * n  # PB
+nscat = 0.497 * n  # EGFP
+nscat = 79.8 * n  # HIV-QD
 nsigma = np.sqrt(2 * nscat / contrast)
 # nsigma2 = np.sqrt(2 * n / contrast2)
 
@@ -52,14 +58,16 @@ crborb = crb_lambda_orbital(0, 1, 566, n, 400, 1)
 crborb_iscat = crb_lambda_orbital_iscat(0, 1, 566, nscat, 400, 1, nsigma)
 # crborb_iscat2 = crb_lambda_orbital_iscat(0, 1, 566, n, 400, 1, nsigma2)
 
-# crborb = crb_lambda_knight(0, 1, 566, n, 400, 1)
-# crborb_iscat = crb_lambda_knight_iscat(0, 1, 566, nscat, 400, 1, nsigma)
+crbknight = crb_lambda_knight(0, 1, 566, n, 400, 1)
+crbknight_iscat = crb_lambda_knight_iscat(0, 1, 566, nscat, 400, 1, nsigma)
 # fit = 100 / np.sqrt(n)
 
 plt.figure(figsize=[7.0, 5.5])
 plt.yscale('log')
 plt.loglog(n, crborb, label='Orbital (Fluorescence)')
 plt.loglog(n, crborb_iscat, label='Orbital (iScat)')
+plt.loglog(n, crbknight, label='Knight (Fluorescence)')
+plt.loglog(n, crbknight_iscat, label='Knight (iSCAT)')
 # plt.loglog(n, fit, '--')
 # plt.loglog(n, crborb_iscat2, label='Orbital (iScat)')
 # plt.axvline(670000)
