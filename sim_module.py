@@ -89,6 +89,7 @@ class TrackingSim:
         xs = x[1]
         ys = y[1]
 
+        # Main simulation loop
         for i in range(self.numpoints):
             t += dt
             tvals[i] = t

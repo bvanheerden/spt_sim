@@ -22,9 +22,9 @@ def rk4(y, x, dx, f, u):
 
 def fx(xfull, t, u):
     xdot = np.array([[0, 0, 0, 0],
-                     [0, -10, 1, 0],
+                     [0, -2, 1, 0],
                      [0, -1, 0, 0],
-                     [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u
+                     [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u
     return xdot
 
 
