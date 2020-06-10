@@ -1380,10 +1380,9 @@ static PyObject *__pyx_float_0_5;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
-static PyObject *__pyx_int_10;
 static PyObject *__pyx_int_neg_1;
+static PyObject *__pyx_int_neg_2;
 static PyObject *__pyx_int_neg_4;
-static PyObject *__pyx_int_neg_10;
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__5;
@@ -1868,7 +1867,7 @@ static PyObject *__pyx_pf_9basic_sim_rk4(CYTHON_UNUSED PyObject *__pyx_self, PyO
  * 
  * def fx(xfull, t, u):             # <<<<<<<<<<<<<<
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  */
 
 /* Python wrapper */
@@ -1961,7 +1960,7 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
  * 
  * def fx(xfull, t, u):
  *     xdot = np.array([[0, 0, 0, 0],             # <<<<<<<<<<<<<<
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  *                      [0, -1, 0, 0],
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 24, __pyx_L1_error)
@@ -1987,18 +1986,18 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   /* "basic_sim.pyx":25
  * def fx(xfull, t, u):
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],             # <<<<<<<<<<<<<<
+ *                      [0, -2, 1, 0],             # <<<<<<<<<<<<<<
  *                      [0, -1, 0, 0],
- *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u
+ *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u
  */
   __pyx_t_4 = PyList_New(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_4, 0, __pyx_int_0);
-  __Pyx_INCREF(__pyx_int_neg_10);
-  __Pyx_GIVEREF(__pyx_int_neg_10);
-  PyList_SET_ITEM(__pyx_t_4, 1, __pyx_int_neg_10);
+  __Pyx_INCREF(__pyx_int_neg_2);
+  __Pyx_GIVEREF(__pyx_int_neg_2);
+  PyList_SET_ITEM(__pyx_t_4, 1, __pyx_int_neg_2);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
   PyList_SET_ITEM(__pyx_t_4, 2, __pyx_int_1);
@@ -2008,9 +2007,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
 
   /* "basic_sim.pyx":26
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  *                      [0, -1, 0, 0],             # <<<<<<<<<<<<<<
- *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u
+ *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u
  *     return xdot
  */
   __pyx_t_5 = PyList_New(4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 26, __pyx_L1_error)
@@ -2029,9 +2028,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   PyList_SET_ITEM(__pyx_t_5, 3, __pyx_int_0);
 
   /* "basic_sim.pyx":27
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  *                      [0, -1, 0, 0],
- *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u             # <<<<<<<<<<<<<<
+ *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u             # <<<<<<<<<<<<<<
  *     return xdot
  * 
  */
@@ -2054,7 +2053,7 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
  * 
  * def fx(xfull, t, u):
  *     xdot = np.array([[0, 0, 0, 0],             # <<<<<<<<<<<<<<
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  *                      [0, -1, 0, 0],
  */
   __pyx_t_7 = PyList_New(4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 24, __pyx_L1_error)
@@ -2089,9 +2088,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "basic_sim.pyx":27
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  *                      [0, -1, 0, 0],
- *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u             # <<<<<<<<<<<<<<
+ *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u             # <<<<<<<<<<<<<<
  *     return xdot
  * 
  */
@@ -2108,9 +2107,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_7, 0, __pyx_int_0);
-  __Pyx_INCREF(__pyx_int_10);
-  __Pyx_GIVEREF(__pyx_int_10);
-  PyList_SET_ITEM(__pyx_t_7, 1, __pyx_int_10);
+  __Pyx_INCREF(__pyx_int_2);
+  __Pyx_GIVEREF(__pyx_int_2);
+  PyList_SET_ITEM(__pyx_t_7, 1, __pyx_int_2);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
   PyList_SET_ITEM(__pyx_t_7, 2, __pyx_int_1);
@@ -2153,7 +2152,7 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
 
   /* "basic_sim.pyx":28
  *                      [0, -1, 0, 0],
- *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 10, 1, 0]]).T * u
+ *                      [1, -1, 0, 0]]) @ xfull + np.array([[0, 2, 1, 0]]).T * u
  *     return xdot             # <<<<<<<<<<<<<<
  * 
  * 
@@ -2168,7 +2167,7 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
  * 
  * def fx(xfull, t, u):             # <<<<<<<<<<<<<<
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  */
 
   /* function exit code */
@@ -3707,7 +3706,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * def fx(xfull, t, u):             # <<<<<<<<<<<<<<
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  */
   __pyx_tuple__3 = PyTuple_Pack(4, __pyx_n_s_xfull, __pyx_n_s_t, __pyx_n_s_u, __pyx_n_s_xdot); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
@@ -3787,10 +3786,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_10 = PyInt_FromLong(10); if (unlikely(!__pyx_int_10)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_neg_2 = PyInt_FromLong(-2); if (unlikely(!__pyx_int_neg_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_4 = PyInt_FromLong(-4); if (unlikely(!__pyx_int_neg_4)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_int_neg_10 = PyInt_FromLong(-10); if (unlikely(!__pyx_int_neg_10)) __PYX_ERR(0, 1, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -4108,7 +4106,7 @@ if (!__Pyx_RefNanny) {
  * 
  * def fx(xfull, t, u):             # <<<<<<<<<<<<<<
  *     xdot = np.array([[0, 0, 0, 0],
- *                      [0, -10, 1, 0],
+ *                      [0, -2, 1, 0],
  */
   __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9basic_sim_3fx, NULL, __pyx_n_s_basic_sim); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
