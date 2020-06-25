@@ -115,13 +115,24 @@ class TrackingSim:
                     posnum += 1
             int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
         if self.iscat:
-            int_ms = 1 * int_iter
-            int_ms = np.random.poisson(int_ms)
-            bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
-            contrast = int_ms / bg_ms
+            int_ms = 1180 * int_iter
+            # int_ms = 800 * int_iter
+            # int_ms = 1060 * int_iter
+            # int_ms = 10 * int_iter
+            int_s = np.int(int_ms * 1000)
+            int_ms = np.random.poisson(int_s) / 1000
+            # bg_ms = np.random.poisson(1072727)  # contrast 0.11% with average count rate 1.18 Mcps
+            bg_ms = np.random.poisson(1072727000) / 1000  # contrast 0.11% with average count rate 1.18 Mcps
+            # bg_ms = np.random.poisson(2666667)  # contrast 0.03% with average count rate 0.8 Mcps
+            # bg_ms = np.random.poisson(2666667000) / 1000 # contrast 0.03% with average count rate 0.8 Mcps
+            # bg_ms = np.random.poisson(235e6)  # contrast 0.00045% with average count rate 1.06 Mcps
+            # bg_ms = np.random.poisson(235e9) / 1000  # contrast 0.00045% with average count rate 1.06 Mcps
+            # bg_ms = np.random.poisson(1000000) / 1000  # contrast 1% with average count rate 10 kcps
+            bg_meas = np.random.poisson(1072727000) / 1000
+            contrast = (int_ms + bg_ms - bg_meas) / bg_meas
             return(contrast)
         else:
-            int_ms = 50 * int_iter + 0  # SBR = 50
+            int_ms = 10 * int_iter + 0  # SBR = 50
             int_ms = np.random.poisson(int_ms)
             return(int_ms)
 
