@@ -51,36 +51,39 @@ nscat_2 = 118   # PB
 nscat_3 = 0.497   # EGFP
 nscat_4 = 79.8   # HIV-QD
 
-contrast = np.linspace(1e-8, 1e-2, num=20)
-nfactor = np.linspace(0.1, 120, num=200)
-contrast = np.logspace(-6.5, -2, num=20)
-nfactor = np.logspace(-0.5, 2.1, num=20)
-contrast = np.logspace(-6, -2, num=20)
-nfactor = np.linspace(70, 130, num=20)
-n = 1e8
+sigma_scat = 25e-6
+sigma_scat2 = 25e-8
+sigma_qy = np.logspace(-5, -3, num=200)
+contrast = 2 * np.sqrt(sigma_scat)
+contrast2 = 2 * np.sqrt(sigma_scat2)
+nfactor = contrast / sigma_qy
+# contrast = 0.01
+# contrast2 = 0.001
+# nfactor = np.logspace(-0.5, 2.2, num=200)
+# contrast = np.linspace(1e-5, 0.01, num=200)
+# nfactor = 100
+n = 1e4
 nscat = nfactor * n
-contrastv, nscatv = np.meshgrid(contrast, nscat)
 
-nsigma = np.sqrt(2 * nscatv / contrastv)
+nsigma = np.sqrt(2 * nscat / contrast)
+nsigma2 = np.sqrt(2 * nscat / contrast2)
 
 crborb_1 = crb_lambda_orbital(0, 1, 566, n, 400, 1)
-crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscatv, 400, 1, nsigma)
+crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscat, 400, 1, nsigma)
+crborb_iscat_1_2 = crb_lambda_orbital_iscat(0, 1, 566, nscat, 400, 1, nsigma2)
 
-print(crborb_1)
 crb_diff = crborb_iscat_1 - crborb_1
-crb_diff = np.clip(crb_diff, -100, 1)
+crb_diff2 = crborb_iscat_1_2 - crborb_1
 
 fig, ax = plt.subplots()
-crbcont = ax.contourf(contrastv, nscatv, crb_diff, 100)
+
+ax.plot(sigma_qy, crb_diff, label='$\sigma_s = 2.5 \\times 10^{-5}$ cm$^2$')
+ax.plot(sigma_qy, crb_diff2, label='$\sigma_s = 2.5 \\times 10^{-7}$ cm$^2$')
+# ax.set_ylim(-2, 10)
 ax.set_xscale('log')
-# ax.set_yscale('log')
+ax.set_yscale('symlog')
+ax.set_xlabel('Absorption cross-section (cm$^2$)')
+ax.set_ylabel('CRB difference (iScat - fluorescence)')
+plt.legend()
 
-fig.colorbar(crbcont)
-
-ax.plot(4.47e-6, 106e8, 'ro')
-ax.plot(0.0011, 118e8, 'ro')
-# ax.plot(6.39e-7, 0.497e8, 'ro')
-ax.plot(2.97e-4, 79.8e8, 'ro')
-
-# plt.savefig('../out/comp_fluor_iscat.png')
 plt.show()

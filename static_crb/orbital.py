@@ -8,7 +8,7 @@ matplotlib.rcParams.update({'font.size': 14})
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
 
-orbital = Orbital(file_orbital)
+# orbital = Orbital(file_orbital)
 # print('orbital')
 
 fileobject_orbital = open(file_orbital, 'rb')

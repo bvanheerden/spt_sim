@@ -1,6 +1,7 @@
 import matplotlib
 from static_crb.CRB import *
 from matplotlib import ticker
+import matplotlib.colors as colors
 
 matplotlib.rcParams.update({'font.size': 14})
 
@@ -51,36 +52,47 @@ nscat_2 = 118   # PB
 nscat_3 = 0.497   # EGFP
 nscat_4 = 79.8   # HIV-QD
 
-contrast = np.linspace(1e-8, 1e-2, num=20)
-nfactor = np.linspace(0.1, 120, num=200)
-contrast = np.logspace(-6.5, -2, num=20)
-nfactor = np.logspace(-0.5, 2.1, num=20)
-contrast = np.logspace(-6, -2, num=20)
-nfactor = np.linspace(70, 130, num=20)
-n = 1e8
-nscat = nfactor * n
-contrastv, nscatv = np.meshgrid(contrast, nscat)
+sigma_scat = np.logspace(-6.6, -4.6, num=20)
+sigma_qy = np.logspace(-5, -3.5, num=20)
 
-nsigma = np.sqrt(2 * nscatv / contrastv)
+# contrast = np.linspace(1e-4, 1e-1, num=20)
+# nfactor = np.linspace(0.1, 120, num=200)
+# contrast = np.logspace(-3, -2, num=20)
+# nfactor = np.logspace(-0.5, 1, num=20)
+# contrast = np.logspace(-6, -2, num=20)
+# nfactor = np.linspace(70, 130, num=20)
+sigma_scatv, sigma_qyv = np.meshgrid(sigma_scat, sigma_qy)
+contrastv = 2 * np.sqrt(sigma_scatv)
+
+n = 1e4
+nfactor = contrastv / sigma_qyv
+nscat = nfactor * n
+nsigma = np.sqrt(2 * nscat / contrastv)
 
 crborb_1 = crb_lambda_orbital(0, 1, 566, n, 400, 1)
-crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscatv, 400, 1, nsigma)
+crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscat, 400, 1, nsigma)
 
 print(crborb_1)
 crb_diff = crborb_iscat_1 - crborb_1
-crb_diff = np.clip(crb_diff, -100, 1)
+# crb_diff = np.clip(crb_diff, -1.5, 1.5)
 
 fig, ax = plt.subplots()
-crbcont = ax.contourf(contrastv, nscatv, crb_diff, 100)
+crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, norm=colors.SymLogNorm(linthresh=0.5, linscale=1))#,
+                                              # vmin=-1.0, vmax=1.0, base=10))
 ax.set_xscale('log')
-# ax.set_yscale('log')
+ax.set_ylabel('scattering cross-section')
+ax.set_xlabel('absorption cross-section')
+ax.set_yscale('log')
 
-fig.colorbar(crbcont)
+colorbar1 = fig.colorbar(crbcont)
+colorbar1.set_label('CRB difference (iScat-Fluorescence)')
 
-ax.plot(4.47e-6, 106e8, 'ro')
-ax.plot(0.0011, 118e8, 'ro')
+# ax.axhline(3e-7)
+
+# ax.plot(4.47e-6, 106e8, 'ro')
+# ax.plot(0.0011, 118e8, 'ro')
 # ax.plot(6.39e-7, 0.497e8, 'ro')
-ax.plot(2.97e-4, 79.8e8, 'ro')
+# ax.plot(2.97e-4, 79.8e8, 'ro')
 
 # plt.savefig('../out/comp_fluor_iscat.png')
 plt.show()
