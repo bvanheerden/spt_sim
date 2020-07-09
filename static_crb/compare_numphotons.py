@@ -13,10 +13,10 @@ file_camera = 'pickles/crb_lambda_camera'
 
 # minflux = MinFlux(file_minflux)
 # print('minflux')
-# orbital = Orbital(file_orbital)
-# print('orbital')
-# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
-# print('orbital_iscat')
+orbital = Orbital(file_orbital)
+print('orbital')
+orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+print('orbital_iscat')
 # knight = Knight(file_knight, 300)
 # knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
 # print('knight')
@@ -45,16 +45,19 @@ contrast_1 = 4.47e-6  # LHCII
 contrast_2 = 0.0011  # PB
 contrast_3 = 6.39e-7  # EGFP
 contrast_4 = 2.97e-4  # HIV-QD
+contrast_4 = 0.042 # HIV-QD
 
 n = np.logspace(1, 9, num=20)
 n1 = np.logspace(2, 9, num=20)
 n2 = np.logspace(1.5, 9, num=20)
 n3 = np.logspace(2, 9, num=20)
 n4 = np.logspace(2.3, 9, num=20)
+n4 = np.logspace(0, 9, num=20)
 nscat_1 = 106 * n1 * 50  # LHCII
 nscat_2 = 118 * n2  # PB
 nscat_3 = 0.497 * n3 * 50000  # EGFP
 nscat_4 = 79.8 * n4  # HIV-QD
+nscat_4 = 522 * n4  # HIV-QD
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
 nsigma_3 = np.sqrt(2 * nscat_3 / contrast_3)
@@ -96,7 +99,7 @@ ax2.loglog(n, crborb_2)#, label='Orbital (Fluorescence)')
 ax2.loglog(n2, crborb_iscat_2)#, label='Orbital (iScat)')
 ax2.loglog(n, crbknight_2)#, label='Knight (Fluorescence)')
 ax2.loglog(n2, crbknight_iscat_2)#, label='Knight (iSCAT)')
-ax2.loglog(n, fit)#, label='Knight (iSCAT)')
+# ax2.loglog(n, fit)#, label='Knight (iSCAT)')
 
 ax3.loglog(n, crborb_3)#, label='Orbital (Fluorescence)')
 ax3.loglog(n3, crborb_iscat_3)#, label='Orbital (iScat)')
