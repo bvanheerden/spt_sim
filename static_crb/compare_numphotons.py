@@ -13,10 +13,10 @@ file_camera = 'pickles/crb_lambda_camera'
 
 # minflux = MinFlux(file_minflux)
 # print('minflux')
-orbital = Orbital(file_orbital)
-print('orbital')
-orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
-print('orbital_iscat')
+# orbital = Orbital(file_orbital)
+# print('orbital')
+# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+# print('orbital_iscat')
 # knight = Knight(file_knight, 300)
 # knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
 # print('knight')
@@ -42,22 +42,28 @@ crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 # crb_lambda_camera = dill.load(fileobject_camera)
 
 contrast_1 = 4.47e-6  # LHCII
+contrast_1 = 4.79e-6  # LHCII
 contrast_2 = 0.0011  # PB
+contrast_2 = 0.000046  # PB
 contrast_3 = 6.39e-7  # EGFP
+contrast_3 = 1.08e-6  # EGFP
 contrast_4 = 2.97e-4  # HIV-QD
 contrast_4 = 0.042 # HIV-QD
 
 n = np.logspace(1, 9, num=20)
-n1 = np.logspace(2, 9, num=20)
+n1 = np.logspace(4, 9, num=20)
 n2 = np.logspace(1.5, 9, num=20)
-n3 = np.logspace(2, 9, num=20)
+n3 = np.logspace(7, 9, num=20)
 n4 = np.logspace(2.3, 9, num=20)
 n4 = np.logspace(0, 9, num=20)
-nscat_1 = 106 * n1 * 50  # LHCII
+nscat_1 = 106 * n1 #* 50  # LHCII
+nscat_1 = 123 * n1 #* 50  # LHCII
 nscat_2 = 118 * n2  # PB
-nscat_3 = 0.497 * n3 * 50000  # EGFP
-nscat_4 = 79.8 * n4  # HIV-QD
+nscat_2 = 50 * n2  # PB
+nscat_3 = 0.497 * n3 #* 50000  # EGFP
+nscat_3 = 0.89 * n3 #* 50000  # EGFP
 nscat_4 = 522 * n4  # HIV-QD
+nscat_4 = 1145000 * n4  # HIV-QD
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
 nsigma_3 = np.sqrt(2 * nscat_3 / contrast_3)
@@ -87,7 +93,7 @@ fit = 100 / np.sqrt(n)
 
 # plt.figure(figsize=[7.0, 5.5])
 
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex='col', figsize=(13, 6))
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, sharex='col', figsize=(15, 7))
 
 ax1.set_yscale('log')
 l1 = ax1.loglog(n, crborb_1, label='Orbital (Fluorescence)')
@@ -116,7 +122,7 @@ ax4.loglog(n4, crbknight_iscat_4)#, label='Knight (iSCAT)')
 # plt.axvline(670000)
 # plt.axhline(0.5)
 # plt.ylim(None, 100)
-fig.legend(bbox_to_anchor=(1, 0), loc='lower right')
+fig.legend(bbox_to_anchor=(1, 1), loc='upper right')
 ax3.set_xlabel('Number of photons (fluorescence)')
 ax1.set_ylabel('CRB (nm)')
 ax4.set_xlabel('Number of photons (fluorescence)')
@@ -126,8 +132,11 @@ ax2.set_title("PB")
 ax3.set_title("GFP")
 ax4.set_title("HIV-QD")
 
+# ax1.text(1e6, 10, '$I_s = 50 I_f$', fontsize=16)
+# ax3.text(1e6, 10, '$I_s = 50000 I_f$', fontsize=16)
+
 # ax1.set_xlim((8e3, None))
 
 plt.subplots_adjust(right=0.8, left=0.08)
-# plt.savefig('../out/comp_fluor_iscat.png')
+# plt.savefig('../out/comp_numphotons.png')
 plt.show()

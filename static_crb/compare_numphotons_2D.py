@@ -53,7 +53,7 @@ nscat_3 = 0.497   # EGFP
 nscat_4 = 79.8   # HIV-QD
 
 sigma_scat = np.logspace(-6.6, -4.6, num=20)
-sigma_qy = np.logspace(-5, -3.5, num=20)
+sigma_qy = np.logspace(-4.5, -3.5, num=20)
 
 # contrast = np.linspace(1e-4, 1e-1, num=20)
 # nfactor = np.linspace(0.1, 120, num=200)
