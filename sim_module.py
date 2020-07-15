@@ -2,6 +2,7 @@
 import numpy as np
 from numpy.random import randn
 import warnings
+from filterpy.kalman import KalmanFilter
 
 from basic_sim import *
 
@@ -15,7 +16,7 @@ def scat_intensity(x, y, x0, y0, amp, waist):
 class TrackingSim:
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1):
 
         self.numpoints = numpoints
         self.method = method
@@ -31,6 +32,31 @@ class TrackingSim:
         self.feedback = feedback
 
         self.iscat = iscat
+        self.stage = stage
+        self.kalman = kalman
+
+        self.rin = rin
+
+    def particle_kf(self, x, dt, r=0.0, q=0.1):
+        kf = KalmanFilter(dim_x=4, dim_z=1, dim_u=1)
+
+        kf.F = np.array([[1., 0., 0., 0.],
+                         [0., 1 - 2 * dt, dt, 0.],
+                         [0., -dt, 1., 0.],
+                         [dt, -dt, 0., 1.]])
+
+        kf.H = np.array([[1., -1., 0, 0]])
+
+        kf.B = np.array([[0., 2 * dt, dt, 0]]).T
+        kf.R *= r
+        kf.Q *= np.array([[q, 0, 0, 0],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0]])
+
+        #     kf.x = np.array([[x, vx, y, vy]]).T
+        kf.x = x
+        return kf
 
     def main_tracking(self, D):
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
@@ -47,8 +73,14 @@ class TrackingSim:
         tvals = np.zeros(self.numpoints)
         measx_vals = np.zeros(self.numpoints)
         truex_vals = np.zeros(self.numpoints)
+        kalmx_vals = np.zeros(self.numpoints)
+        stagex_vals = np.zeros(self.numpoints)
+
         measy_vals = np.zeros(self.numpoints)
         truey_vals = np.zeros(self.numpoints)
+        kalmy_vals = np.zeros(self.numpoints)
+        stagey_vals = np.zeros(self.numpoints)
+
         intvals = np.zeros(self.numpoints)
 
         # Orbital Method
@@ -82,20 +114,27 @@ class TrackingSim:
         feedback_steps = np.int(1 / (self.feedback * dt))
         print('feedback steps:', feedback_steps)
 
+        kalman_steps = feedback_steps
+        kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D * 100))
+        kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D * 100))
+
         measx = 0
         measy = 0
         prev_measx = 0
         prev_measy = 0
         xs = x[1]
         ys = y[1]
+        ux = 0
+        uy = 0
 
         # Main simulation loop
         for i in range(self.numpoints):
             t += dt
             tvals[i] = t
 
-            ux = 0
-            uy = 0
+            if not self.stage:
+                ux = 0
+                uy = 0
 
             x, y = trajectory.step(dt, (ux, uy))
 
@@ -103,11 +142,24 @@ class TrackingSim:
             xp = x[0]
             # ys = y[1]
             # xs = x[1]
+            if self.stage:
+                ys = y[1]
+                xs = x[1]
 
             if self.tracking:
                 if i % feedback_steps == 0:
-                    xs = xs + measx
-                    ys = ys + measy
+                    # xs = xs + measx
+                    # ys = ys + measy
+                    if self.stage:
+                        if self.kalman:
+                            ux = kfx.x[0, 0]
+                            uy = kfy.x[0, 0]
+                        else:
+                            ux = xs[0] + measx
+                            uy = ys[0] + measy
+                    else:
+                        xs = xs + measx
+                        ys = ys + measy
             else:
                 xs = 0
                 ys = 0
@@ -194,9 +246,28 @@ class TrackingSim:
             prev_measx = measx
             prev_measy = measy
             truex_vals[i] = xp
-            measx_vals[i] = xs
+            # measx_vals[i] = xs
             truey_vals[i] = yp
-            measy_vals[i] = ys
+            # measy_vals[i] = ys
+
+            if True:
+                if i % kalman_steps == 0:
+                    kfx.predict(u=ux)
+                    kfx.update(measx)
+                    kfy.predict(u=uy)
+                    kfy.update(measy)
+
+            measx_vals[i] = xs + measx
+            measy_vals[i] = ys + measy
+            stagex_vals[i] = xs
+            stagey_vals[i] = ys
+
+            if True:
+                kalmx_vals[i] = kfx.x[0]
+                kalmy_vals[i] = kfy.x[0]
+            else:
+                kalmx_vals[i] = xs[0] + measx
+                kalmy_vals[i] = ys[0] + measy
 
         err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
