@@ -5,17 +5,17 @@ from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
 
-simulation_orb = TrackingSim(numpoints=1000000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                             feedback=0.1, iscat=False)
-simulation_orb_iscat = TrackingSim(numpoints=1000000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                                   feedback=0.1, iscat=True)
+simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
+                             feedback=12.5, iscat=False)
+simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
+                                   feedback=12.5, iscat=True)
 
 diffs = np.logspace(-11, 0, 12)
 
 
 def parr_func(i, D, method, sim):
-    err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
-    return err
+    retvals = sim.main_tracking(D)
+    return retvals[0]
 
 
 def fitfunc(D, B, nm):

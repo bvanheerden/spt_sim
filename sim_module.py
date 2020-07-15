@@ -44,6 +44,10 @@ class TrackingSim:
         self.q2 = weights[2]
         self.q3 = weights[3]
 
+        self.x0 = 0
+        self.y0 = 0
+        self.first = 0  # quick fix for minflux problem with first measurement
+
     def particle_kf(self, x, dt, r=0.0, q=0.1):
         kf = KalmanFilter(dim_x=4, dim_z=1, dim_u=1)
 
@@ -99,21 +103,21 @@ class TrackingSim:
 
         elif self.method == 'knight':
             if i % kt_steps == 0:
-                x0, y0 = kt_positions[posnum]
+                self.x0, self.y0 = kt_positions[posnum]
                 if posnum == 39:
                     posnum = 0
                 else:
                     posnum += 1
-            int_iter = intensity(xp, yp, xs + x0, ys + y0, self.amp, self.waist)
+            int_iter = intensity(xp, yp, xs + self.x0, ys + self.y0, self.amp, self.waist)
 
         elif self.method == 'minflux':
             if i % mf_steps == 0:
-                x0, y0 = mf_positions[posnum]
+                self.x0, self.y0 = mf_positions[posnum]
                 if posnum == 3:
                     posnum = 0
                 else:
                     posnum += 1
-            int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
+            int_iter = mf_intensity(xp, yp, xs + self.x0, ys + self.y0, fwhm, self.amp)
         if self.iscat:
             int_ms = 1180 * int_iter
             # int_ms = 800 * int_iter
@@ -175,6 +179,10 @@ class TrackingSim:
 
             measx = measx * (1.27 + 3.8 * pos0_int)
             measy = measy * (1.27 + 3.8 * pos0_int)
+
+            if self.first > 0:
+                measx, measy = 0, 0
+                self.first -= 1
         return measx, measy
 
     def main_tracking(self, D):
@@ -284,8 +292,8 @@ class TrackingSim:
                             uy = kfy.x[0, 0]
                             # print(kfx.x[1:])
                             if self.lqr:
-                                ux = -K @ (kfx.x[1:] - np.array([kfx.x[0], 0, 0]))
-                                uy = -K @ (kfy.x[1:] - np.array([kfy.x[0], 0, 0]))
+                                ux = -K @ (kfx.x[1:] - np.array([kfx.x[0], 0, 0], dtype=object))
+                                uy = -K @ (kfy.x[1:] - np.array([kfy.x[0], 0, 0], dtype=object))
                                 ux = ux[0, 0]
                                 uy = uy[0, 0]
                         else:

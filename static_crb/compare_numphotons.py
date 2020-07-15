@@ -41,13 +41,9 @@ crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 # fileobject_camera = open(file_camera, 'rb')
 # crb_lambda_camera = dill.load(fileobject_camera)
 
-contrast_1 = 4.47e-6  # LHCII
 contrast_1 = 4.79e-6  # LHCII
-contrast_2 = 0.0011  # PB
 contrast_2 = 0.000046  # PB
-contrast_3 = 6.39e-7  # EGFP
 contrast_3 = 1.08e-6  # EGFP
-contrast_4 = 2.97e-4  # HIV-QD
 contrast_4 = 0.042 # HIV-QD
 
 n = np.logspace(1, 9, num=20)
@@ -56,13 +52,9 @@ n2 = np.logspace(1.5, 9, num=20)
 n3 = np.logspace(7, 9, num=20)
 n4 = np.logspace(2.3, 9, num=20)
 n4 = np.logspace(0, 9, num=20)
-nscat_1 = 106 * n1 #* 50  # LHCII
-nscat_1 = 123 * n1 #* 50  # LHCII
-nscat_2 = 118 * n2  # PB
-nscat_2 = 50 * n2  # PB
-nscat_3 = 0.497 * n3 #* 50000  # EGFP
-nscat_3 = 0.89 * n3 #* 50000  # EGFP
-nscat_4 = 522 * n4  # HIV-QD
+nscat_1 = 123 * n1 * 50  # LHCII
+nscat_2 = 50 * n2 * 10 # PB
+nscat_3 = 0.89 * n3 * 50000  # EGFP
 nscat_4 = 1145000 * n4  # HIV-QD
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
