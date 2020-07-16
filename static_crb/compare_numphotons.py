@@ -47,9 +47,12 @@ contrast_3 = 1.08e-6  # EGFP
 contrast_4 = 0.042 # HIV-QD
 
 n = np.logspace(1, 9, num=20)
-n1 = np.logspace(4, 9, num=20)
-n2 = np.logspace(1.5, 9, num=20)
-n3 = np.logspace(7, 9, num=20)
+# n1 = np.logspace(4, 9, num=20)
+n1 = np.logspace(2, 9, num=20)
+# n2 = np.logspace(3, 9, num=20)
+n2 = np.logspace(2, 9, num=20)
+# n3 = np.logspace(7, 9, num=20)
+n3 = np.logspace(1.8, 9, num=20)
 n4 = np.logspace(2.3, 9, num=20)
 n4 = np.logspace(0, 9, num=20)
 nscat_1 = 123 * n1 * 50  # LHCII
@@ -124,11 +127,13 @@ ax2.set_title("PB")
 ax3.set_title("GFP")
 ax4.set_title("HIV-QD")
 
-# ax1.text(1e6, 10, '$I_s = 50 I_f$', fontsize=16)
-# ax3.text(1e6, 10, '$I_s = 50000 I_f$', fontsize=16)
+ax1.text(1e6, 10, '$I_s = 50 I_f$', fontsize=16)
+ax2.text(1e6, 10, '$I_s = 10 I_f$', fontsize=16)
+ax3.text(1e6, 10, '$I_s = 50000 I_f$', fontsize=16)
 
 # ax1.set_xlim((8e3, None))
 
 plt.subplots_adjust(right=0.8, left=0.08)
 # plt.savefig('../out/comp_numphotons.png')
+plt.savefig('../out/comp_numphotons_adjusted.png')
 plt.show()

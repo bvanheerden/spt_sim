@@ -23,5 +23,10 @@ ax2.plot(xvals, param)
 
 ax3.plot(xvals, crbparam)
 ax3.plot(xvals, crbparam_fluo)
+
+ax1.set_ylabel('Intensity')
+ax2.set_ylabel('Parameter')
+ax3.set_ylabel('CRB (parameter)')
+
 plt.savefig('../out/crb_param.png')
 plt.show()
