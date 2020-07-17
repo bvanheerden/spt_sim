@@ -16,7 +16,7 @@ def scat_intensity(x, y, x0, y0, amp, waist):
 class TrackingSim:
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True):
 
         self.numpoints = numpoints
         self.method = method
@@ -36,6 +36,8 @@ class TrackingSim:
         self.kalman = kalman
 
         self.rin = rin
+
+        self.debug = debug
 
     def particle_kf(self, x, dt, r=0.0, q=0.1):
         kf = KalmanFilter(dim_x=4, dim_z=1, dim_u=1)
@@ -85,7 +87,8 @@ class TrackingSim:
 
         # Orbital Method
         cycle_steps = np.int(1 / (freq * dt))
-        print('cycle_steps:', cycle_steps)
+        if self.debug:
+            print('cycle_steps:', cycle_steps)
         omega = 2 * np.pi * freq
         r = self.waist / np.sqrt(2)
         # print('r:', r)
@@ -101,7 +104,8 @@ class TrackingSim:
         kt_positions = [np.multiply(pos, 0.3) for pos in kt_positions]
         kt_positions = [tuple(pos) for pos in kt_positions]
         kt_steps = np.int(cycle_steps / 40)
-        print('kt_steps:', kt_steps)
+        if self.debug:
+            print('kt_steps:', kt_steps)
         posnum = 0
 
         # Minflux
@@ -109,10 +113,12 @@ class TrackingSim:
         fwhm = self.fwhm
         mf_positions = [(0, 0), (-0.25 * L, 0.43301 * L), (-0.25 * L, -0.43301 * L), (0.5 * L, 0)]
         mf_steps = np.int(cycle_steps / 4)
-        print('mf_steps:', mf_steps)
+        if self.debug:
+            print('mf_steps:', mf_steps)
 
         feedback_steps = np.int(1 / (self.feedback * dt))
-        print('feedback steps:', feedback_steps)
+        if self.debug:
+            print('feedback steps:', feedback_steps)
 
         kalman_steps = feedback_steps
         kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D * 100))
@@ -269,5 +275,6 @@ class TrackingSim:
                 kalmx_vals[i] = xs[0] + measx
                 kalmy_vals[i] = ys[0] + measy
 
-        err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
+        # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
+        err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
         return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
