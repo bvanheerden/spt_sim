@@ -5,8 +5,8 @@ from sim_module import TrackingSim
 
 simulation_orb = TrackingSim(numpoints=10000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
                              feedback=12.5, iscat=False)
-simulation_orb = TrackingSim(numpoints=10000, method='knight', freq=12.5, amp=24.0, waist=0.4, tracking=True,
-                             feedback=12.5, iscat=False)
+# simulation_orb = TrackingSim(numpoints=10000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
+#                              feedback=12.5, iscat=True)
 # simulation_orb = TrackingSim(numpoints=10000, method='minflux', freq=12.5, amp=320.0, L=0.05, tracking=True, feedback=12.5)
 
 err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.00001)

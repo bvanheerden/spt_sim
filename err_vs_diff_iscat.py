@@ -10,7 +10,8 @@ simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=
 simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
                                    feedback=12.5, iscat=True)
 
-diffs = np.logspace(-11, 0, 12)
+diffs = np.logspace(-13, 2, 18)
+# diffs = np.logspace(-4, 2, 12)
 
 
 def parr_func(i, D, method, sim):
@@ -26,9 +27,9 @@ errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulati
 errs_iscat = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
 
 # untracked = np.sqrt(2000 * diffs)
-param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
-print(param[0], param[1])
-tracked = fitfunc(diffs, param[0], param[1])
+# param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
+# print(param[0], param[1])
+# tracked = fitfunc(diffs, param[0], param[1])
 
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
@@ -36,6 +37,6 @@ cutoff = np.pi * 0.025 ** 2 * 0.1
 plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')
 # plt.loglog(diffs, untracked, '--', color='gray')
-plt.loglog(diffs, tracked, '--', color='black')
+# plt.loglog(diffs, tracked, '--', color='black')
 plt.axvline(cutoff)
 plt.show()

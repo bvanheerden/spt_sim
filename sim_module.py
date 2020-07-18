@@ -195,15 +195,33 @@ class TrackingSim:
                 int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
 
             if self.iscat:
-                int_ms = 1 * int_iter
-                int_ms = np.random.poisson(int_ms)
-                bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
-                contrast = int_ms / bg_ms
+                intfactor = 118
+                int_ms = intfactor * 10 * int_iter
+                # int_ms = 800 * int_iter
+                # int_ms = 1060 * int_iter
+                # int_ms = 10 * int_iter
+                int_s = np.int(int_ms * 1000)
+                int_ms = np.random.poisson(int_s) / 1000
+                bgval = (intfactor * 10) * (100 / 0.11)
+                bg_ms = np.random.poisson(bgval*1000) / 1000  # contrast 0.11% with average count rate 1.18 Mcps
+                bg_meas = np.random.poisson(bgval*1000) / 1000
+                # bg_meas = np.random.poisson(235e9) / 1000
+                contrast = (int_ms + bg_ms - bg_meas) / bg_meas
                 intvals[i] = contrast
             else:
-                int_ms = 50 * int_iter + 0  # SBR = 50
+                # int_ms = 50 * int_iter + 0  # SBR = 50
+                int_ms = 10 * int_iter + 0  # SBR = 50
                 int_ms = np.random.poisson(int_ms)
                 intvals[i] = int_ms
+            #     int_ms = 1 * int_iter
+            #     int_ms = np.random.poisson(int_ms)
+            #     bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
+            #     contrast = int_ms / bg_ms
+            #     intvals[i] = contrast
+            # else:
+            #     int_ms = 50 * int_iter + 0  # SBR = 50
+            #     int_ms = np.random.poisson(int_ms)
+            #     intvals[i] = int_ms
 
             if i % cycle_steps == 0:
                 integral = np.sum(intvals[i - cycle_steps:i])
