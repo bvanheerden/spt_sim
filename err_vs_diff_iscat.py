@@ -6,17 +6,21 @@ import joblib
 from sim_module import TrackingSim
 
 simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                             feedback=12.5, iscat=False)
+                             feedback=12.5, iscat=False, debug=False)
 simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                                   feedback=12.5, iscat=True)
+                                   feedback=12.5, iscat=True, debug=False)
 
-diffs = np.logspace(-13, 2, 18)
+diffs = np.logspace(-19, 2, 18)
 # diffs = np.logspace(-4, 2, 12)
 
 
 def parr_func(i, D, method, sim):
-    err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
-    return err
+    print('run ', i, 'of 18')
+    errsum = 0
+    for j in range(5):
+        err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
+        errsum += err
+    return errsum / 5
 
 
 def fitfunc(D, B, nm):
@@ -33,6 +37,9 @@ errs_iscat = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', si
 
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
+
+np.savetxt('errs_fluo_gfp.txt', errs)
+np.savetxt('errs_iscat_gfp.txt', errs_iscat)
 
 plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')
