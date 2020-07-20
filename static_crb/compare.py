@@ -54,10 +54,14 @@ r = x
 # plt.savefig('../out/comp_mf_small.png')
 # plt.show()
 
-crbknight = crb_lambda_knight(0, y, 50, 100, 400, 1,)
-crbmf_large = crb_lambda_minflux(0, y, 566, 100, 800, 1)
-crbmf = crb_lambda_minflux(0, y, 50, 100, 800, 1)
-crborb = crb_lambda_orbital(0, y, 566, 100, 400, 1)
+crbknight = crb_lambda_knight(0, y, 50, 1, 400, 1,)
+crbmf_large = crb_lambda_minflux(0, y, 566, 1, 800, 1)
+crbmf = crb_lambda_minflux(0, y, 50, 1, 800, 1)
+crborb = crb_lambda_orbital(0, y, 566, 1, 400, 1)
+
+print('Orbital: ', crb_lambda_orbital(0, 0, 566, 1, 400, 1))
+print('MINFLUX: ', crb_lambda_minflux(0, 1, 50, 1, 800, 1))
+print('KNIGHT: ', crb_lambda_knight(0, 0, 50, 1, 400, 1))
 
 plt.figure(figsize=[7.0, 5.5])
 plt.yscale('log')
