@@ -10,7 +10,7 @@ file_knight_500 = 'pickles/crb_lambda_knight_0.5'
 file_knight_700 = 'pickles/crb_lambda_knight_0.7'
 file_knight_900 = 'pickles/crb_lambda_knight_0.9'
 
-knight = Knight(file_knight_900, 900)
+# knight = Knight(file_knight_900, 900)
 # print('knight')
 # knight.return_lambda()
 
@@ -40,10 +40,10 @@ crb900 = crb_lambda_knight(0, y, 400, 100, 1200, 1)
 plt.figure()
 plt.yscale('log')
 # plt.plot(y, crb100, label='L=100')
-plt.plot(y, crb300, label='L=300')
-plt.plot(y, crb500, label='L=500')
-plt.plot(y, crb700, label='L=700')
-plt.plot(y, crb900, label='L=900')
+plt.plot(y, crb300, label='L=1500')
+plt.plot(y, crb500, label='L=2500')
+plt.plot(y, crb700, label='L=3500')
+plt.plot(y, crb900, label='L=4500')
 plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')

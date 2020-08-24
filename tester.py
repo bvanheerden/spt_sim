@@ -13,6 +13,7 @@ simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=
 # simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=12.5, amp=80.0, L=0.05, tracking=True, feedback=12.5, kalman=False, lqr=False)
 
 err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.0001)
+err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(1e-12)
 
 tvals = np.linspace(0, 100, 1000)
 

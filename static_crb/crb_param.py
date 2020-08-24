@@ -21,12 +21,15 @@ ax1.plot(xvals, gauss2, color='C0')
 
 ax2.plot(xvals, param)
 
-ax3.plot(xvals, crbparam)
-ax3.plot(xvals, crbparam_fluo)
+ax3.plot(xvals, crbparam, label='iSCAT')
+ax3.plot(xvals, crbparam_fluo, label='Fluorescence')
 
 ax1.set_ylabel('Intensity')
 ax2.set_ylabel('Parameter')
 ax3.set_ylabel('CRB (parameter)')
+ax3.set_xlabel('x position (nm)')
+
+ax3.legend()
 
 plt.savefig('../out/crb_param.png')
 plt.show()
