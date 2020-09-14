@@ -195,20 +195,22 @@ class TrackingSim:
                 int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
 
             if self.iscat:
-                # intfactor = 1.1e6  # HIV-QD
-                # intfactor = 50  # PB
-                # intfactor = 123  # LHCII
-                intfactor = 0.89  # GFP
+                # intfactor = 1.5e6  # HIV-QD
+                # intfactor = 45  # PB
+                # intfactor = 260  # LHCII
+                intfactor = 1146  # LHCII-mic
+                # intfactor = 128  # GFP
                 int_ms = intfactor * 10 * int_iter
                 # int_ms = 800 * int_iter
                 # int_ms = 1060 * int_iter
                 # int_ms = 10 * int_iter
                 int_s = np.int(int_ms * 1000)
                 int_ms = np.random.poisson(int_s) / 1000
-                # bgval = (intfactor * 10) / 0.043  # HIV-QD
-                # bgval = (intfactor * 10) / 4.6e-4  # PB
-                # bgval = (intfactor * 10) / 4.8e-6  # LHCII
-                bgval = (intfactor * 10) / 1.08e-6  # GFP
+                # bgval = (intfactor * 10) / 0.057  # HIV-QD
+                # bgval = (intfactor * 10) / 4.2e-4  # PB
+                # bgval = (intfactor * 10) / 1.02e-5  # LHCII
+                bgval = (intfactor * 10) / 4.47e-5  # LHCII-mic
+                # bgval = (intfactor * 10) / 1.65e-6  # GFP
                 bg_ms = np.random.poisson(bgval*1000) / 1000
                 bg_meas = np.random.poisson(bgval*1000) / 1000
                 # bg_meas = np.random.poisson(235e9) / 1000
