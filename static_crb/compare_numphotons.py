@@ -1,7 +1,11 @@
 import matplotlib
 from static_crb.CRB import *
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -110,7 +114,8 @@ fit = 100 / np.sqrt(n)
 # plt.figure(figsize=[7.0, 5.5])
 
 # fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, sharex='col', figsize=(7, 18))
-fig = plt.figure(figsize=(9, 9))
+# fig = plt.figure(figsize=(9, 9))
+fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0])
@@ -150,7 +155,7 @@ ax5.loglog(n4, crbknight_iscat_4)#, label='Knight (iSCAT)')
 # plt.axvline(670000)
 # plt.axhline(0.5)
 # plt.ylim(None, 100)
-fig.legend(bbox_to_anchor=(0.85, 0.85), loc='upper right')
+fig.legend(bbox_to_anchor=(0.9, 0.85), loc='upper right')
 ax4.set_xlabel('Number of photons (fluorescence)')
 ax2.set_ylabel('CRB (nm)')
 ax5.set_xlabel('Number of photons (fluorescence)')
@@ -170,8 +175,9 @@ if adjusted:
 
 # plt.subplots_adjust(right=0.6, left=0.12, top=0.95, hspace=0.3)
 plt.subplots_adjust(hspace=0.4)
+# plt.tight_layout()
 if not adjusted:
-    plt.savefig('../out/comp_numphotons.png')
+    plt.savefig('../out/comp_numphotons.pdf')
 else:
-    plt.savefig('../out/comp_numphotons_adjusted.png')
+    plt.savefig('../out/comp_numphotons_adjusted.pdf')
 plt.show()

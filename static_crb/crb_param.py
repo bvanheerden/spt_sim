@@ -1,5 +1,12 @@
 import numpy as np
+import matplotlib
 from matplotlib import pyplot as plt
+import rsmf
+
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 xvals = np.linspace(-300, 300)
 fwhm = 212
@@ -15,7 +22,8 @@ param = np.exp(frac) / (2 * np.cosh(frac))
 crbparam = (param * (1-param) / np.sqrt(param ** 2 + (1 - param) ** 2))
 crbparam_fluo = np.sqrt(param * (1 - param))
 
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(5, 7))
+fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.5)
+ax1, ax2, ax3 = fig.subplots(3, 1, sharex=True)
 ax1.plot(xvals, gauss1, color='C0')
 ax1.plot(xvals, gauss2, color='C0')
 
@@ -31,5 +39,5 @@ ax3.set_xlabel('x position (nm)')
 
 ax3.legend()
 
-plt.savefig('../out/crb_param.png')
+plt.savefig('../out/crb_param.pdf')
 plt.show()
