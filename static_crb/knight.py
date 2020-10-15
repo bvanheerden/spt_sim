@@ -1,7 +1,11 @@
 import matplotlib
 from static_crb.CRB import *
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_knight_100 = 'pickles/crb_lambda_knight_0.1'
@@ -10,7 +14,7 @@ file_knight_500 = 'pickles/crb_lambda_knight_0.5'
 file_knight_700 = 'pickles/crb_lambda_knight_0.7'
 file_knight_900 = 'pickles/crb_lambda_knight_0.9'
 
-knight = Knight(file_knight_900, 900)
+# knight = Knight(file_knight_900, 900)
 # print('knight')
 # knight.return_lambda()
 
@@ -37,7 +41,7 @@ fileobject_knight = open(file_knight_900, 'rb')
 crb_lambda_knight = dill.load(fileobject_knight)
 crb900 = crb_lambda_knight(0, y, 400, 100, 1200, 1)
 
-plt.figure()
+figure = formatter.figure(width_ratio=0.7)
 plt.yscale('log')
 # plt.plot(y, crb100, label='L=100')
 plt.plot(y, crb300, label='L=300')
@@ -48,6 +52,6 @@ plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
-plt.savefig('../out/knight_crb.png')
+plt.savefig('../out/knight_crb.pdf')
 plt.show()
 

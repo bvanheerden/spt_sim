@@ -1,7 +1,13 @@
 import matplotlib
 from static_crb.CRB import *
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+
+# matplotlib.rcParams.update({'font.size': 14})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -55,19 +61,21 @@ r = x
 # plt.show()
 
 crbknight = crb_lambda_knight(0, y, 50, 100, 400, 1,)
-# crbmf_large = crb_lambda_minflux(0, y, 566, 100, 800, 1)
-# crbmf = crb_lambda_minflux(0, y, 50, 100, 800, 1)
+crbmf_large = crb_lambda_minflux(0, y, 566, 100, 800, 1)
+crbmf = crb_lambda_minflux(0, y, 50, 100, 800, 1)
 crborb = crb_lambda_orbital(0, y, 566, 100, 400, 1)
 
-plt.figure(figsize=[7.0, 5.5])
+# plt.figure(figsize=[7.0, 5.5])
+figure = formatter.figure(width_ratio=0.7)
 plt.yscale('log')
-plt.plot(y, crbknight, label="Knight's Tour")
-# plt.plot(y, crbmf, label='MINFLUX L=50')
-# plt.plot(y, crbmf_large, label='MINFLUX L=566')
-plt.plot(y, crborb, label='Orbital')
+plt.plot(y, crbknight, label="KT L=1500")
+plt.plot(y, crbmf, label='MINFLUX L=50')
+plt.plot(y, crbmf_large, label='MINFLUX L=566')
+plt.plot(y, crborb, label='Orbital L=566')
 # plt.ylim(None, 100)
 plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
-# plt.savefig('../out/comp_mf_large.png')
+plt.tight_layout()
+plt.savefig('../out/comp_mf_large.pdf')
 plt.show()

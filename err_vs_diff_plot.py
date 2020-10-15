@@ -5,8 +5,11 @@ import matplotlib
 from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
+import rsmf
 
 matplotlib.rcParams.update({'font.size': 14})
+
+formatter = rsmf.setup(r'\documentclass[a4paper,12pt]{report}')
 
 errs = np.loadtxt('errs.txt')
 errs_mf = np.loadtxt('errs_mf.txt')

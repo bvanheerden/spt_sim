@@ -1,7 +1,11 @@
 import matplotlib
 from static_crb.CRB import *
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -13,8 +17,8 @@ file_minflux = 'pickles/crb_lambda_minflux'
 fileobject_minflux = open(file_minflux, 'rb')
 crb_lambda_minflux = dill.load(fileobject_minflux)
 
-fish = crb_lambda_minflux(0, 1, 300, 1000, 800, 1, 100)
-print(fish)
+# fish = crb_lambda_minflux(0, 1, 300, 1000, 800, 1, 100)
+# print(fish)
 # fisher_inv = np.linalg.inv(fish)
 # print(fisher_inv)
 # print(np.mean(np.diag(fisher_inv)[1:]))
@@ -26,6 +30,7 @@ print(fish)
 
 y = np.linspace(-500, 500, num=200)
 
+figure = formatter.figure(width_ratio=0.7)
 plt.yscale('log')
 # x, y, L, N, w, amp
 
@@ -49,19 +54,24 @@ plt.yscale('log')
 
 # crb100 = crb_lambda_minflux(0, y, 50, 10000, 800, 1, 10)
 # crb200 = crb_lambda_minflux(0, y, 100, 10000, 800, 1, 0.5)
-crb400 = crb_lambda_minflux(y, 0, 300, 10000, 300, 1, 3160)
+# crb400 = crb_lambda_minflux(y, 0, 300, 10000, 300, 1, 3160)
 # crb800 = crb_lambda_minflux(0, y, 500, 10000, 800, 1, 0.5)
 # crb1600 = crb_lambda_minflux(0, y, 700, 10000, 800, 1, 0.5)
+crb100 = crb_lambda_minflux(0, y, 50, 10000, 800, 1)
+crb200 = crb_lambda_minflux(0, y, 100, 10000, 800, 1)
+crb400 = crb_lambda_minflux(0, y, 300, 10000, 800, 1)
+crb800 = crb_lambda_minflux(0, y, 500, 10000, 800, 1)
+crb1600 = crb_lambda_minflux(0, y, 700, 10000, 800, 1)
 
-# plt.plot(y, crb100, label='L=50')
-# plt.plot(y, crb200, label='L=100')
+plt.plot(y, crb100, label='L=50')
+plt.plot(y, crb200, label='L=100')
 plt.plot(y, crb400, label='L=300')
-# plt.plot(y, crb800, label='L=500')
-# plt.plot(y, crb1600, label='L=700')
+plt.plot(y, crb800, label='L=500')
+plt.plot(y, crb1600, label='L=700')
 plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
-# plt.savefig('../out/minflux_crb.png')
+plt.savefig('../out/minflux_crb.pdf')
 plt.show()
 
