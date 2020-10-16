@@ -5,8 +5,12 @@ import matplotlib
 from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 errs = np.loadtxt('errs_fluo_gfp.txt')
 errs_gfp = np.loadtxt('errs_iscat_gfp.txt')
@@ -26,7 +30,8 @@ diffs = np.logspace(-19, 2, 18)
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 12.5
 
-plt.figure(figsize=(8, 5))
+# plt.figure(figsize=(8, 5))
+fig = formatter.figure(width_ratio=0.8)
 plt.loglog(diffs, errs, '-o', label='Fluorescence')
 plt.loglog(diffs, errs_gfp, '-o', label='GFP')
 plt.loglog(diffs, errs_lhcii, '-o', label="LHCII")
@@ -39,5 +44,6 @@ plt.ylabel(r'Average error (\textmu m)')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff)
 plt.legend()
-plt.savefig('./out/err_diff_iscat.png')
+plt.tight_layout()
+plt.savefig('./out/err_diff_iscat.pdf')
 plt.show()
