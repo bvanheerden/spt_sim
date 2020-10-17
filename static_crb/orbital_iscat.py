@@ -21,7 +21,7 @@ fileobject_orbital_fluo = open(file_orbital_fluo, 'rb')
 crb_lambda_orbital_fluo = dill.load(fileobject_orbital_fluo)
 
 
-contrast = 0.005
+contrast = 0.0005
 n = 10000
 nscat = 7 * n
 nsigma = np.sqrt(2 * nscat / contrast)
