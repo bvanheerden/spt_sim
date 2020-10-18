@@ -30,12 +30,12 @@ ax1.plot(xvals, gauss2, color='C0')
 ax2.plot(xvals, param)
 
 ax3.plot(xvals, crbparam, label='iSCAT')
-ax3.plot(xvals, crbparam_fluo, label='Fluorescence')
+ax3.plot(xvals, crbparam_fluo, label='Fluoressensie')
 
-ax1.set_ylabel('Intensity (arb. unit)')
+ax1.set_ylabel('Intensiteit')
 ax2.set_ylabel('Parameter')
-ax3.set_ylabel('CRB (param.) (arb. unit)')
-ax3.set_xlabel('x position (nm)')
+ax3.set_ylabel('CRB (parameter)')
+ax3.set_xlabel('x-posisie (nm)')
 
 ax3.legend()
 
