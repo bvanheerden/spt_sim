@@ -8,7 +8,7 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-xvals = np.linspace(-300, 300)
+xvals = np.linspace(-300, 300, num=100)
 fwhm = 212
 L = 300
 
@@ -32,9 +32,9 @@ ax2.plot(xvals, param)
 ax3.plot(xvals, crbparam, label='iSCAT')
 ax3.plot(xvals, crbparam_fluo, label='Fluorescence')
 
-ax1.set_ylabel('Intensity')
+ax1.set_ylabel('Intensity (arb. unit)')
 ax2.set_ylabel('Parameter')
-ax3.set_ylabel('CRB (parameter)')
+ax3.set_ylabel('CRB (param.) (arb. unit)')
 ax3.set_xlabel('x position (nm)')
 
 ax3.legend()
