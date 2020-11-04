@@ -28,9 +28,9 @@ cutoff = np.pi * 0.025 ** 2 * 12.5
 
 # plt.figure(figsize=(8, 5))
 fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs, errs, '-o', label='Orbitaal')
-plt.loglog(diffs, errs_mf, '-o', label='MINFLUX')
-plt.loglog(diffs, errs_kt, '-o', label="Ruiter se toer")
+plt.loglog(diffs*1000, errs, '-o', label='Orbitaal')
+plt.loglog(diffs*1000, errs_mf, '-o', label='MINFLUX')
+plt.loglog(diffs*1000, errs_kt, '-o', label="Ruiter se toer")
 plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
 plt.ylabel(r'Gemiddelde fout (\textmu m)')
 # plt.loglog(diffs, untracked, '--', color='gray')
