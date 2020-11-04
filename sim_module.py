@@ -84,6 +84,7 @@ class TrackingSim:
         stagey_vals = np.zeros(self.numpoints)
 
         intvals = np.zeros(self.numpoints)
+        integralvals = np.zeros(self.numpoints)
 
         # Orbital Method
         cycle_steps = np.int(1 / (freq * dt))
@@ -219,8 +220,13 @@ class TrackingSim:
             else:
                 # int_ms = 50 * int_iter + 0  # SBR = 50
                 int_ms = 10 * int_iter + 0  # SBR = 50
-                int_ms = np.random.poisson(int_ms)
-                intvals[i] = int_ms
+                ##### big change here 11/04!!! going to try fixing it to use actual counts per iteration!
+                # int_ms = np.random.poisson(int_ms)
+                # intvals[i] = int_ms
+                int_correct_iter = int_ms * dt
+                int_correct_iter = np.random.poisson(int_correct_iter)
+                intvals[i] = int_correct_iter
+
             #     int_ms = 1 * int_iter
             #     int_ms = np.random.poisson(int_ms)
             #     bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
@@ -233,6 +239,7 @@ class TrackingSim:
 
             if i % cycle_steps == 0:
                 integral = np.sum(intvals[i - cycle_steps:i])
+                integralvals[i] = integral
                 if self.method == 'orbital':
                     integral_sin = np.sum(intvals[i-cycle_steps:i] * np.sin(omega * tvals[i-cycle_steps:i]))
                     integral_cos = np.sum(intvals[i-cycle_steps:i] * np.cos(omega * tvals[i-cycle_steps:i]))
@@ -303,4 +310,4 @@ class TrackingSim:
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
-        return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
+        return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
