@@ -21,7 +21,7 @@ diffs = np.logspace(-14, 5, 18)
 def parr_func(i, D, method):
     errsum = 0
     for j in range(5):
-        print('diff # ', i, 'of 12')
+        print('diff # ', i, 'of 18')
         print('run # ', j, 'of 5')
         if method == 'orb':
             err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(D)
@@ -42,9 +42,9 @@ errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb') for i, D
 errs_mf = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs.txt', errs)
-np.savetxt('errs_mf.txt', errs_mf)
-np.savetxt('errs_kt.txt', errs_kt)
+np.savetxt('errs1.txt', errs)
+np.savetxt('errs_mf1.txt', errs_mf)
+np.savetxt('errs_kt1.txt', errs_kt)
 
 # untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
