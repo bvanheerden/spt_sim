@@ -7,15 +7,22 @@ from sim_module import TrackingSim
 
 numpoints = 100000
 
-simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                             feedback=12.5, iscat=False, debug=False)
-simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=12.5, amp=320.0, L=0.05, tracking=True,
-                             feedback=12.5, debug=False)
-simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=12.5, amp=24.0, waist=0.4, tracking=True,
-                            feedback=12.5, debug=False)
+freq = 12.5
+# freq = 3.125
+ffreq = 3.125
+
+simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
+                             feedback=ffreq, iscat=False, debug=False, rin=1)
+simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
+                             feedback=ffreq, debug=False, rin=1, fwhm=0.36)
+simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
+                            feedback=ffreq, debug=False, rin=10)
 
 diffs = np.logspace(-14, 5, 18)
+diffs = np.logspace(-10, 1, 12)
+# diffs = np.logspace(-12, 6, 18)
 # diffs = np.logspace(-3, 5, 18)
+# diffs = [1e-10]
 
 
 def parr_func(i, D, method):
@@ -38,15 +45,15 @@ def fitfunc(D, B, nm):
     return np.sqrt(2 * D / B + (nm ** 2 * B))
 
 
-errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb') for i, D in enumerate(diffs))
-errs_mf = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
+# errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb') for i, D in enumerate(diffs))
+# errs_mf = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs1.txt', errs)
-np.savetxt('errs_mf1.txt', errs_mf)
-np.savetxt('errs_kt1.txt', errs_kt)
+# np.savetxt('errs4.txt', errs)
+# np.savetxt('errs_mf4.txt', errs_mf)
+np.savetxt('errs_kt4.txt', errs_kt)
 
-# untracked = np.sqrt(2000 * diffs)
+untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
 # print(param[0], param[1])
 # tracked = fitfunc(diffs, param[0], param[1])
@@ -54,10 +61,10 @@ np.savetxt('errs_kt1.txt', errs_kt)
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
 
-plt.loglog(diffs, errs, '-o')
-plt.loglog(diffs, errs_mf, '-o')
+# plt.loglog(diffs, errs, '-o')
+# plt.loglog(diffs, errs_mf, '-o')
 plt.loglog(diffs, errs_kt, '-o')
-# plt.loglog(diffs, untracked, '--', color='gray')
+plt.loglog(diffs, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 plt.axvline(cutoff)
 plt.show()
