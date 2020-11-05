@@ -137,8 +137,11 @@ class TrackingSim:
             return(contrast)
         else:
             int_ms = 10 * int_iter + 0  # SBR = 50
-            int_ms = np.random.poisson(int_ms)
-            return(int_ms)
+            ### big change 11/04!!! Trying to use correct iteration counts
+            # int_ms = np.random.poisson(int_ms)
+            int_iter_correct = int_ms * dt
+            int_iter_correct = np.random.poisson(int_iter_correct)
+            return(int_iter_correct)
 
     def get_meas_pos(self, L, cycle_steps, fwhm, i, int_fact, intvals, kt_positions, kt_steps, measx, measy,
                      mf_positions, mf_steps, omega, tvals):
