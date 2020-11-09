@@ -7,7 +7,7 @@ import joblib
 from sim_module import TrackingSim
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
@@ -34,12 +34,12 @@ cutoff2 = (3.75 * 0.4) ** 2 * 12.5 * 0.005
 # cutoff2 = 0.2
 
 # plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs*1000, errs, '-o', label='Orbitaal')
+fig = formatter.figure(width_ratio=0.7)
+plt.loglog(diffs*1000, errs, '-o', label='Orbital')
 plt.loglog(diffs*1000, errs_mf, '-o', label='MINFLUX')
-plt.loglog(diffs*1000, errs_kt, '-o', label="Ruitersprong")
-plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
-plt.ylabel(r'Gemiddelde fout (\textmu m)')
+plt.loglog(diffs*1000, errs_kt, '-o', label="Knight's Tour")
+plt.xlabel(r'Diffusion coefficient (\textmu m$^2$s$^{-1}$)')
+plt.ylabel(r'Average error (\textmu m)')
 # plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff * 1000)
@@ -50,5 +50,5 @@ plt.ylabel(r'Gemiddelde fout (\textmu m)')
 # plt.axhline(0.166)
 plt.legend()
 plt.tight_layout()
-plt.savefig('out/err_diff_fluo.pdf')
+plt.savefig('out/err_diff_fluo_art.pdf')
 plt.show()

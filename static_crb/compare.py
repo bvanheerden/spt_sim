@@ -2,7 +2,7 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -77,5 +77,5 @@ plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
-plt.savefig('../out/comp_mf_large.pdf')
+plt.savefig('../out/comp_mf_large_art.pdf')
 plt.show()

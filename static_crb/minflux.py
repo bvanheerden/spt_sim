@@ -2,7 +2,7 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -68,10 +68,10 @@ plt.plot(y, crb200, label='L=100nm')
 plt.plot(y, crb400, label='L=300nm')
 plt.plot(y, crb800, label='L=500nm')
 plt.plot(y, crb1600, label='L=700nm')
-plt.legend(loc='lower right')
+plt.legend(loc='upper center', framealpha=0.7)
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
-plt.savefig('../out/minflux_crb.pdf')
+plt.savefig('../out/minflux_crb_art.pdf')
 plt.show()
 
