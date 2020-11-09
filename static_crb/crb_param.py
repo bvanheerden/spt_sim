@@ -3,7 +3,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -30,14 +30,13 @@ ax1.plot(xvals, gauss2, color='C0')
 ax2.plot(xvals, param)
 
 ax3.plot(xvals, crbparam, label='iSCAT')
-ax3.plot(xvals, crbparam_fluo, label='Fluoressensie')
+ax3.plot(xvals, crbparam_fluo, label='Fluorescence')
 
-ax1.set_ylabel('Intensiteit')
+ax1.set_ylabel('Intensity')
 ax2.set_ylabel('Parameter')
 ax3.set_ylabel('CRB (parameter)')
-ax3.set_xlabel('x-posisie (nm)')
+ax3.set_xlabel('x-position (nm)')
 
-ax3.legend()
+ax3.legend(framealpha=0.7)
 
-plt.savefig('../out/crb_param.pdf')
-plt.show()
+plt.savefig('../out/crb_param_art.pdf')

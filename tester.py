@@ -12,20 +12,20 @@ import scipy.signal
 # matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=12.5, amp=4.0, waist=0.4, tracking=True,
-                             feedback=12.5, iscat=False, kalman=True, lqr=True, rin=1000, weights=[1, 1, 1, 1])
+                             feedback=12.5, iscat=False, kalman=True, lqr=True, rin=1000, weights=[0.1, 1, 1, 1])
 # simulation_orb = TrackingSim(numpoints=10000, method='minflux', freq=12.5, amp=80.0, L=0.05, tracking=True,
 #                              feedback=12.5, iscat=False, kalman=True, lqr=False)#, rin=0.1, weights=[0.1, 1, 1, 1])
 # simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=12.5, amp=80.0, L=0.05, tracking=True, feedback=12.5, kalman=False, lqr=False)
 
-good = False
+good = True
 if good:
     # err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.0001)
     err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.001)
-    filename = 'out/good_tracking.pdf'
+    filename = 'out/good_tracking_art.pdf'
 else:
-    err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.03)
+    err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
     # err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.01)
-    filename = 'out/bad_tracking.pdf'
+    filename = 'out/bad_tracking_art.pdf'
 
 tvals = np.linspace(0, 100, 1000)
 # tvals = np.linspace(0, 10, 1000)
@@ -47,10 +47,10 @@ intvals = intvals * 1000  # times 1000 since timestep is 0.001 ms
 ax3.plot(tvals, intvals)
 # ax3.axhline(np.mean(intvals))
 
-ax3.set_xlabel('Tyd (ms)')
-ax1.set_ylabel(r'X Posisie (\textmu m)')
-ax2.set_ylabel(r'Y Posisie (\textmu m)')
-ax3.set_ylabel(r'Intensiteit (tellings/ms)')
+ax3.set_xlabel('Time (ms)')
+ax1.set_ylabel(r'X Position (\textmu m)')
+ax2.set_ylabel(r'Y Position (\textmu m)')
+ax3.set_ylabel(r'Intensity (counts/ms)')
 fig.align_ylabels()
 
 print(np.mean(intvals))

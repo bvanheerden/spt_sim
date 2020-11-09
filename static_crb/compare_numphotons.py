@@ -2,7 +2,7 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -115,7 +115,7 @@ fit = 100 / np.sqrt(n)
 
 # fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, sharex='col', figsize=(7, 18))
 # fig = plt.figure(figsize=(9, 9))
-fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
+fig = formatter.figure(width_ratio=0.8, aspect_ratio=1.4)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0])
@@ -178,7 +178,6 @@ if adjusted:
 plt.subplots_adjust(hspace=0.4)
 # plt.tight_layout()
 if not adjusted:
-    plt.savefig('../out/comp_numphotons.pdf')
+    plt.savefig('../out/comp_numphotons_art.pdf')
 else:
-    plt.savefig('../out/comp_numphotons_adjusted.pdf')
-plt.show()
+    plt.savefig('../out/comp_numphotons_adjusted_art.pdf')
