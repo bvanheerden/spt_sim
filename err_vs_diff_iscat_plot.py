@@ -12,15 +12,16 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-errs = np.loadtxt('errs_fluo_gfp.txt')
-errs_gfp = np.loadtxt('errs_iscat_gfp.txt')
-errs_hiv = np.loadtxt('errs_iscat_hiv.txt')
-errs_lhcii = np.loadtxt('errs_iscat_lhcii.txt')
-errs_lhcii_mic = np.loadtxt('errs_iscat_lhcii-mic.txt')
-errs_pb = np.loadtxt('errs_iscat_pb.txt')
+errs = np.loadtxt('errs_fluo_gfp1.txt')
+errs_gfp = np.loadtxt('errs_iscat_gfp1.txt')
+errs_hiv = np.loadtxt('errs_iscat_hiv1.txt')
+errs_lhcii = np.loadtxt('errs_iscat_lhcii1.txt')
+errs_lhcii_mic = np.loadtxt('errs_iscat_lhcii-mic1.txt')
+errs_pb = np.loadtxt('errs_iscat_pb1.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 diffs = np.logspace(-19, 2, 18)
+diffs = np.logspace(-15, 1, 12)
 
 # untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
