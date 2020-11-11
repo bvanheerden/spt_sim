@@ -3,6 +3,7 @@ import numpy as np
 from numpy.random import randn
 import warnings
 from filterpy.kalman import KalmanFilter
+import scipy
 
 from basic_sim import *
 
@@ -16,7 +17,7 @@ def scat_intensity(x, y, x0, y0, amp, waist):
 class TrackingSim:
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True):
+                 feedback=50, iscat=False, stage=True, kalman=True, lqr=False, rin=0.1, weights=[100, 1, 1, 1], debug=True):
 
         self.numpoints = numpoints
         self.method = method
@@ -34,6 +35,12 @@ class TrackingSim:
         self.iscat = iscat
         self.stage = stage
         self.kalman = kalman
+        self.lqr = lqr
+
+        self.rcont = weights[0]
+        self.q1 = weights[1]
+        self.q2 = weights[2]
+        self.q3 = weights[3]
 
         self.rin = rin
 
@@ -59,6 +66,31 @@ class TrackingSim:
         #     kf.x = np.array([[x, vx, y, vy]]).T
         kf.x = x
         return kf
+
+    def get_lqr(self, r, dt, q1, q2, q3):
+
+        F = np.array([[1 - 2 * dt, dt, 0.],
+                      [-dt, 1., 0.],
+                      [-dt, 0., 1.]])
+        # F = np.array([[1 - 2 * dt, dt],
+        #               [-1., 0.]])
+
+        B = np.array([[2 * dt, dt, 0]]).T
+        R = r
+        # Q = np.array([[1, -1, 0, 0],
+        #               [-1, 1, 0, 0],
+        #               [0, 0, 1, 0],
+        #               [0, 0, 0, 1]])
+        Q = np.array([[q1, 0, 0],
+                      [0, q2, 0],
+                      [0, 0, q2]])
+
+        # solve DARE
+        X = np.matrix(scipy.linalg.solve_discrete_are(F, B, Q, R))
+
+        # compute the LQR gain
+        K = np.matrix(scipy.linalg.inv(B.T * X * B + R) * (B.T * X * F))
+        return K
 
     def main_tracking(self, D):
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
@@ -125,6 +157,8 @@ class TrackingSim:
         kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D * 100))
         kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D * 100))
 
+        K = self.get_lqr(self.rcont, dt, self.q1, self.q2, self.q3)
+
         measx = 0
         measy = 0
         prev_measx = 0
@@ -161,6 +195,11 @@ class TrackingSim:
                         if self.kalman:
                             ux = kfx.x[0, 0]
                             uy = kfy.x[0, 0]
+                            if self.lqr:
+                                ux = -K @ (kfx.x[1:] - np.array([kfx.x[0], 0, 0], dtype=object))
+                                uy = -K @ (kfy.x[1:] - np.array([kfy.x[0], 0, 0], dtype=object))
+                                ux = ux[0, 0]
+                                uy = uy[0, 0]
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy

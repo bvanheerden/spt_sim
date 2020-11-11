@@ -34,7 +34,7 @@ cutoff2 = (3.75 * 0.4) ** 2 * 12.5 * 0.005
 # cutoff2 = 0.2
 
 # plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=0.7)
+fig = formatter.figure(width_ratio=0.8)
 plt.loglog(diffs*1000, errs, '-o', label='Orbital')
 plt.loglog(diffs*1000, errs_mf, '-o', label='MINFLUX')
 plt.loglog(diffs*1000, errs_kt, '-o', label="Knight's Tour")
