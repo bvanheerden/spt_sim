@@ -11,23 +11,25 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-errs = np.loadtxt('errs3.txt')
-errs_mf = np.loadtxt('errs_mf3.txt')
-errs_kt = np.loadtxt('errs_kt3.txt')
+errs = np.loadtxt('errs7.txt')
+errs_mf = np.loadtxt('errs_mf7.txt')
+errs_kt = np.loadtxt('errs_kt7.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 diffs = np.logspace(-14, 5, 18)
-diffs = np.logspace(-10, 1, 12)
+diffs = np.logspace(-10, 1, 18)
 
 untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
 # print(param[0], param[1])
 # tracked = fitfunc(diffs, param[0], param[1])
 
-cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 12.5 * 0.005
-cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 3.125 * 0.05
-cutoff1 = np.pi * 0.025 ** 2 * 12.5 * 0.005
-cutoff2 = (3.75 * 0.4) ** 2 * 12.5 * 0.005
+# cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 12.5 * 0.005
+cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 3.125 * 0.01
+# cutoff1 = np.pi * 0.025 ** 2 * 12.5 * 0.005
+cutoff1 = np.pi * 0.025 ** 2 * 3.125 * 0.01
+# cutoff2 = (3.75 * 0.4) ** 2 * 12.5 * 0.005
+cutoff2 = (3.75 * 0.4) ** 2 * 3.125 * 0.01
 # cutoff = 0.4 ** 2 * 12.5 / 4
 
 # cutoff1 = 0.03
