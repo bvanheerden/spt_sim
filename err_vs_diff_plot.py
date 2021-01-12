@@ -7,9 +7,11 @@ import joblib
 from sim_module import TrackingSim
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+# formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+#                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+# matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+
+matplotlib.rcParams.update({'font.size': 11})
 
 errs = np.loadtxt('errs7.txt')
 errs_mf = np.loadtxt('errs_mf7.txt')
@@ -35,13 +37,15 @@ cutoff2 = (3.75 * 0.4) ** 2 * 3.125 * 0.01
 # cutoff1 = 0.03
 # cutoff2 = 0.2
 
-# plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs*1000, errs, '-o', label='Orbitaal')
-plt.loglog(diffs*1000, errs_mf, '-o', label='MINFLUX')
-plt.loglog(diffs*1000, errs_kt, '-o', label="Ruitersprong")
-plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
-plt.ylabel(r'Gemiddelde fout (\textmu m)')
+plt.figure(figsize=(4, 3), dpi=150)
+# fig = formatter.figure(width_ratio=0.8)
+plt.loglog(diffs*1000, errs, marker='.', label='Orbital', lw=1)
+plt.loglog(diffs*1000, errs_kt, marker='.', label="Knight's Tour", lw=1, color='C2')
+plt.loglog(diffs*1000, errs_mf, marker='.', label='MINFLUX', lw=1, color='C1')
+# plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
+# plt.ylabel(r'Gemiddelde fout (\textmu m)')
+plt.xlabel(r'Diffusion coefficient (\textmu m$^2$s$^{-1}$)')
+plt.ylabel(r'Average error (\textmu m)')
 # plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff * 1000)
@@ -53,4 +57,5 @@ plt.ylabel(r'Gemiddelde fout (\textmu m)')
 plt.legend()
 plt.tight_layout()
 # plt.savefig('out/err_diff_fluo.pdf')
+plt.savefig('out/poster/err_diff_fluo.png')
 plt.show()
