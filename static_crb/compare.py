@@ -1,3 +1,4 @@
+import dill as dill
 import matplotlib
 from static_crb.CRB import *
 import rsmf
@@ -40,8 +41,8 @@ crb_lambda_knight = dill.load(fileobject_knight)
 # fileobject_camera = open(file_camera, 'rb')
 # crb_lambda_camera = dill.load(fileobject_camera)
 
-x = np.linspace(-200, 200, num=100)
-y = np.linspace(-400, 400, num=100)
+x = np.linspace(-200, 200, num=200)
+y = np.linspace(-400, 400, num=200)
 xv, yv = np.meshgrid(x, y)
 r = x
 # plt.yscale('log')
@@ -68,12 +69,12 @@ crborb = crb_lambda_orbital(0, y, 566, 100, 400, 1)
 # plt.figure(figsize=[7.0, 5.5])
 figure = formatter.figure(width_ratio=0.7)
 plt.yscale('log')
-plt.plot(y, crbknight, label="KT L=1500nm")
+plt.plot(y, crbknight, label="RS L=1500nm")
 plt.plot(y, crbmf, label='MINFLUX L=50nm')
 plt.plot(y, crbmf_large, label='MINFLUX L=566nm')
-plt.plot(y, crborb, label='Orbital L=566nm')
+plt.plot(y, crborb, label='Orbitaal L=566nm')
 # plt.ylim(None, 100)
-plt.legend(loc='lower right')
+plt.legend(loc='lower right', framealpha=0.7)
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()

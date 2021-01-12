@@ -39,14 +39,14 @@ crb1600 = crb_lambda_orbital(0, y, 900, nscat, 636, 1, nsigma)
 
 # crb800 = crb_lambda_orbital_fluo(0, y, 300, n, 424, 1)
 
-figure= formatter.figure(width_ratio=0.7)
+figure= formatter.figure(width_ratio=0.8)
 
 plt.plot(y, crb100, label='L=300')
 plt.plot(y, crb200, label='L=500')
 # plt.plot(y, crb400, label='L=564')
 plt.plot(y, crb800, label='L=700')
 plt.plot(y, crb1600, label='L=900')
-plt.legend(loc='lower right')
+plt.legend(loc='lower right', framealpha=0.7)
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
