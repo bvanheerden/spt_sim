@@ -7,10 +7,12 @@ import joblib
 from sim_module import TrackingSim
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+# formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+#                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+#
+# matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.size': 12})
 
 errs = np.loadtxt('errs_fluo_gfp1.txt')
 errs_gfp = np.loadtxt('errs_iscat_gfp1.txt')
@@ -31,20 +33,21 @@ diffs = np.logspace(-15, 1, 12)
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 12.5
 
-# plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs*1000, errs, '-o', label='Fluoressensie')
+plt.figure(figsize=(6, 4), dpi=150)
+# fig = formatter.figure(width_ratio=0.8)
+plt.loglog(diffs*1000, errs, '-o', label='Fluorescence')
 plt.loglog(diffs*1000, errs_gfp, '-o', label='GFP')
 plt.loglog(diffs*1000, errs_lhcii, '-o', label="LHCII")
-plt.loglog(diffs*1000, errs_pb, '-o', label="FB")
-plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Misel")
-plt.loglog(diffs*1000, errs_hiv, '-o', label="MIV-QD")
-plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
-plt.ylabel(r'Gemiddelde fout (\textmu m)')
+plt.loglog(diffs*1000, errs_pb, '-o', label="PB")
+plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Micelle")
+plt.loglog(diffs*1000, errs_hiv, '-o', label="HIV-QD")
+plt.xlabel(r'Diffusion Coefficient (\textmu m$^2$s$^{-1}$)')
+plt.ylabel(r'Average Error (\textmu m)')
 # plt.loglog(diffs, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff)
-plt.legend()
+plt.legend(ncol=2)
 plt.tight_layout()
-plt.savefig('./out/err_diff_iscat.pdf')
+# plt.savefig('./out/err_diff_iscat.pdf')
+plt.savefig('./out/poster/err_diff_iscat.png')
 plt.show()
