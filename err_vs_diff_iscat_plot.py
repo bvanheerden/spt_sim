@@ -12,7 +12,7 @@ import rsmf
 #
 # matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-matplotlib.rcParams.update({'font.size': 12})
+matplotlib.rcParams.update({'font.size': 13})
 
 errs = np.loadtxt('errs_fluo_gfp1.txt')
 errs_gfp = np.loadtxt('errs_iscat_gfp1.txt')
@@ -36,10 +36,10 @@ cutoff = np.pi * 0.025 ** 2 * 12.5
 plt.figure(figsize=(6, 4), dpi=150)
 # fig = formatter.figure(width_ratio=0.8)
 plt.loglog(diffs*1000, errs, '-o', label='Fluorescence')
-plt.loglog(diffs*1000, errs_gfp, '-o', label='GFP')
 plt.loglog(diffs*1000, errs_lhcii, '-o', label="LHCII")
-plt.loglog(diffs*1000, errs_pb, '-o', label="PB")
 plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Micelle")
+plt.loglog(diffs*1000, errs_pb, '-o', label="PB")
+plt.loglog(diffs*1000, errs_gfp, '-o', label='GFP')
 plt.loglog(diffs*1000, errs_hiv, '-o', label="HIV-QD")
 plt.xlabel(r'Diffusion Coefficient (\textmu m$^2$s$^{-1}$)')
 plt.ylabel(r'Average Error (\textmu m)')
@@ -49,5 +49,5 @@ plt.ylabel(r'Average Error (\textmu m)')
 plt.legend(ncol=2)
 plt.tight_layout()
 # plt.savefig('./out/err_diff_iscat.pdf')
-plt.savefig('./out/poster/err_diff_iscat.png')
+plt.savefig('./out/poster/err_diff_iscat.pdf')
 plt.show()
