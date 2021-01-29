@@ -85,7 +85,7 @@ ax1.plot(y, crb200, label='L=500nm')
 # plt.plot(y, crb400, label='L=564')
 ax1.plot(y, crb800, label='L=700nm')
 ax1.plot(y, crb1600, label='L=900nm')
-ax1.legend(loc='lower right', framealpha=0.5)
+ax1.legend(loc='upper center', framealpha=0.5, ncol=2)
 ax1.set_ylabel('CRB (nm)')
 ax1.text(-520, 50, 'a', fontweight='bold', fontsize='12')
 
@@ -94,7 +94,7 @@ ax3.plot(y, crb300_kt, label='L=300nm')
 ax3.plot(y, crb500_kt, label='L=500nm')
 ax3.plot(y, crb700_kt, label='L=700nm')
 ax3.plot(y, crb900_kt, label='L=900nm')
-ax3.legend(loc='lower right', framealpha=0.5)
+ax3.legend(loc='lower right', framealpha=0.5, ncol=2)
 ax3.text(-520, 50, 'b', fontweight='bold', fontsize='12')
 
 ax2.set_yscale('log')
@@ -103,7 +103,7 @@ ax2.plot(y, crb200_mf, label='L=100nm')
 ax2.plot(y, crb400_mf, label='L=300nm')
 ax2.plot(y, crb800_mf, label='L=500nm')
 ax2.plot(y, crb1600_mf, label='L=700nm')
-ax2.legend(loc='lower right', framealpha=0.5)
+ax2.legend(loc='upper center', framealpha=0.5, ncol=2)
 ax2.text(-520, 2000, 'c', fontweight='bold', fontsize='12')
 ax2.set_xlabel('x (nm)')
 ax2.set_ylabel('CRB (nm)')
@@ -125,6 +125,5 @@ N = np.linspace(95, 105)
 dist = norm(loc=100, scale=0.5)
 
 crb = crb_lambda_orbital(0, y[:, None], 300, N, 212, 1)
-
 
 
