@@ -24,8 +24,11 @@ crbparam_fluo = np.sqrt(param * (1 - param))
 
 fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.5)
 ax1, ax2, ax3 = fig.subplots(3, 1, sharex=True)
-ax1.plot(xvals, gauss1, color='C0')
-ax1.plot(xvals, gauss2, color='C0')
+ax1.plot(xvals[25:], gauss1[25:], color='C0')
+ax1.plot(xvals[:75], gauss2[:75], color='C0')
+
+ax1.fill_between(xvals[25:], 0, gauss1[25:], color='#8FBBD9')
+ax1.fill_between(xvals[:75], 0, gauss2[:75], color='#8FBBD9')
 
 ax2.plot(xvals, param)
 
@@ -38,5 +41,9 @@ ax3.set_ylabel('CRB (parameter)')
 ax3.set_xlabel('x-position (nm)')
 
 ax3.legend(framealpha=0.7)
+
+ax1.text(-430, 0.95, 'a', fontsize=12, weight='bold')
+ax2.text(-430, 0.95, 'b', fontsize=12, weight='bold')
+ax3.text(-430, 0.52, 'c', fontsize=12, weight='bold')
 
 plt.savefig('../out/crb_param_art.pdf')

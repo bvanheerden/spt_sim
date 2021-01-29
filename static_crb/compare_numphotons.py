@@ -53,19 +53,21 @@ contrast_4 = 0.057  # HIV-QD
 
 adjusted = False
 
-n = np.logspace(1, 9, num=20)
+maxexp = 7
+
+n = np.logspace(1, maxexp, num=20)
 if adjusted:
-    n1 = np.logspace(2.5, 9, num=20)
-    n11 = np.logspace(1, 9, num=20)
-    n2 = np.logspace(2.2, 9, num=20)
-    n3 = np.logspace(2.5, 9, num=20)
+    n1 = np.logspace(2.5, maxexp, num=20)
+    n11 = np.logspace(1, maxexp, num=20)
+    n2 = np.logspace(2.2, maxexp, num=20)
+    n3 = np.logspace(2.5, maxexp, num=20)
 else:
-    n1 = np.logspace(3, 9, num=20)
-    n11 = np.logspace(1.9, 9, num=20)
-    n2 = np.logspace(2.2, 9, num=20)
-    n3 = np.logspace(4, 9, num=20)
-n4 = np.logspace(2.3, 9, num=20)
-n4 = np.logspace(0, 9, num=20)
+    n1 = np.logspace(3, maxexp, num=20)
+    n11 = np.logspace(1.9, maxexp, num=20)
+    n2 = np.logspace(2.2, maxexp, num=20)
+    n3 = np.logspace(4, maxexp, num=20)
+n4 = np.logspace(2.3, maxexp, num=20)
+n4 = np.logspace(0, maxexp, num=20)
 if adjusted:
     nscat_1 = 260 * n1 * 5  # LHCII
     nscat_11 = 1145 * n11 * 5  # LHCII-micelle
@@ -115,7 +117,7 @@ fit = 100 / np.sqrt(n)
 
 # fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, sharex='col', figsize=(7, 18))
 # fig = plt.figure(figsize=(9, 9))
-fig = formatter.figure(width_ratio=0.8, aspect_ratio=1.4)
+fig = formatter.figure(width_ratio=0.7, aspect_ratio=1.4)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0])
@@ -126,8 +128,8 @@ ax5 = fig.add_subplot(spec[2, 1])
 ax1.set_yscale('log')
 l1 = ax1.loglog(n, crborb_1, label='Orbital (Fluorescence)')
 l2 = ax1.loglog(n1, crborb_iscat_1, label='Orbital (iSCAT)')
-l3 = ax1.loglog(n, crbknight_1, label="Knight's Tour (Fluorescence)")
-l4 = ax1.loglog(n1, crbknight_iscat_1, label="Knight's Tour (iSCAT)")
+l3 = ax1.loglog(n, crbknight_1, label="KT (Fluorescence)")
+l4 = ax1.loglog(n1, crbknight_iscat_1, label="KT (iSCAT)")
 
 ax2.loglog(n, crborb_11)
 ax2.loglog(n11, crborb_iscat_11)
@@ -159,8 +161,8 @@ fig.legend(bbox_to_anchor=(0.9, 0.85), loc='upper right')
 ax1.set_ylabel('CRB (nm)')
 ax2.set_ylabel('CRB (nm)')
 ax4.set_ylabel('CRB (nm)')
-ax4.set_xlabel('Number of photons (fluorescence)')
-ax5.set_xlabel('Number of photons (fluorescence)')
+ax4.set_xlabel('Number of photons\n(fluorescence)')
+ax5.set_xlabel('Number of photons\n(fluorescence)')
 ax1.set_title("LHCII")
 ax2.set_title("LHCII-micelle")
 ax3.set_title("PB")
@@ -175,7 +177,7 @@ if adjusted:
 # ax1.set_xlim((8e3, None))
 
 # plt.subplots_adjust(right=0.6, left=0.12, top=0.95, hspace=0.3)
-plt.subplots_adjust(hspace=0.4)
+plt.subplots_adjust(hspace=0.4, wspace=0.3)
 # plt.tight_layout()
 if not adjusted:
     plt.savefig('../out/comp_numphotons_art.pdf')
