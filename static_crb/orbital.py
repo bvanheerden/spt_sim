@@ -4,15 +4,15 @@ from scipy.stats import norm
 from scipy.signal import convolve
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
-
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+# formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
+#                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+#
+# matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
 
-# orbital = Orbital(file_orbital)
+# orbital = Orbital(file_orbital, bg=True)
 # print('orbital')
 
 fileobject_orbital = open(file_orbital, 'rb')
@@ -20,15 +20,16 @@ crb_lambda_orbital = dill.load(fileobject_orbital)
 
 y = np.linspace(-500, 500, num=100)
 
-fig = formatter.figure(width_ratio=0.7)
+# fig = formatter.figure(width_ratio=0.7)
+plt.figure()
 
 plt.yscale('log')
 # x, y, L, N, w, amp
-crb100 = crb_lambda_orbital(0, y, 300, 100, 212, 1)
-crb200 = crb_lambda_orbital(0, y, 500, 100, 353, 1)
-# crb400 = crb_lambda_orbital(0, y, 300, 4000, 424, 1)
-crb800 = crb_lambda_orbital(0, y, 700, 100, 494, 1)
-crb1600 = crb_lambda_orbital(0, y, 900, 100, 636, 1)
+crb100 = crb_lambda_orbital(0, y, 300, 100, 212, 1, 100)
+crb200 = crb_lambda_orbital(0, y, 500, 100, 353, 1, 100)
+# crb400 = crb_lambda_orbital(0, y, 300, 4000, 424, 1, 100)
+crb800 = crb_lambda_orbital(0, y, 700, 100, 494, 1, 100)
+crb1600 = crb_lambda_orbital(0, y, 900, 100, 636, 1, 100)
 
 # crb200 = crb_lambda_orbital(0, y, 500, 50, 353, 1)
 # crb800 = crb_lambda_orbital(0, y, 700, 150, 494, 1)
@@ -43,12 +44,13 @@ plt.legend(loc='lower right')
 plt.xlabel('x (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
-plt.savefig('../out/orbital_crb_art.pdf')
+# plt.savefig('../out/orbital_crb_art.pdf')
+plt.show()
 
-N = np.linspace(95, 105)
-dist = norm(loc=100, scale=0.5)
-
-crb = crb_lambda_orbital(0, y[:, None], 300, N, 212, 1)
+# N = np.linspace(95, 105)
+# dist = norm(loc=100, scale=0.5)
+#
+# crb = crb_lambda_orbital(0, y[:, None], 300, N, 212, 1)
 
 # plt.figure()
 # # plt.plot(N, dist.pdf(N))
