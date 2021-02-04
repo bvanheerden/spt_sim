@@ -112,8 +112,8 @@ class MinFlux(PositionMethod):
 
     def __init__(self, filename):
         super().__init__(filename)
-        # self.shape = self.doughnut(self.amp, self.r, self.fwhm)
-        self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
+        self.shape = self.doughnut(self.amp, self.r, self.fwhm)
+        # self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
 
@@ -129,7 +129,7 @@ class MinFlux(PositionMethod):
         self.param_vector()
 
     def lambdify(self, crb):
-        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n],
+        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp],
                                  crb, ['numpy', 'sympy'])
         return crb_lambda
 
