@@ -7,6 +7,7 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 xvals = np.linspace(-300, 300, num=100)
 fwhm = 212
@@ -22,7 +23,7 @@ param = np.exp(frac) / (2 * np.cosh(frac))
 crbparam = (param * (1-param) / np.sqrt(param ** 2 + (1 - param) ** 2))
 crbparam_fluo = np.sqrt(param * (1 - param))
 
-fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.5)
+fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.7)
 ax1, ax2, ax3 = fig.subplots(3, 1, sharex=True)
 ax1.plot(xvals[25:], gauss1[25:], color='C0')
 ax1.plot(xvals[:75], gauss2[:75], color='C0')
@@ -35,9 +36,9 @@ ax2.plot(xvals, param)
 ax3.plot(xvals, crbparam, label='iSCAT')
 ax3.plot(xvals, crbparam_fluo, label='Fluorescence')
 
-ax1.set_ylabel('Intensity')
-ax2.set_ylabel('Parameter')
-ax3.set_ylabel('CRB (parameter)')
+ax1.set_ylabel('Intensity (a.u.)')
+ax2.set_ylabel('Parameter (a.u.)')
+ax3.set_ylabel('CRB (param.) (a.u.)')
 ax3.set_xlabel('x-position (nm)')
 
 ax3.legend(framealpha=0.7)

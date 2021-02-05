@@ -6,6 +6,7 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital_iscat'
@@ -43,13 +44,13 @@ crb1600 = crb_lambda_orbital(0, y, 900, nscat, 636, 1, nsigma)
 # crb800 = [crb_lambda_orbital_fluo(0, yval, 300, n_arr[i], 424, 1) for i, yval in enumerate(y)]
 
 figure = formatter.figure(width_ratio=0.5, aspect_ratio=1/1.3)
-plt.plot(y, crb100, label='L=300nm')
-plt.plot(y, crb200, label='L=500nm')
+plt.plot(y, crb100, label='$L=300$ nm')
+plt.plot(y, crb200, label='$L=500$ nm')
 # plt.plot(y, crb400, label='L=564')
-plt.plot(y, crb800, label='L=700nm')
-plt.plot(y, crb1600, label='L=900nm')
-plt.legend(loc='lower right', framealpha=0.7)
-plt.xlabel('x (nm)')
+plt.plot(y, crb800, label='$L=700$ nm')
+plt.plot(y, crb1600, label='$L=900$ nm')
+plt.legend(loc='lower right', framealpha=0.7, handlelength=1.0, labelspacing=0.3)
+plt.xlabel('Position (nm)')
 plt.ylabel('CRB (nm)')
 plt.tight_layout()
 plt.savefig('../out/orbital_crb_iscat_art.pdf')
