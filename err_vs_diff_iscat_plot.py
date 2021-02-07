@@ -15,11 +15,17 @@ import rsmf
 matplotlib.rcParams.update({'font.size': 13})
 
 errs = np.loadtxt('errs_fluo_gfp1.txt')
-errs_gfp = np.loadtxt('errs_iscat_gfp1.txt')
-errs_hiv = np.loadtxt('errs_iscat_hiv1.txt')
-errs_lhcii = np.loadtxt('errs_iscat_lhcii1.txt')
-errs_lhcii_mic = np.loadtxt('errs_iscat_lhcii-mic1.txt')
-errs_pb = np.loadtxt('errs_iscat_pb1.txt')
+# errs_gfp = np.loadtxt('errs_iscat_gfp1.txt')
+# errs_hiv = np.loadtxt('errs_iscat_hiv1.txt')
+# errs_lhcii = np.loadtxt('errs_iscat_lhcii1.txt')
+# errs_lhcii_mic = np.loadtxt('errs_iscat_lhcii-mic1.txt')
+# errs_pb = np.loadtxt('errs_iscat_pb1.txt')
+
+errs_gfp = np.loadtxt('errs_iscat_gfp3.txt')
+errs_hiv = np.loadtxt('errs_iscat_hiv3.txt')
+errs_lhcii = np.loadtxt('errs_iscat_lhcii3.txt')
+errs_lhcii_mic = np.loadtxt('errs_iscat_lhcii-mic3.txt')
+errs_pb = np.loadtxt('errs_iscat_pb3.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 diffs = np.logspace(-19, 2, 18)

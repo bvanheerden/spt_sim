@@ -31,8 +31,8 @@ def fitfunc(D, B, nm):
     return np.sqrt(2 * D / B + (nm ** 2 * B))
 
 
-errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
-# errs_iscat = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
+# errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
+errs_iscat = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
 
 # untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
@@ -42,11 +42,11 @@ errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulati
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
 
-np.savetxt('errs_fluo_gfp1.txt', errs)
-# np.savetxt('errs_iscat_pb1.txt', errs_iscat)
+# np.savetxt('errs_fluo_gfp1.txt', errs)
+np.savetxt('errs_iscat_hiv3.txt', errs_iscat)
 
-plt.loglog(diffs, errs, '-o')
-# plt.loglog(diffs, errs_iscat, '-o')
+# plt.loglog(diffs, errs, '-o')
+plt.loglog(diffs, errs_iscat, '-o')
 # plt.loglog(diffs, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 plt.axvline(cutoff)
