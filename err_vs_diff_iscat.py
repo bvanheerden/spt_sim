@@ -43,7 +43,7 @@ cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
 
 # np.savetxt('errs_fluo_gfp1.txt', errs)
-np.savetxt('errs_iscat_hiv3.txt', errs_iscat)
+np.savetxt('errs_iscat_pb4.txt', errs_iscat)
 
 # plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')

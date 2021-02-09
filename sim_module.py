@@ -203,8 +203,8 @@ class TrackingSim:
                 # intfactor = 128  # GFP
 
                 # new values:
-                intfactor = 1.4e6  # HIV-QD
-                # intfactor = 33  # PB
+                # intfactor = 1.4e6  # HIV-QD
+                intfactor = 33  # PB
                 # intfactor = 48  # LHCII
                 # intfactor = 213  # LHCII-mic
                 # intfactor = 84  # GFP
@@ -225,8 +225,8 @@ class TrackingSim:
                 # bgval = (intfactor * 12 * dt) / 1.65e-6  # GFP
 
                 # new values:
-                bgval = (intfactor * 12 * dt) / 0.057  # HIV-QD
-                # bgval = (intfactor * 12 * dt) / 4.2e-4  # PB
+                # bgval = (intfactor * 12 * dt) / 0.057  # HIV-QD
+                bgval = (intfactor * 12 * dt) / 4.2e-4  # PB
                 # bgval = (intfactor * 12 * dt) / 1.02e-5  # LHCII
                 # bgval = (intfactor * 12 * dt) / 4.47e-5  # LHCII-mic
                 # bgval = (intfactor * 12 * dt) / 1.08e-6  # GFP
