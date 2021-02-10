@@ -60,7 +60,7 @@ crb1600 = crb_lambda_orbital(0, y, 900, nscat, 636, 1, nsigma)
 # crb800 = [crb_lambda_orbital_fluo(0, yval, 300, n_arr[i], 424, 1) for i, yval in enumerate(y)]
 
 
-fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.7)
+fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.4)
 ax1, ax2, ax3 = fig.subplots(3, 1, sharex=True)
 
 ax1.plot(xvals[25:], gauss1[25:], color='C0')
