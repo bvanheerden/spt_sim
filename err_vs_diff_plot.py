@@ -37,7 +37,7 @@ cutoff2 = (3.75 * 0.4) ** 2 * 3.125 * 0.01
 # cutoff1 = 0.03
 # cutoff2 = 0.2
 
-plt.figure(figsize=(4, 3), dpi=150)
+plt.figure(figsize=(5, 3), dpi=300)
 # fig = formatter.figure(width_ratio=0.8)
 plt.loglog(diffs*1000, errs, marker='.', label='Orbital', lw=1)
 plt.loglog(diffs*1000, errs_kt, marker='.', label="Knight's Tour", lw=1, color='C2')
@@ -54,8 +54,18 @@ plt.ylabel(r'Average error (\textmu m)')
 # plt.axhline(0.016)
 # plt.axhline(0.144)
 # plt.axhline(0.166)
+
+plt.axvline(30, color='black', alpha=0.3)
+plt.text(30, 1e5, 'GFP')
+plt.axvline(8.4e-3, color='black', alpha=0.3)
+plt.text(1e-3, 1e5, 'LHCII')
+plt.axvline(3.4, color='black', alpha=0.3)
+plt.text(3.4, 1e5, 'HIV')
+plt.axvline(3e-2, color='black', alpha=0.3)
+plt.text(3e-2, 1e5, 'PB')
+
 plt.legend()
 plt.tight_layout()
 # plt.savefig('out/err_diff_fluo.pdf')
-plt.savefig('out/poster/err_diff_fluo.pdf')
+plt.savefig('out/err_diff_fluo.png')
 plt.show()
