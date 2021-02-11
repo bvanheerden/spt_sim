@@ -86,6 +86,11 @@ nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
 nsigma_3 = np.sqrt(2 * nscat_3 / contrast_3)
 nsigma_4 = np.sqrt(2 * nscat_4 / contrast_4)
 
+lhcii_funcs = (lambda n: n * 48, lambda n: n / 48)
+pb_funcs = (lambda n: n * 33, lambda n: n / 33)
+gfp_funcs = (lambda n: n * 84, lambda n: n / 84)
+hiv_funcs = (lambda n: n * 1.4e6, lambda n: n / 1.4e6)
+
 crborb_1 = crb_lambda_orbital(0, 1, 566, n, 400, 1)
 crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscat_1, 400, 1, nsigma_1)
 crbknight_1 = crb_lambda_knight(0, 1, 566, n, 400, 1)
@@ -120,10 +125,10 @@ fit = 100 / np.sqrt(n)
 fig = formatter.figure(width_ratio=0.7, aspect_ratio=1.0)
 # spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=2)
-ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0])
-ax3 = fig.add_subplot(spec[1, 1])
-ax4 = fig.add_subplot(spec[0, 1])
+ax1 = fig.add_subplot(spec[0, 0], sharex=ax2, sharey=ax2)
+ax3 = fig.add_subplot(spec[1, 1], sharex=ax2, sharey=ax2)
+ax4 = fig.add_subplot(spec[0, 1], sharex=ax2, sharey=ax2)
 # ax5 = fig.add_subplot(spec[2, 1])
 
 ax1.set_yscale('log')
@@ -177,6 +182,16 @@ if adjusted:
     ax3.text(1e6, 10, '$I_s = 5000 I_f$', fontsize=16)
 
 # ax1.set_xlim((8e3, None))
+
+secax1 = ax1.secondary_xaxis('top', functions=lhcii_funcs)
+secax2 = ax2.secondary_xaxis('top', functions=pb_funcs)
+secax3 = ax3.secondary_xaxis('top', functions=hiv_funcs)
+secax4 = ax4.secondary_xaxis('top', functions=gfp_funcs)
+
+secax1.set_xlabel('Number of photons (iSCAT)')
+secax4.set_xlabel('Number of photons (iSCAT)')
+# ax1.spines['top'].set_color('red')
+# secax1.tick_params(axis='x', colors='red')
 
 # plt.subplots_adjust(right=0.6, left=0.12, top=0.95, hspace=0.3)
 plt.subplots_adjust(hspace=0.4, wspace=0.3)
