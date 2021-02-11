@@ -60,10 +60,10 @@ if adjusted:
     n2 = np.logspace(2.2, 9, num=20)
     n3 = np.logspace(2.5, 9, num=20)
 else:
-    n1 = np.logspace(3, 9, num=20)
-    n11 = np.logspace(1.9, 9, num=20)
-    n2 = np.logspace(2.2, 9, num=20)
-    n3 = np.logspace(4, 9, num=20)
+    n1 = np.logspace(3.7, 9, num=20)
+    n11 = np.logspace(2.5, 9, num=20)
+    n2 = np.logspace(2.4, 9, num=20)
+    n3 = np.logspace(4.1, 9, num=20)
 n4 = np.logspace(2.3, 9, num=20)
 n4 = np.logspace(0, 9, num=20)
 if adjusted:
@@ -72,12 +72,11 @@ if adjusted:
     nscat_2 = 45 * n2 * 1  # PB
     nscat_3 = 1.45 * n3 * 5000  # EGFP
 else:
-    nscat_1 = 260 * n1  # LHCII
-    nscat_11 = 1145 * n11  # LHCII-micelle
-    nscat_2 = 45 * n2  # PB
-    nscat_3 = 1.45 * n3  # EGFP
-    nscat_3 = 128 * n3  # EGFP
-nscat_4 = 1500000 * n4  # HIV-QD
+    nscat_1 = 48 * n1  # LHCII
+    nscat_11 = 213 * n11  # LHCII-micelle
+    nscat_2 = 33 * n2  # PB
+    nscat_3 = 84 * n3  # EGFP
+nscat_4 = 1400000 * n4  # HIV-QD
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_11 = np.sqrt(2 * nscat_11 / contrast_11)
 nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
@@ -182,7 +181,7 @@ if adjusted:
 plt.subplots_adjust(hspace=0.4)
 plt.tight_layout()
 if not adjusted:
-    plt.savefig('../out/poster/comp_numphotons.pdf')
+    plt.savefig('../out/poster/comp_numphotons.png')
 else:
     plt.savefig('../out/poster/comp_numphotons_adjusted.png')
 plt.show()
