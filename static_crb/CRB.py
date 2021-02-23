@@ -83,7 +83,7 @@ class PositionMethod:
             sum3 += prec * ydiff[i] ** 2
             sum4 += prec * ydiff[i] * xdiff[i]
         if self.iscat:
-            crb = (self.sigma_n / (self.N - self.sigma_n)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+            crb = sp.sqrt(self.sigma_n ** 2 / (self.N - self.sigma_n) ** 2) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
         else:
             crb = (1 / sp.sqrt(self.N)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
         return crb
@@ -112,8 +112,8 @@ class MinFlux(PositionMethod):
 
     def __init__(self, filename):
         super().__init__(filename)
-        # self.shape = self.doughnut(self.amp, self.r, self.fwhm)
-        self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
+        self.shape = self.doughnut(self.amp, self.r, self.fwhm)
+        # self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
 
@@ -128,10 +128,10 @@ class MinFlux(PositionMethod):
 
         self.param_vector()
 
-    def lambdify(self, crb):
-        crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n],
-                                 crb, ['numpy', 'sympy'])
-        return crb_lambda
+    # def lambdify(self, crb):
+    #     crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n],
+    #                              crb, ['numpy', 'sympy'])
+    #     return crb_lambda
 
 
 class Orbital(PositionMethod):
