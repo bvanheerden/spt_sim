@@ -1,11 +1,15 @@
+"""CRB of knight's tour method for different scanning lengths"""
 import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+latex = True
 
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+if latex:
+    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                     pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+    matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_knight_100 = 'pickles/crb_lambda_knight_0.1'
@@ -14,9 +18,10 @@ file_knight_500 = 'pickles/crb_lambda_knight_0.5'
 file_knight_700 = 'pickles/crb_lambda_knight_0.7'
 file_knight_900 = 'pickles/crb_lambda_knight_0.9'
 
-# knight = Knight(file_knight_900, 900)
-# print('knight')
-# knight.return_lambda()
+compute_crb = False
+
+if compute_crb:
+    knight = Knight(file_knight_900, 900)
 
 y = np.linspace(-500, 500, num=100)
 # x, y, L, N, w, amp
@@ -43,7 +48,6 @@ crb900 = crb_lambda_knight(0, y, 400, 100, 1200, 1)
 
 figure = formatter.figure(width_ratio=0.7)
 plt.yscale('log')
-# plt.plot(y, crb100, label='L=100')
 plt.plot(y, crb300, label='L=300nm')
 plt.plot(y, crb500, label='L=500nm')
 plt.plot(y, crb700, label='L=700nm')

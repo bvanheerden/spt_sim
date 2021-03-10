@@ -1,3 +1,4 @@
+"""Make a plot to demonstrate crb of the parameter and how it relates to position"""
 import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt

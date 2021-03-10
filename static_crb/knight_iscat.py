@@ -1,3 +1,4 @@
+"""CRB for knights tour with iSCAT localisation"""
 import matplotlib
 from static_crb.CRB import *
 

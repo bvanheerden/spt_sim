@@ -1,3 +1,4 @@
+"""Show iscat precision as a function of absorption and scattering cross section"""
 import matplotlib
 from static_crb.CRB import *
 from matplotlib import ticker
@@ -16,8 +17,8 @@ file_camera = 'pickles/crb_lambda_camera'
 # print('minflux')
 # orbital = Orbital(file_orbital)
 # print('orbital')
-# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
-# print('orbital_iscat')
+orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+print('orbital_iscat')
 # knight = Knight(file_knight, 300)
 # knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
 # print('knight')

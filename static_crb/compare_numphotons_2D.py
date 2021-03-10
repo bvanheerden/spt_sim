@@ -1,3 +1,4 @@
+"""2D plot of CRB as a function of absorption and scattering cross sections"""
 import matplotlib
 from static_crb.CRB import *
 from matplotlib import ticker

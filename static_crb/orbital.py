@@ -1,19 +1,26 @@
+"CRB of orbital method for different scanning lengths using fluorescence"
 import matplotlib
 from static_crb.CRB import *
 from scipy.stats import norm
 from scipy.signal import convolve
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+latex = True
 
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+if latex:
+    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                     pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+    matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
 
-# orbital = Orbital(file_orbital)
-# print('orbital')
+compute_crb = False
+
+if compute_crb:
+    orbital = Orbital(file_orbital)
+    print('orbital')
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
@@ -30,10 +37,6 @@ crb200 = crb_lambda_orbital(0, y, 500, 100, 353, 1)
 crb800 = crb_lambda_orbital(0, y, 700, 100, 494, 1)
 crb1600 = crb_lambda_orbital(0, y, 900, 100, 636, 1)
 
-# crb200 = crb_lambda_orbital(0, y, 500, 50, 353, 1)
-# crb800 = crb_lambda_orbital(0, y, 700, 150, 494, 1)
-# crb1600 = crb_lambda_orbital(0, y, 900, 100, 636, 1)
-
 plt.plot(y, crb100, label='L=300nm')
 plt.plot(y, crb200, label='L=500nm')
 # plt.plot(y, crb400, label='L=564')
@@ -45,22 +48,5 @@ plt.ylabel('CRB (nm)')
 plt.tight_layout()
 plt.savefig('../out/orbital_crb.pdf')
 plt.show()
-
-N = np.linspace(95, 105)
-dist = norm(loc=100, scale=0.5)
-
-crb = crb_lambda_orbital(0, y[:, None], 300, N, 212, 1)
-
-# plt.figure()
-# # plt.plot(N, dist.pdf(N))
-# convd = np.zeros((100, 50))
-#
-# for i, row in enumerate(crb):
-#     convd[i] = convolve(dist.pdf(N), row, mode='same')
-#
-# plt.plot(convd[20, :])
-# plt.plot(crb[20, :])
-# plt.plot(dist.pdf(N))
-# plt.show()
 
 

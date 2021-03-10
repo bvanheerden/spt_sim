@@ -1,3 +1,4 @@
+"""Main library for computing CRBs"""
 import numpy as np
 from matplotlib import pyplot as plt
 import sympy as sp

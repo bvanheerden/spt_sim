@@ -1,11 +1,15 @@
+"""Compare iSCAT and fluorescence for different samples as afunction of number of photons"""
 import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+latex = False
 
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+if latex:
+    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                     pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+    matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -15,20 +19,16 @@ file_knight = 'pickles/crb_lambda_knight'
 file_knight_iscat = 'pickles/crb_lambda_knight_iscat'
 file_camera = 'pickles/crb_lambda_camera'
 
-# minflux = MinFlux(file_minflux)
-# print('minflux')
-# orbital = Orbital(file_orbital)
-# print('orbital')
-# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
-# print('orbital_iscat')
-# knight = Knight(file_knight, 300)
-# knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
-# print('knight')
-# camera = Camera(file_camera)
-# print('camera')
+compute_crb = False
 
-# fileobject_minflux = open(file_minflux, 'rb')
-# crb_lambda_minflux = dill.load(fileobject_minflux)
+if compute_crb:
+    orbital = Orbital(file_orbital)
+    print('orbital')
+    orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+    print('orbital_iscat')
+    knight = Knight(file_knight, 300)
+    knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
+    print('knight')
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
@@ -41,9 +41,6 @@ crb_lambda_knight = dill.load(fileobject_knight)
 
 fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
-
-# fileobject_camera = open(file_camera, 'rb')
-# crb_lambda_camera = dill.load(fileobject_camera)
 
 contrast_1 = 1.02e-5  # LHCII
 contrast_11 = 4.47e-5  # LHCII-micelle
@@ -111,11 +108,10 @@ crbknight_iscat_4 = crb_lambda_knight_iscat(0, 1, 566, nscat_4, 400, 1, nsigma_4
 
 fit = 100 / np.sqrt(n)
 
-# plt.figure(figsize=[7.0, 5.5])
-
-# fig, (ax1, ax2, ax3, ax4, ax5) = plt.subplots(5, 1, sharex='col', figsize=(7, 18))
-# fig = plt.figure(figsize=(9, 9))
-fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
+if latex:
+    fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
+else:
+    fig = plt.figure(figsize=[7, 5])
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0])
@@ -150,11 +146,7 @@ ax5.loglog(n4, crborb_iscat_4)#, label='Orbital (iScat)')
 ax5.loglog(n, crbknight_4)#, label='Knight (Fluorescence)')
 ax5.loglog(n4, crbknight_iscat_4)#, label='Knight (iSCAT)')
 
-# plt.loglog(n, fit, '--')
-# plt.loglog(n, crborb_iscat2, label='Orbital (iScat)')
-# plt.axvline(670000)
-# plt.axhline(0.5)
-# plt.ylim(None, 100)
+plt.ylim(None, 100)
 fig.legend(bbox_to_anchor=(0.9, 0.85), loc='upper right')
 ax1.set_ylabel('CRB (nm)')
 ax2.set_ylabel('CRB (nm)')
@@ -172,9 +164,6 @@ if adjusted:
     # ax2.text(1e6, 10, '$I_s = 10 I_f$', fontsize=16)
     ax3.text(1e6, 10, '$I_s = 5000 I_f$', fontsize=16)
 
-# ax1.set_xlim((8e3, None))
-
-# plt.subplots_adjust(right=0.6, left=0.12, top=0.95, hspace=0.3)
 plt.subplots_adjust(hspace=0.4)
 # plt.tight_layout()
 if not adjusted:

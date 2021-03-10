@@ -1,3 +1,4 @@
+"""Compare different methods of localisation in 1D as a function of number of photons"""
 import matplotlib
 from static_crb.CRB import *
 

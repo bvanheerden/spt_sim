@@ -1,3 +1,4 @@
+"""compare iscat and fluorescence CRB as a function of position"""
 import matplotlib
 from static_crb.CRB import *
 
@@ -9,14 +10,17 @@ file_knight = 'pickles/crb_lambda_knight'
 file_orbital_iscat = 'pickles/crb_lambda_orbital_iscat'
 file_knight_iscat = 'pickles/crb_lambda_knight_iscat'
 
-# orbital = Orbital(file_orbital)
-# print('orbital')
-# knight = Knight(file_knight, 300)
-# print('knight')
-# orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
-# print('orbital')
-# knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
-# print('knight')
+compute_crb = False
+
+if compute_crb:
+    orbital = Orbital(file_orbital)
+    print('orbital')
+    knight = Knight(file_knight, 300)
+    print('knight')
+    orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
+    print('orbital')
+    knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
+    print('knight')
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
