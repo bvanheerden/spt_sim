@@ -84,7 +84,8 @@ class PositionMethod:
             sum3 += prec * ydiff[i] ** 2
             sum4 += prec * ydiff[i] * xdiff[i]
         if self.iscat:
-            crb = sp.sqrt(self.sigma_n ** 2 / (self.N - self.sigma_n) ** 2) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+            crb = sp.sqrt(self.sigma_n ** 2 / (self.N ** 2 - self.sigma_n ** 2)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
+            # crb = sp.sqrt(self.sigma_n ** 2 / (self.N - self.sigma_n) ** 2) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
         else:
             crb = (1 / sp.sqrt(self.N)) * sp.sqrt(sum1 / (2 * sum2 * sum3 - sum4 ** 2))
         return crb

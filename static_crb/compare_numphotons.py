@@ -22,11 +22,11 @@ file_camera = 'pickles/crb_lambda_camera'
 compute_crb = False
 
 if compute_crb:
-    orbital = Orbital(file_orbital)
-    print('orbital')
+    # orbital = Orbital(file_orbital)
+    # print('orbital')
     orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
     print('orbital_iscat')
-    knight = Knight(file_knight, 300)
+    # knight = Knight(file_knight, 300)
     knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
     print('knight')
 
@@ -75,6 +75,7 @@ else:
     nscat_3 = 1.45 * n3  # EGFP
     nscat_3 = 128 * n3  # EGFP
 nscat_4 = 1500000 * n4  # HIV-QD
+nscat_hiv = (1500000 * contrast_4 / 4) * n
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_11 = np.sqrt(2 * nscat_11 / contrast_11)
 nsigma_2 = np.sqrt(2 * nscat_2 / contrast_2)
@@ -101,7 +102,7 @@ crborb_iscat_3 = crb_lambda_orbital_iscat(0, 1, 566, nscat_3, 400, 1, nsigma_3)
 crbknight_3 = crb_lambda_knight(0, 1, 566, n, 400, 1)
 crbknight_iscat_3 = crb_lambda_knight_iscat(0, 1, 566, nscat_3, 400, 1, nsigma_3)
 
-crborb_4 = crb_lambda_orbital(0, 1, 566, n, 400, 1)
+crborb_4 = crb_lambda_orbital(0, 1, 566, nscat_hiv, 400, 1)
 crborb_iscat_4 = crb_lambda_orbital_iscat(0, 1, 566, nscat_4, 400, 1, nsigma_4)
 crbknight_4 = crb_lambda_knight(0, 1, 566, n, 400, 1)
 crbknight_iscat_4 = crb_lambda_knight_iscat(0, 1, 566, nscat_4, 400, 1, nsigma_4)
@@ -142,7 +143,7 @@ ax4.loglog(n, crbknight_3)#, label='Knight (Fluorescence)')
 ax4.loglog(n3, crbknight_iscat_3)#, label='Knight (iSCAT)')
 
 ax5.loglog(n, crborb_4)#, label='Orbital (Fluorescence)')
-ax5.loglog(n4, crborb_iscat_4)#, label='Orbital (iScat)')
+ax5.loglog(n4, 10.0*crborb_iscat_4)#, label='Orbital (iScat)')
 ax5.loglog(n, crbknight_4)#, label='Knight (Fluorescence)')
 ax5.loglog(n4, crbknight_iscat_4)#, label='Knight (iSCAT)')
 
