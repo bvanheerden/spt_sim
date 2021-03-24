@@ -18,7 +18,7 @@ file_knight_500 = 'pickles/crb_lambda_knight_0.5'
 file_knight_700 = 'pickles/crb_lambda_knight_0.7'
 file_knight_900 = 'pickles/crb_lambda_knight_0.9'
 
-compute_crb = False
+compute_crb = True
 
 if compute_crb:
     knight = Knight(file_knight_900, 900)
