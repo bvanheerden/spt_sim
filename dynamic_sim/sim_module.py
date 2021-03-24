@@ -329,4 +329,5 @@ class TrackingSim:
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
-        return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
+        # return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
+        return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals

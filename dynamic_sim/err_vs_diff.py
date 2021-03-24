@@ -20,8 +20,8 @@ simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, am
 simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
                             feedback=ffreq, debug=False, rin=10)
 
-diffs = np.logspace(-14, 5, 18)
-diffs = np.logspace(-10, 1, 18)
+# diffs = np.logspace(-14, 5, 16)
+diffs = np.logspace(-10, 1, 16)
 # diffs = np.logspace(-12, 6, 18)
 # diffs = np.logspace(-3, 5, 18)
 # diffs = [1e-10]
@@ -29,9 +29,9 @@ diffs = np.logspace(-10, 1, 18)
 
 def parr_func(i, D, method):
     errsum = 0
-    for j in range(5):
-        print('diff # ', i, 'of 18')
-        print('run # ', j, 'of 5')
+    for j in range(1):
+        print('diff # ', i, 'of 8')
+        print('run # ', j, 'of 1')
         if method == 'orb':
             err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(D)
         elif method == 'mf':
@@ -40,20 +40,20 @@ def parr_func(i, D, method):
             err, measx, truex, measy, truey, intvals = simulation_kt.main_tracking(D)
         errsum += err
         print('average int: ', np.mean(intvals))
-    return errsum / 5
+    return errsum / 1
 
 
 def fitfunc(D, B, nm):
     return np.sqrt(2 * D / B + (nm ** 2 * B))
 
 
-errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb') for i, D in enumerate(diffs))
-errs_mf = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
-errs_kt = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
+errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb') for i, D in enumerate(diffs))
+errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
+errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs7.txt', errs)
-np.savetxt('errs_mf7.txt', errs_mf)
-np.savetxt('errs_kt7.txt', errs_kt)
+np.savetxt('errs1.txt', errs)
+np.savetxt('errs_mf1.txt', errs_mf)
+np.savetxt('errs_kt1.txt', errs_kt)
 
 untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
