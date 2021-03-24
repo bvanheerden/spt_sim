@@ -5,10 +5,10 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-latex = False
+latex = True
 
 if latex:
-    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+    formatter = rsmf.CustomFormatter(columnwidth=345 * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
