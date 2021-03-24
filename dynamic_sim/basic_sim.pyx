@@ -29,22 +29,17 @@ def fx(xfull, t, u):
 
 
 class ParticleTrajectory2D(object):
-    def __init__(self, x0, y0, D, noise=[0.0, 0.0]):
+    def __init__(self, x0, y0, D):
         self.x = x0
         self.y = y0
         self.t = 0
-        self.noise = noise
         self.D = D
         self.randomise = RandomState()
 
     def step(self, dt, u):
         # print(randn())
-        if True:
-            self.x = rk4(self.x, self.t, dt, fx, u[0]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
-            self.y = rk4(self.y, self.t, dt, fx, u[1]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
-        else:
-            self.x = rk4(self.x, self.t, dt, fx, u[0]) + np.array([[0, 0, 0, 0]]).T
-            self.y = rk4(self.y, self.t, dt, fx, u[1]) + np.array([[0, 0, 0, 0]]).T
+        self.x = rk4(self.x, self.t, dt, fx, u[0]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
+        self.y = rk4(self.y, self.t, dt, fx, u[1]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
         self.t += dt
         return self.x, self.y
 

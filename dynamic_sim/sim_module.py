@@ -3,20 +3,33 @@ import numpy as np
 from numpy.random import randn
 import warnings
 from filterpy.kalman import KalmanFilter
-
 from basic_sim import *
 
 
-def scat_intensity(x, y, x0, y0, amp, waist):
-    r = np.linalg.norm([x - x0, y - y0])
-    retint = amp * np.exp(-4 * np.log(2) * ((r / waist) ** 2))
-    return retint
-
-
 class TrackingSim:
+    """Main class of the module.
+
+    After creating an instance, run main_tracking to simulate a trajectory.
+
+    Arguments:
+
+        numpoints -- number of simulation timesteps.
+        method -- scanning method to use.
+        freq -- scanning frequency in kHz.
+        amp -- excitation intensity amplitude (a.u.)
+        waist -- gaussian beam waist in um
+        L -- tracking length in um
+        tracking -- whether to apply feedback or not.
+        feedback -- feedback frequency in kHz.
+        stage -- whether to simulate stage dynamics or not.
+        rin -- R value for Kalman filter.
+        debug -- whether to print debug output.
+        intfactor -- iSCAT vs fluorescence photon count factor.
+        contrast -- average iSCAT contrast.
+        """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None, contrast=None):
 
         self.numpoints = numpoints
         self.method = method
@@ -39,7 +52,18 @@ class TrackingSim:
 
         self.debug = debug
 
+        self.intfactor = intfactor
+        self.contrast = contrast
+
     def particle_kf(self, x, dt, r=0.0, q=0.1):
+        """Initialise Kalman filter using filterpy.
+
+        Arguments:
+            x -- initial state vector.
+            dt -- timestep.
+            r -- represents measurement noise.
+            q -- represents process noise (brownian motion).
+            """
         kf = KalmanFilter(dim_x=4, dim_z=1, dim_u=1)
 
         kf.F = np.array([[1., 0., 0., 0.],
@@ -60,11 +84,56 @@ class TrackingSim:
         kf.x = x
         return kf
 
+    def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_positions, kt_steps, measx, measy,
+                  mf_positions, mf_steps, omega, tvals, x0, y0):
+        """Return estimated position using some scanning method"""
+
+        integral = np.sum(intvals[i - cycle_steps:i])
+        integralvals[i] = integral
+
+        if self.method == 'orbital':
+            integral_sin = np.sum(intvals[i - cycle_steps:i] * np.sin(omega * tvals[i - cycle_steps:i]))
+            integral_cos = np.sum(intvals[i - cycle_steps:i] * np.cos(omega * tvals[i - cycle_steps:i]))
+            measx = int_fact * (integral_cos / integral)
+            measy = int_fact * (integral_sin / integral)
+
+        elif self.method == 'knight':
+            if i != 0:
+                kt_intensities = intvals[i - cycle_steps:i].reshape((40, kt_steps)).sum(axis=1)
+                kt_intensities = kt_intensities / np.sum(kt_intensities)
+                weighted_positions = \
+                    [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(kt_positions)]
+                sumpos = tuple(np.sum(weighted_positions, axis=0))
+                measx, measy = sumpos
+            else:
+                measx, measy = 0, 0
+
+        elif self.method == 'minflux':
+            pos3_int = np.sum(intvals[i - mf_steps:i]) / integral
+            pos2_int = np.sum(intvals[i - 2 * mf_steps:i - mf_steps]) / integral
+            pos1_int = np.sum(intvals[i - 3 * mf_steps:i - 2 * mf_steps]) / integral
+            pos0_int = np.sum(intvals[i - 4 * mf_steps:i - 3 * mf_steps]) / integral
+
+            x0, y0 = mf_positions[0]
+            x1, y1 = mf_positions[1]
+            x2, y2 = mf_positions[2]
+            x3, y3 = mf_positions[3]
+
+            measx = np.dot([pos1_int, pos2_int, pos3_int], [x1, x2, x3])
+            measy = np.dot([pos1_int, pos2_int, pos3_int], [y1, y2, y3])
+
+            measx = measx * (-1) / (1 - ((self.L ** 2 * np.log(2)) / self.fwhm ** 2))
+            measy = measy * (-1) / (1 - ((self.L ** 2 * np.log(2)) / self.fwhm ** 2))
+
+            measx = measx * (1.27 + 3.8 * pos0_int)
+            measy = measy * (1.27 + 3.8 * pos0_int)
+        return measx, measy, x0, y0
+
     def main_tracking(self, D):
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
-        x = np.array([[0, 0, 0, 0]]).T
+        x = np.array([[0, 0, 0, 0]]).T  # initial position and speed
         y = np.array([[0, 0, 0, 0]]).T
-        trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D, noise=[0.0, 0.0])
+        trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)
 
         dt = 0.001  # timestep in ms
 
@@ -196,105 +265,27 @@ class TrackingSim:
                 int_iter = mf_intensity(xp, yp, xs + x0, ys + y0, fwhm, self.amp)
 
             if self.iscat:
-                # intfactor = 1.5e6  # HIV-QD
-                # intfactor = 45  # PB
-                # intfactor = 260  # LHCII
-                # intfactor = 1146  # LHCII-mic
-                # intfactor = 128  # GFP
 
-                # new values:
-                # intfactor = 1.4e6  # HIV-QD
-                intfactor = 33  # PB
-                # intfactor = 48  # LHCII
-                # intfactor = 213  # LHCII-mic
-                # intfactor = 84  # GFP
-
-                int_ms = intfactor * 20 * int_iter * dt
-                # int_ms = 800 * int_iter
-                # int_ms = 1060 * int_iter
-                # int_ms = 10 * int_iter
-                # int_s = np.int(int_ms * 1000)
-                # int_ms = np.random.poisson(int_s) / 1000
+                int_ms = self.intfactor * 2 * 10 * int_iter * dt
 
                 int_ms = np.random.poisson(int_ms)
 
-                # bgval = (intfactor * 12 * dt) / 0.057  # HIV-QD
-                # bgval = (intfactor * 12 * dt) / 4.2e-4  # PB
-                # bgval = (intfactor * 12 * dt) / 1.02e-5  # LHCII
-                # bgval = (intfactor * 12 * dt) / 4.47e-5  # LHCII-mic
-                # bgval = (intfactor * 12 * dt) / 1.65e-6  # GFP
-
-                # new values:
-                # bgval = (intfactor * 12 * dt) / 0.057  # HIV-QD
-                bgval = (intfactor * 12 * dt) / 4.2e-4  # PB
-                # bgval = (intfactor * 12 * dt) / 1.02e-5  # LHCII
-                # bgval = (intfactor * 12 * dt) / 4.47e-5  # LHCII-mic
-                # bgval = (intfactor * 12 * dt) / 1.08e-6  # GFP
+                bgval = (self.intfactor * 10 * dt) / self.contrast
 
                 bg_ms = np.random.poisson(bgval*1000) / 1000
                 bg_meas = np.random.poisson(bgval*1000) / 1000
-                # bg_meas = np.random.poisson(235e9) / 1000
                 contrast = (int_ms + bg_ms - bg_meas) / bg_meas
                 intvals[i] = contrast
             else:
-                # int_ms = 50 * int_iter + 0  # SBR = 50
-                int_ms = 10 * int_iter + 0  # SBR = 50
-                ##### big change here 11/04!!! going to try fixing it to use actual counts per iteration!
-                # int_ms = np.random.poisson(int_ms)
-                # intvals[i] = int_ms
+                int_ms = 10 * int_iter + 0  # SBR = 10
                 int_correct_iter = int_ms * dt
                 int_correct_iter = np.random.poisson(int_correct_iter)
                 intvals[i] = int_correct_iter
 
-            #     int_ms = 1 * int_iter
-            #     int_ms = np.random.poisson(int_ms)
-            #     bg_ms = np.random.poisson(40)  # contrast 3% with average count rate 6 Mcps
-            #     contrast = int_ms / bg_ms
-            #     intvals[i] = contrast
-            # else:
-            #     int_ms = 50 * int_iter + 0  # SBR = 50
-            #     int_ms = np.random.poisson(int_ms)
-            #     intvals[i] = int_ms
-
             if i % cycle_steps == 0:
-                integral = np.sum(intvals[i - cycle_steps:i])
-                integralvals[i] = integral
-                if self.method == 'orbital':
-                    integral_sin = np.sum(intvals[i-cycle_steps:i] * np.sin(omega * tvals[i-cycle_steps:i]))
-                    integral_cos = np.sum(intvals[i-cycle_steps:i] * np.cos(omega * tvals[i-cycle_steps:i]))
-                    measx = int_fact * (integral_cos / integral)
-                    measy = int_fact * (integral_sin / integral)
-
-                elif self.method == 'knight':
-                    if i != 0:
-                        kt_intensities = intvals[i-cycle_steps:i].reshape((40, kt_steps)).sum(axis=1)
-                        kt_intensities = kt_intensities / np.sum(kt_intensities)
-                        weighted_positions = \
-                            [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(kt_positions)]
-                        sumpos = tuple(np.sum(weighted_positions, axis=0))
-                        measx, measy = sumpos
-                    else:
-                        measx, measy = 0, 0
-
-                elif self.method == 'minflux':
-                    pos3_int = np.sum(intvals[i-mf_steps:i]) / integral
-                    pos2_int = np.sum(intvals[i-2*mf_steps:i-mf_steps]) / integral
-                    pos1_int = np.sum(intvals[i-3*mf_steps:i-2*mf_steps]) / integral
-                    pos0_int = np.sum(intvals[i-4*mf_steps:i-3*mf_steps]) / integral
-
-                    x0, y0 = mf_positions[0]
-                    x1, y1 = mf_positions[1]
-                    x2, y2 = mf_positions[2]
-                    x3, y3 = mf_positions[3]
-
-                    measx = np.dot([pos1_int, pos2_int, pos3_int], [x1, x2, x3])
-                    measy = np.dot([pos1_int, pos2_int, pos3_int], [y1, y2, y3])
-
-                    measx = measx * (-1)/(1 - ((L ** 2 * np.log(2)) / fwhm ** 2))
-                    measy = measy * (-1)/(1 - ((L ** 2 * np.log(2)) / fwhm ** 2))
-
-                    measx = measx * (1.27 + 3.8 * pos0_int)
-                    measy = measy * (1.27 + 3.8 * pos0_int)
+                measx, measy, x0, y0 = self.meas_func(cycle_steps, i, int_fact, integralvals, intvals,
+                                                      kt_positions, kt_steps, measx, measy, mf_positions, mf_steps,
+                                                      omega, tvals, x0, y0)
 
             if np.isnan(measx):
                 measx = prev_measx
@@ -331,3 +322,4 @@ class TrackingSim:
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
         # return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
         return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals
+
