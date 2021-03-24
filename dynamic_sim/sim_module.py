@@ -55,6 +55,15 @@ class TrackingSim:
         self.intfactor = intfactor
         self.contrast = contrast
 
+        kt_positions = [(0, 5), (2, 6), (4, 5), (5, 3), (4, 1), (2, 0), (0, 1), (2, 2), (0, 3), (1, 5),
+                        (3, 4), (5, 5), (6, 3), (5, 1), (3, 0), (1, 1), (3, 2), (1, 3), (2, 5), (4, 4),
+                        (5, 2), (4, 0), (2, 1), (0, 0), (-1, 2), (0, 4), (2, 3), (3, 5), (5, 4), (4, 2),
+                        (5, 0), (3, -1), (1, 0), (0, 2), (1, 4), (3, 3), (1, 2), (3, 1), (4, 3), (2, 4)]
+
+        kt_positions = [np.subtract(pos, (2.5, 2.5)) for pos in kt_positions]
+        kt_positions = [np.multiply(pos, 0.3) for pos in kt_positions]
+        self.kt_positions = [tuple(pos) for pos in kt_positions]
+
     def particle_kf(self, x, dt, r=0.0, q=0.1):
         """Initialise Kalman filter using filterpy.
 
@@ -84,7 +93,7 @@ class TrackingSim:
         kf.x = x
         return kf
 
-    def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_positions, kt_steps, measx, measy,
+    def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_steps, measx, measy,
                   mf_positions, mf_steps, omega, tvals, x0, y0):
         """Return estimated position using some scanning method"""
 
@@ -102,7 +111,7 @@ class TrackingSim:
                 kt_intensities = intvals[i - cycle_steps:i].reshape((40, kt_steps)).sum(axis=1)
                 kt_intensities = kt_intensities / np.sum(kt_intensities)
                 weighted_positions = \
-                    [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(kt_positions)]
+                    [tuple(np.multiply(pos, kt_intensities[i])) for i, pos in enumerate(self.kt_positions)]
                 sumpos = tuple(np.sum(weighted_positions, axis=0))
                 measx, measy = sumpos
             else:
@@ -133,14 +142,15 @@ class TrackingSim:
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
         x = np.array([[0, 0, 0, 0]]).T  # initial position and speed
         y = np.array([[0, 0, 0, 0]]).T
-        trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)
+        trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)  # Initialise trajectory object from Cython library
 
         dt = 0.001  # timestep in ms
+        cycle_steps = np.int(1 / (self.freq * dt))  # Number of time steps per feedback cycle
+        if self.debug:
+            print('cycle_steps:', cycle_steps)
 
-        theta = 0
+        # Initialise loop variables
         t = 0
-        freq = self.freq  # cycles / ms
-
         tvals = np.zeros(self.numpoints)
         measx_vals = np.zeros(self.numpoints)
         truex_vals = np.zeros(self.numpoints)
@@ -156,32 +166,19 @@ class TrackingSim:
         integralvals = np.zeros(self.numpoints)
 
         # Orbital Method
-        cycle_steps = np.int(1 / (freq * dt))
-        if self.debug:
-            print('cycle_steps:', cycle_steps)
-        omega = 2 * np.pi * freq
-        r = self.waist / np.sqrt(2)
-        # print('r:', r)
-        int_fact = self.waist ** 2 / (2 * r)
+        theta = 0
+        omega = 2 * np.pi * self.freq
+        r = self.waist / np.sqrt(2)  # Rotation radius
+        int_fact = self.waist ** 2 / (2 * r)  # Factor used to compute position estimate
         
         # Knight's Tour
-        kt_positions = [(0, 5), (2, 6), (4, 5), (5, 3), (4, 1), (2, 0), (0, 1), (2, 2), (0, 3), (1, 5),
-                        (3, 4), (5, 5), (6, 3), (5, 1), (3, 0), (1, 1), (3, 2), (1, 3), (2, 5), (4, 4),
-                        (5, 2), (4, 0), (2, 1), (0, 0), (-1, 2), (0, 4), (2, 3), (3, 5), (5, 4), (4, 2),
-                        (5, 0), (3, -1), (1, 0), (0, 2), (1, 4), (3, 3), (1, 2), (3, 1), (4, 3), (2, 4)]
-
-        kt_positions = [np.subtract(pos, (2.5, 2.5)) for pos in kt_positions]
-        kt_positions = [np.multiply(pos, 0.3) for pos in kt_positions]
-        kt_positions = [tuple(pos) for pos in kt_positions]
-        kt_steps = np.int(cycle_steps / 40)
+        kt_steps = np.int(cycle_steps / np.len(self.kt_positions))  # Number of time steps per KT scan point
         if self.debug:
             print('kt_steps:', kt_steps)
-        posnum = 0
+        posnum = 0  # Initialise current scan point
 
         # Minflux
-        L = self.L
-        fwhm = self.fwhm
-        mf_positions = [(0, 0), (-0.25 * L, 0.43301 * L), (-0.25 * L, -0.43301 * L), (0.5 * L, 0)]
+        mf_positions = [(0, 0), (-0.25 * self.L, 0.43301 * self.L), (-0.25 * self.L, -0.43301 * self.L), (0.5 * self.L, 0)]
         mf_steps = np.int(cycle_steps / 4)
         if self.debug:
             print('mf_steps:', mf_steps)
@@ -248,7 +245,7 @@ class TrackingSim:
 
             elif self.method == 'knight':
                 if i % kt_steps == 0:
-                    x0, y0 = kt_positions[posnum]
+                    x0, y0 = self.kt_positions[posnum]
                     if posnum == 39:
                         posnum = 0
                     else:
@@ -284,7 +281,7 @@ class TrackingSim:
 
             if i % cycle_steps == 0:
                 measx, measy, x0, y0 = self.meas_func(cycle_steps, i, int_fact, integralvals, intvals,
-                                                      kt_positions, kt_steps, measx, measy, mf_positions, mf_steps,
+                                                      kt_steps, measx, measy, mf_positions, mf_steps,
                                                       omega, tvals, x0, y0)
 
             if np.isnan(measx):
