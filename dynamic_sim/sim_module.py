@@ -1,5 +1,6 @@
 # Main simulation module. Instance of TrackingSim is created after which main_tracking can be called multiple times.
 import numpy as np
+import scipy
 from numpy.random import randn
 import warnings
 from filterpy.kalman import KalmanFilter
@@ -93,6 +94,31 @@ class TrackingSim:
         #     kf.x = np.array([[x, vx, y, vy]]).T
         kf.x = x
         return kf
+
+    def get_lqr(self, r, dt, q1, q2, q3):
+
+        F = np.array([[1 - 2 * dt, dt, 0.],
+                      [-dt, 1., 0.],
+                      [-dt, 0., 1.]])
+        # F = np.array([[1 - 2 * dt, dt],
+        #               [-1., 0.]])
+
+        B = np.array([[2 * dt, dt, 0]]).T
+        R = r
+        # Q = np.array([[1, -1, 0, 0],
+        #               [-1, 1, 0, 0],
+        #               [0, 0, 1, 0],
+        #               [0, 0, 0, 1]])
+        Q = np.array([[q1, 0, 0],
+                      [0, q2, 0],
+                      [0, 0, q2]])
+
+        # solve DARE
+        X = np.ndarray(scipy.linalg.solve_discrete_are(F, B, Q, R))
+
+        # compute the LQR gain
+        K = np.ndarray(scipy.linalg.inv(B.T * X * B + R) * (B.T * X * F))
+        return K
 
     def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_steps, measx, measy,
                   mf_steps, omega, tvals, x0, y0):
