@@ -6,7 +6,7 @@ import joblib
 from sim_module import TrackingSim
 
 numpoints = 100000
-numpoints = 500000
+# numpoints = 500000
 
 freq = 12.5
 # freq = 3.125
@@ -14,11 +14,11 @@ ffreq = 3.125
 # ffreq = 12.5
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=10)
+                             feedback=ffreq, iscat=False, debug=False, rin=0.1)
 simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
-                             feedback=ffreq, debug=False, rin=10, fwhm=0.36)
+                             feedback=ffreq, debug=False, rin=0.1, fwhm=0.36)
 simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
-                            feedback=ffreq, debug=False, rin=10)
+                            feedback=ffreq, debug=False, rin=0.1)
 
 # diffs = np.logspace(-14, 5, 16)
 diffs = np.logspace(-10, 1, 16)
@@ -29,7 +29,7 @@ diffs = np.logspace(-10, 1, 16)
 
 def parr_func(i, D, method):
     errsum = 0
-    for j in range(1):
+    for j in range(5):
         print('diff # ', i, 'of 8')
         print('run # ', j, 'of 1')
         if method == 'orb':
@@ -40,7 +40,7 @@ def parr_func(i, D, method):
             err, measx, truex, measy, truey, intvals = simulation_kt.main_tracking(D)
         errsum += err
         print('average int: ', np.mean(intvals))
-    return errsum / 1
+    return errsum / 5
 
 
 def fitfunc(D, B, nm):
