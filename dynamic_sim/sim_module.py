@@ -95,29 +95,32 @@ class TrackingSim:
         kf.x = x
         return kf
 
-    def get_lqr(self, r, dt, q1, q2, q3):
+    def get_lqr(self, r, dt):
 
-        F = np.array([[1 - 2 * dt, dt, 0.],
-                      [-dt, 1., 0.],
-                      [-dt, 0., 1.]])
+        F = np.array([[0, 0, 0, 0],
+                      [0, 1 - 2 * dt, dt, 0],
+                      [0, -dt, 1, 0],
+                      [dt, -dt, 0, 1]])
         # F = np.array([[1 - 2 * dt, dt],
         #               [-1., 0.]])
 
-        B = np.array([[2 * dt, dt, 0]]).T
+        B = np.array([[0, 2 * dt, dt, 0]]).T
         R = r
-        # Q = np.array([[1, -1, 0, 0],
-        #               [-1, 1, 0, 0],
-        #               [0, 0, 1, 0],
-        #               [0, 0, 0, 1]])
-        Q = np.array([[q1, 0, 0],
-                      [0, q2, 0],
-                      [0, 0, q2]])
+        Q = np.array([[1, -1, 0, 0],
+                      [-1, 1, 0, 0],
+                      [0, 0, 0, 0],
+                      [0, 0, 0, 1]])
+        # Q = np.array([[q1, 0, 0],
+        #               [0, q2, 0],
+        #               [0, 0, q2]])
 
+        print(F.dtype)
         # solve DARE
-        X = np.ndarray(scipy.linalg.solve_discrete_are(F, B, Q, R))
+        X = scipy.linalg.solve_discrete_are(F, B, Q, R)
 
         # compute the LQR gain
-        K = np.ndarray(scipy.linalg.inv(B.T * X * B + R) * (B.T * X * F))
+        K = scipy.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ F)
+        # K = K[1:]  # remove first column since we don't control the particle
         return K
 
     def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_steps, measx, measy,
@@ -167,7 +170,7 @@ class TrackingSim:
 
     def main_tracking(self, D):
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
-        x = np.array([[0, 0, 0, 0]]).T  # initial position and speed
+        x = np.array([[0, 0, 0, 0]]).T  # initial state
         y = np.array([[0, 0, 0, 0]]).T
         trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)  # Initialise trajectory object from Cython library
 
@@ -216,6 +219,11 @@ class TrackingSim:
         kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D))
         kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D))
 
+        lqr = self.get_lqr(10, dt)
+        lqr[0, 0] = 0
+        # lqr[0, 3] = 0
+        print(lqr)
+
         # Initialise loop variables
         measx = 0
         measy = 0
@@ -248,8 +256,8 @@ class TrackingSim:
                 if i % feedback_steps == 0:
                     if self.stage:
                         if self.kalman:
-                            ux = kfx.x[0, 0]
-                            uy = kfy.x[0, 0]
+                            ux = -lqr @ kfx.x
+                            uy = -lqr @ kfy.x
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
@@ -332,6 +340,6 @@ class TrackingSim:
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
-        return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
-        # return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals
+        # return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
+        return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals
 
