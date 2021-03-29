@@ -30,7 +30,7 @@ class TrackingSim:
         """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None, contrast=None):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=10, debug=True, intfactor=None, contrast=None):
 
         self.numpoints = numpoints
         self.method = method
@@ -50,6 +50,8 @@ class TrackingSim:
         self.kalman = kalman
 
         self.rin = rin
+
+        self.r = r
 
         self.debug = debug
 
@@ -95,7 +97,7 @@ class TrackingSim:
         kf.x = x
         return kf
 
-    def get_lqr(self, r, dt):
+    def get_lqr(self, dt):
 
         F = np.array([[0, 0, 0, 0],
                       [0, 1 - 2 * dt, dt, 0],
@@ -105,16 +107,15 @@ class TrackingSim:
         #               [-1., 0.]])
 
         B = np.array([[0, 2 * dt, dt, 0]]).T
-        R = r
+        R = self.r
         Q = np.array([[1, -1, 0, 0],
                       [-1, 1, 0, 0],
-                      [0, 0, 0, 0],
+                      [0, 0, 1, 0],
                       [0, 0, 0, 1]])
         # Q = np.array([[q1, 0, 0],
         #               [0, q2, 0],
         #               [0, 0, q2]])
 
-        print(F.dtype)
         # solve DARE
         X = scipy.linalg.solve_discrete_are(F, B, Q, R)
 
@@ -219,9 +220,8 @@ class TrackingSim:
         kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D))
         kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D))
 
-        lqr = self.get_lqr(10, dt)
-        lqr[0, 0] = 0
-        # lqr[0, 3] = 0
+        lqr = self.get_lqr(dt)
+        # lqr[0, 0] = 0
         print(lqr)
 
         # Initialise loop variables
@@ -258,6 +258,8 @@ class TrackingSim:
                         if self.kalman:
                             ux = -lqr @ kfx.x
                             uy = -lqr @ kfy.x
+                            # ux = kfx.x[0, 1] - kfx.x[0, 0]
+                            # uy = kfy.x[0, 0]
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy

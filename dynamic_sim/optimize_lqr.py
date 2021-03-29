@@ -5,49 +5,31 @@ import numpy as np
 import scipy
 import joblib
 
+freq = 12.5
+ffreq = 3.125
+
 
 def minfunc(weights):
+
+    weights = 10 ** weights
     print(weights)
 
-    simulation_orb = TrackingSim(numpoints=10000, method='orbital', freq=12.5, amp=5.0, waist=0.4, tracking=True,
-                                 feedback=12.5, iscat=False, kalman=True, lqr=True, rin=0.1,
-                                 weights=np.insert(weights, 0, 0.0145))
+    simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
+                                 feedback=ffreq, iscat=False, rin=0.1, r=weights, debug=False)
 
     def parr_func(i):
         try:
-            err, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
+            err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0003)
         except:
+            raise
             return 10
         return err
 
-    errs = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i) for i in range(18))
+    errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i) for i in range(16))
 
-    # try:
-    #     err1, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
-    #     err2, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
-    #     err3, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
-    #     err4, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
-    #     err5, measx, truex, kalmx, stagex, measy, truey, kalmy, stagey, intvals = simulation_orb.main_tracking(0.05)
-    # except:
-    #     return 5
-    #
-    # print(np.sum(err1) + np.sum(err2) + np.sum(err3) + np.sum(err4) + np.sum(err5))
-    # return np.sum(err1) + np.sum(err2) + np.sum(err3) + np.sum(err4) + np.sum(err5)
     print(np.sum(errs))
     return np.sum(errs)
 
 
-# res = scipy.optimize.minimize(minfunc, [0.007, 1, 1, 1], bounds=[(0.005, 0.01), (0, 2), (0, 2), (0, 2)])
-# print(res.x)
-# res = scipy.optimize.minimize(minfunc, 0.008, bounds=[(0.001, 0.01)])
-# print(res.x)
-
-# res = scipy.optimize.basinhopping(minfunc, [0.007, 1, 1, 1], stepsize=1, T=10)
-# print(res.x)
-res = scipy.optimize.dual_annealing(minfunc, bounds=[(0, 10), (0, 10), (0, 10)])
-print(res.x)
-# res = scipy.optimize.dual_annealing(minfunc, bounds=[(0, 0.1)])
-# print(res.x)
-
-# x0 = scipy.optimize.brute(minfunc, ranges=((0.005, 0.01), (0, 10), (0, 10), (0, 10)), Ns=5, finish=None)
-# print(x0)
+x = scipy.optimize.brute(minfunc, ranges=[(-1, 2)], finish=None)
+print(x)
