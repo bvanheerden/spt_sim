@@ -30,7 +30,7 @@ class TrackingSim:
         """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=10, debug=True, intfactor=None, contrast=None):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=[1, 0.001], debug=True, intfactor=None, contrast=None):
 
         self.numpoints = numpoints
         self.method = method
@@ -220,9 +220,9 @@ class TrackingSim:
         kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D))
         kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D))
 
-        lqr = self.get_lqr(dt)
+        # lqr = self.get_lqr(dt)
         # lqr[0, 0] = 0
-        print(lqr)
+        # print(lqr)
 
         # Initialise loop variables
         measx = 0
@@ -256,10 +256,10 @@ class TrackingSim:
                 if i % feedback_steps == 0:
                     if self.stage:
                         if self.kalman:
-                            ux = -lqr @ kfx.x
-                            uy = -lqr @ kfy.x
-                            # ux = kfx.x[0, 1] - kfx.x[0, 0]
-                            # uy = kfy.x[0, 0]
+                            # ux = -lqr @ kfx.x
+                            # uy = -lqr @ kfy.x
+                            ux = self.r[0] * (kfx.x[0, 0] - kfx.x[1, 0]) + kfx.x[1, 0] + self.r[1] * kfx.x[3, 0]
+                            uy = self.r[0] * (kfy.x[0, 0] - kfy.x[1, 0]) + kfy.x[1, 0] + self.r[1] * kfy.x[3, 0]
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
