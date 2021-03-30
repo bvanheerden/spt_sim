@@ -13,13 +13,13 @@ import rsmf
 
 matplotlib.rcParams.update({'font.size': 11})
 
-errs = np.loadtxt('errs7.txt')
-errs_mf = np.loadtxt('errs_mf7.txt')
-errs_kt = np.loadtxt('errs_kt7.txt')
+errs = np.loadtxt('errs1.txt')
+errs_mf = np.loadtxt('errs_mf1.txt')
+errs_kt = np.loadtxt('errs_kt1.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 diffs = np.logspace(-14, 5, 18)
-diffs = np.logspace(-10, 1, 18)
+diffs = np.logspace(-8, 1, 16)
 
 untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
@@ -57,5 +57,5 @@ plt.ylabel(r'Average error (\textmu m)')
 plt.legend()
 plt.tight_layout()
 # plt.savefig('out/err_diff_fluo.pdf')
-plt.savefig('out/poster/err_diff_fluo.pdf')
+# plt.savefig('out/poster/err_diff_fluo.pdf')
 plt.show()
