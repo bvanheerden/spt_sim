@@ -258,8 +258,10 @@ class TrackingSim:
                         if self.kalman:
                             # ux = -lqr @ kfx.x
                             # uy = -lqr @ kfy.x
-                            ux = self.r[0] * (kfx.x[0, 0] - kfx.x[1, 0]) + kfx.x[1, 0] + self.r[1] * kfx.x[3, 0]
-                            uy = self.r[0] * (kfy.x[0, 0] - kfy.x[1, 0]) + kfy.x[1, 0] + self.r[1] * kfy.x[3, 0]
+                            ux = kfx.x[0, 0]
+                            uy = kfy.x[0, 0]
+                            # ux = self.r[0] * (kfx.x[0, 0] - kfx.x[1, 0]) + kfx.x[1, 0] + self.r[1] * kfx.x[3, 0]
+                            # uy = self.r[0] * (kfy.x[0, 0] - kfy.x[1, 0]) + kfy.x[1, 0] + self.r[1] * kfy.x[3, 0]
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
