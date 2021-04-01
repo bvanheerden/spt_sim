@@ -13,9 +13,9 @@ import rsmf
 
 matplotlib.rcParams.update({'font.size': 11})
 
-errs = np.loadtxt('errs1.txt')
-errs_mf = np.loadtxt('errs_mf1.txt')
-errs_kt = np.loadtxt('errs_kt1.txt')
+errs = np.loadtxt('errs2.txt')
+errs_mf = np.loadtxt('errs_mf2.txt')
+errs_kt = np.loadtxt('errs_kt2.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 diffs = np.logspace(-14, 5, 18)

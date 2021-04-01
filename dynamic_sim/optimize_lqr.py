@@ -11,16 +11,20 @@ ffreq = 3.125
 
 def minfunc(weights):
 
-    # weights = [1.8, weights[0]]
-    weights = [weights[0], 0.0037]
+    weights = [2.1, weights[0]]
+    # weights = [weights[0], 0.0047]
     print(weights)
 
-    simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                                 feedback=ffreq, iscat=False, rin=0.1, r=weights, debug=False)
+    # simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
+    #                              feedback=ffreq, iscat=False, rin=0.1, r=weights, debug=False)
+    simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
+                                feedback=ffreq, debug=False, rin=1, fwhm=0.36, r=weights)
+    # simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
+    #                              feedback=ffreq, debug=False, rin=1, r=weights)
 
     def parr_func(i):
         try:
-            err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.003)
+            err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.00003)
         except:
             raise
             return 10
@@ -33,5 +37,7 @@ def minfunc(weights):
 
 
 # x = scipy.optimize.brute(minfunc, ranges=[(0.0001, 0.01)], finish=None)
-x = scipy.optimize.brute(minfunc, ranges=[(0.5, 2)], finish=None)
+x = scipy.optimize.brute(minfunc, ranges=[(0.05, 0.2)], finish=None)
+# x = scipy.optimize.brute(minfunc, ranges=[(0.5, 2)], finish=None)
+# x = scipy.optimize.brute(minfunc, ranges=[(1.7, 2.5)], finish=None)
 print(x)
