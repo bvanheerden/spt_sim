@@ -14,9 +14,9 @@ ffreq = 3.125
 # ffreq = 12.5
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=1, r=[1.8, 0.004])
+                             feedback=ffreq, iscat=False, debug=False, rin=1, r=[2.0, 0.003])
 simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.1, tracking=True,
-                            feedback=ffreq, debug=False, rin=0.001, fwhm=0.36, r=[2.1, 0.15])
+                            feedback=ffreq, debug=False, rin=0.001, fwhm=0.36, r=[2.0, 0.0006])
 simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
                             feedback=ffreq, debug=False, rin=1, r=[2.1, 0.15])
 

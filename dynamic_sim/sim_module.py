@@ -102,7 +102,7 @@ class TrackingSim:
 
         #     kf.x = np.array([[x, vx, y, vy]]).T
         kf.x = x
-        kf.P = np.array([[0.01, 0, 0, 0],
+        kf.P = np.array([[0.0001, 0, 0, 0],
                          [0, 0, 0, 0],
                          [0, 0, 0, 0],
                          [0, 0, 0, 0]])
@@ -208,6 +208,9 @@ class TrackingSim:
         intvals = np.zeros(self.numpoints)
         integralvals = np.zeros(self.numpoints)
 
+        errx_vals = np.zeros(self.numpoints)
+        erry_vals = np.zeros(self.numpoints)
+
         kalman_steps = self.feedback_steps  # Kalman filter updates with same frequency as controller
         kfx = self.particle_kf(x, kalman_steps * self.dt, r=self.rin, q=(2 * D))
         kfy = self.particle_kf(y, kalman_steps * self.dt, r=self.rin, q=(2 * D))
@@ -232,6 +235,9 @@ class TrackingSim:
             t += self.dt
             tvals[i] = t
 
+            errx_vals[i] = kfx.x[0, 0] - kfx.x[1, 0]
+            erry_vals[i] = kfy.x[0, 0] - kfy.x[1, 0]
+
             if not self.stage:
                 ux = 0
                 uy = 0
@@ -253,8 +259,8 @@ class TrackingSim:
                             # uy = -lqr @ kfy.x
                             # ux = kfx.x[0, 0]
                             # uy = kfy.x[0, 0]
-                            ux = self.r[0] * (kfx.x[0, 0] - kfx.x[1, 0]) + kfx.x[1, 0]# + self.r[1] * kfx.x[3, 0]
-                            uy = self.r[0] * (kfy.x[0, 0] - kfy.x[1, 0]) + kfy.x[1, 0]# + self.r[1] * kfy.x[3, 0]
+                            ux = self.r[0] * (errx_vals[i]) + kfx.x[1, 0] + self.r[1] * np.sum(errx_vals)
+                            uy = self.r[0] * (erry_vals[i]) + kfy.x[1, 0] + self.r[1] * np.sum(erry_vals)
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
