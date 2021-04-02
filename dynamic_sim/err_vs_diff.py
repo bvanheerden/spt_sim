@@ -14,17 +14,17 @@ ffreq = 3.125
 # ffreq = 12.5
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=1, r=[2.0, 0.003])
-simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.1, tracking=True,
-                            feedback=ffreq, debug=False, rin=0.001, fwhm=0.36, r=[2.0, 0.0006])
+                             feedback=ffreq, iscat=False, debug=False, rin=1, r=[2.0, 0.001])
+simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
+                            feedback=ffreq, debug=False, rin=0.1, fwhm=0.36, r=[2.0, 0.001])
 simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
-                            feedback=ffreq, debug=False, rin=1, r=[2.1, 0.15])
+                            feedback=ffreq, debug=False, rin=1, r=[2.9, 0.0001])
 
 numdiffs = 16
-numruns = 3
+numruns = 5
 
 # diffs = np.logspace(-14, 5, 16)
-diffs = np.logspace(-9, 1, 16)
+diffs = np.logspace(-11, 1, numdiffs)
 # diffs = np.logspace(-12, 6, 18)
 # diffs = np.logspace(-3, 5, 18)
 # diffs = [1e-10]
@@ -54,9 +54,9 @@ def fitfunc(D, B, nm):
 errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 # errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-# np.savetxt('errs2.txt', errs)
-np.savetxt('errs_mf2.txt', errs_mf)
-# np.savetxt('errs_kt2.txt', errs_kt)
+# np.savetxt('errs3.txt', errs)
+np.savetxt('errs_mf3.txt', errs_mf)
+# np.savetxt('errs_kt3.txt', errs_kt)
 
 untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])

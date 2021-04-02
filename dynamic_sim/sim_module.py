@@ -257,10 +257,10 @@ class TrackingSim:
                         if self.kalman:
                             # ux = -lqr @ kfx.x
                             # uy = -lqr @ kfy.x
-                            # ux = kfx.x[0, 0]
-                            # uy = kfy.x[0, 0]
-                            ux = self.r[0] * (errx_vals[i]) + kfx.x[1, 0] + self.r[1] * np.sum(errx_vals)
-                            uy = self.r[0] * (erry_vals[i]) + kfy.x[1, 0] + self.r[1] * np.sum(erry_vals)
+                            ux = kfx.x[0, 0]
+                            uy = kfy.x[0, 0]
+                            # ux = self.r[0] * (errx_vals[i]) + kfx.x[1, 0] + self.r[1] * np.sum(errx_vals)
+                            # uy = self.r[0] * (erry_vals[i]) + kfy.x[1, 0] + self.r[1] * np.sum(erry_vals)
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
@@ -341,7 +341,7 @@ class TrackingSim:
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
-        # return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
-        return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals
-        # return err, kalmx_vals, truex_vals, kalmy_vals, truey_vals, integralvals
+        # return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
+        return err, stagex_vals, truex_vals, stagey_vals, truey_vals, intvals
+        # return err, kalmx_vals, truex_vals, kalmy_vals, truey_vals, intvals
 
