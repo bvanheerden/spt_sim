@@ -238,10 +238,6 @@ class TrackingSim:
             errx_vals[i] = kfx.x[0, 0] - kfx.x[1, 0]
             erry_vals[i] = kfy.x[0, 0] - kfy.x[1, 0]
 
-            if not self.stage:
-                ux = 0
-                uy = 0
-
             # Calculate new positions for stage and particle
             x, y = trajectory.step(self.dt, (ux, uy))
             yp = y[0]
@@ -250,7 +246,7 @@ class TrackingSim:
                 ys = y[1]
                 xs = x[1]
 
-            # Apply feedback (need to add LQR!)
+            # Apply feedback
             if self.tracking:
                 if i % self.feedback_steps == 0:
                     if self.stage:
@@ -265,8 +261,12 @@ class TrackingSim:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
                     else:
-                        xs = xs + measx
-                        ys = ys + measy
+                        if self.kalman:
+                            xs = kfx.x[0, 0]
+                            ys = kfy.x[0, 0]
+                        else:
+                            xs = xs + measx
+                            ys = ys + measy
             else:
                 xs = 0
                 ys = 0
@@ -317,9 +317,11 @@ class TrackingSim:
                                                       measx, measy, self.omega, tvals, x0, y0)
 
             if np.isnan(measx):
-                measx = prev_measx
+                # measx = prev_measx
+                measx = 0
             if np.isnan(measy):
-                measy = prev_measy
+                # measy = prev_measy
+                measy = 0
 
             prev_measx = measx
             prev_measy = measy
