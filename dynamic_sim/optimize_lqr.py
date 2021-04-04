@@ -11,21 +11,25 @@ ffreq = 3.125
 
 def minfunc(weights):
 
-    weights = [2.9, weights[0]]
+    # weights = [2.9, weights[0]]
     # weights = [weights[0], 0.001]
+    weights = 10 ** weights
     print(weights)
 
-    # simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-    #                              feedback=ffreq, iscat=False, rin=0.1, r=weights, debug=False)
-    # simulation_orb = TrackingSim(numpoints=50000, method='minflux', freq=freq, amp=45.0, L=0.1, tracking=True,
-    #                             feedback=ffreq, debug=False, rin=0.001, fwhm=0.36, r=weights)
-    simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
-                                 feedback=ffreq, debug=False, rin=0.1, r=weights)
+    simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
+                                 feedback=ffreq, iscat=False, rin=weights, debug=False)
+    # simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=freq, amp=45.0, L=0.1, tracking=True,
+    #                             feedback=ffreq, debug=False, rin=weights, fwhm=0.36)
+    # simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
+    #                              feedback=ffreq, debug=False, rin=weights)
 
     def parr_func(i):
         try:
             # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.000001)
-            err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.01)
+            # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.01)  # KT
+            # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)  # orb
+            # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)  # mf
+            err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)  # mf slow
         except:
             raise
             return 10
@@ -37,6 +41,10 @@ def minfunc(weights):
     return np.sum(errs)
 
 
-x = scipy.optimize.brute(minfunc, ranges=[(0.0001, 0.01)], finish=None)
+# x = scipy.optimize.brute(minfunc, ranges=[(0.01, 1)], finish=None)  # kalman filter orb
+# x = scipy.optimize.brute(minfunc, ranges=[(0.005, 0.05)], finish=None)  # kalman filter mf
+# x = scipy.optimize.brute(minfunc, ranges=[(-4, -1)], finish=None)  # kalman filter mf slow exp
+x = scipy.optimize.brute(minfunc, ranges=[(-2, 0)], finish=None)  # kalman filter KT exp
+# x = scipy.optimize.brute(minfunc, ranges=[(0.001, 1)], finish=None)
 # x = scipy.optimize.brute(minfunc, ranges=[(0.5, 3)], finish=None)
 print(x)
