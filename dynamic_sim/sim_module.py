@@ -30,7 +30,7 @@ class TrackingSim:
         """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=[1, 0.001], debug=True, intfactor=None,
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None,
                  contrast=None, bg=0):
 
         self.numpoints = numpoints
@@ -46,7 +46,6 @@ class TrackingSim:
         self.stage = stage
         self.kalman = kalman
         self.rin = rin
-        self.r = r
         self.debug = debug
         self.intfactor = intfactor
         self.contrast = contrast
@@ -109,33 +108,6 @@ class TrackingSim:
                          [0, 0, 0, 0],
                          [0, 0, 0, 0]])
         return kf
-
-    def get_lqr(self, dt):
-
-        F = np.array([[0, 0, 0, 0],
-                      [0, 1 - 2 * dt, dt, 0],
-                      [0, -dt, 1, 0],
-                      [dt, -dt, 0, 1]])
-        # F = np.array([[1 - 2 * dt, dt],
-        #               [-1., 0.]])
-
-        B = np.array([[0, 2 * dt, dt, 0]]).T
-        R = self.r
-        Q = np.array([[1, -1, 0, 0],
-                      [-1, 1, 0, 0],
-                      [0, 0, 1, 0],
-                      [0, 0, 0, 1]])
-        # Q = np.array([[q1, 0, 0],
-        #               [0, q2, 0],
-        #               [0, 0, q2]])
-
-        # solve DARE
-        X = scipy.linalg.solve_discrete_are(F, B, Q, R)
-
-        # compute the LQR gain
-        K = scipy.linalg.inv(B.T @ X @ B + R) @ (B.T @ X @ F)
-        # K = K[1:]  # remove first column since we don't control the particle
-        return K
 
     def meas_func(self, cycle_steps, i, integralvals, intvals, kt_steps, measx, measy, omega, tvals, x0, y0):
         """Return estimated position using some scanning method"""
@@ -217,10 +189,6 @@ class TrackingSim:
         kfx = self.particle_kf(x, kalman_steps * self.dt, r=self.rin, q=(2 * D))
         kfy = self.particle_kf(y, kalman_steps * self.dt, r=self.rin, q=(2 * D))
 
-        # lqr = self.get_lqr(dt)
-        # lqr[0, 0] = 0
-        # print(lqr)
-
         theta = 0  # Orbital method angle
         posnum = 0  # Current scan point for KT or MF
         measx = 0
@@ -253,12 +221,8 @@ class TrackingSim:
                 if i % self.feedback_steps == 0:
                     if self.stage:
                         if self.kalman:
-                            # ux = -lqr @ kfx.x
-                            # uy = -lqr @ kfy.x
                             ux = kfx.x[0, 0]
                             uy = kfy.x[0, 0]
-                            # ux = self.r[0] * (errx_vals[i]) + kfx.x[1, 0] + self.r[1] * np.sum(errx_vals)
-                            # uy = self.r[0] * (erry_vals[i]) + kfy.x[1, 0] + self.r[1] * np.sum(erry_vals)
                         else:
                             ux = xs[0] + measx
                             uy = ys[0] + measy

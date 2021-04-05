@@ -11,13 +11,13 @@ freq = 12.5
 ffreq = 3.125
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=0.001, r=[2.0, 0.001])
+                             feedback=ffreq, iscat=False, debug=False, rin=0.001)
 simulation_orb1 = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=0.01, r=[2.0, 0.001])
+                             feedback=ffreq, iscat=False, debug=False, rin=0.01)
 simulation_orb2 = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=0.1, r=[2.0, 0.001])
+                             feedback=ffreq, iscat=False, debug=False, rin=0.1)
 simulation_orb3 = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                              feedback=ffreq, iscat=False, debug=False, rin=1, r=[2.0, 0.001])
+                              feedback=ffreq, iscat=False, debug=False, rin=1)
 
 numdiffs = 16
 numruns = 3
