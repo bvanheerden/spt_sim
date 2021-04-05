@@ -30,7 +30,8 @@ class TrackingSim:
         """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=[1, 0.001], debug=True, intfactor=None, contrast=None):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, r=[1, 0.001], debug=True, intfactor=None,
+                 contrast=None, bg=0):
 
         self.numpoints = numpoints
         self.method = method
@@ -49,6 +50,7 @@ class TrackingSim:
         self.debug = debug
         self.intfactor = intfactor
         self.contrast = contrast
+        self.bg = bg
 
         self.dt = 0.001  # timestep in ms
         self.cycle_steps = np.int(1 / (self.freq * self.dt))  # Number of time steps per feedback cycle
@@ -309,8 +311,9 @@ class TrackingSim:
             else:
                 int_ms = 10 * int_iter + 0  # SBR = 10
                 int_correct_iter = int_ms * self.dt
+                bg = np.random.poisson(self.bg)
                 int_correct_iter = np.random.poisson(int_correct_iter)
-                intvals[i] = int_correct_iter
+                intvals[i] = int_correct_iter + bg
 
             if i % self.cycle_steps == 0:
                 measx, measy, x0, y0 = self.meas_func(self.cycle_steps, i, integralvals, intvals, self.kt_steps,

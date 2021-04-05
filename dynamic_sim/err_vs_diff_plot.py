@@ -13,9 +13,9 @@ import rsmf
 
 matplotlib.rcParams.update({'font.size': 11})
 
-errs = np.loadtxt('errs1.txt')
-errs_mf = np.loadtxt('errs_mf1.txt')
-errs_kt = np.loadtxt('errs_kt1.txt')
+errs = np.loadtxt('errs4.txt')
+errs_mf = np.loadtxt('errs_mf4.txt')
+errs_kt = np.loadtxt('errs_kt4.txt')
 
 # errs = np.concatenate((np.loadtxt('errs8.txt').flatten(), np.loadtxt('errs9.txt').flatten()[:]))
 # errs_mf = np.concatenate((np.loadtxt('errs_mf8.txt').flatten(), np.loadtxt('errs_mf9.txt').flatten()[:]))
@@ -24,6 +24,7 @@ errs_kt = np.loadtxt('errs_kt1.txt')
 diffs = np.logspace(-9, 1, 16)
 diffs = np.logspace(-10, -4, 8)
 diffs = np.logspace(-10, 0, 16)
+# diffs = np.logspace(-4, 0, 16)
 
 untracked = np.sqrt(200 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])

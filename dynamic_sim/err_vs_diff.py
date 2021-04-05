@@ -14,19 +14,19 @@ ffreq = 3.125
 # ffreq = 12.5
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=0.04, r=[2.0, 0.001])
+                             feedback=ffreq, iscat=False, debug=False, rin=0.04, r=[2.6, 0.000])
 simulation_mf = TrackingSim(numpoints=numpoints, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
-                            feedback=ffreq, debug=False, rin=0.004, fwhm=0.36, r=[2.0, 0.001])
+                            feedback=ffreq, debug=False, rin=0.004, fwhm=0.36, r=[2.6, 0.000])
 simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
-                            feedback=ffreq, debug=False, rin=0.3, r=[2.9, 0.0001])
+                            feedback=ffreq, debug=False, rin=0.3, r=[2.6, 0.000])
 
 numdiffs = 16
 numruns = 6
 
 # diffs = np.logspace(-11, 1, numdiffs)
-diffs = np.logspace(-4, 0, numdiffs)
+# diffs = np.logspace(-4, 0, numdiffs)
 # diffs = np.logspace(-10, -4, numdiffs)
-# diffs = np.logspace(-10, 0, numdiffs)
+diffs = np.logspace(-10, 0, numdiffs)
 
 
 def parr_func(i, D, method):
@@ -53,11 +53,11 @@ errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb') for i, D
 errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs2.txt', errs)
-np.savetxt('errs_mf2.txt', errs_mf)
-np.savetxt('errs_kt2.txt', errs_kt)
+np.savetxt('errs5.txt', errs)
+np.savetxt('errs_mf5.txt', errs_mf)
+np.savetxt('errs_kt5.txt', errs_kt)
 
-untracked = np.sqrt(100 * diffs)
+untracked = np.sqrt(200 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
 # print(param[0], param[1])
 # tracked = fitfunc(diffs, param[0], param[1])

@@ -7,17 +7,17 @@ freq = 12.5
 ffreq = 3.125
 # freq = 3.125
 
-# simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-#                              feedback=ffreq, iscat=False, rin=0.1, r=[1.8, 0.0037])
-simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, rin=0.3, r=[2.0, 0.001], stage=True, kalman=True)
+simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
+                             feedback=ffreq, iscat=False, rin=0.04, r=[2.0, 0.000], bg=0.00125)
+# simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
+#                              feedback=ffreq, iscat=False, rin=0.3, r=[1.2, 0.001], stage=True, kalman=True)
 # simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
 #                              feedback=ffreq, rin=0.1, fwhm=0.36, r=[0.5, 0.0006])
 
-# err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)
+err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-7)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)
-err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)
+# err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.01)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.1)
 
@@ -25,6 +25,7 @@ err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)
 # for i in range(100):
 #         binnedints[i] = np.sum(intvals[1000 * i:1000 * (i + 1)])
 
+print(np.mean(intvals))
 print('average intensity:', np.sum(intvals) / 100, ' counts/ms')
 print('Meas variance:', np.std(measx) ** 2)
 print(err)
