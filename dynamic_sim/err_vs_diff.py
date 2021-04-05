@@ -6,7 +6,6 @@ import joblib
 from sim_module import TrackingSim
 
 numpoints = 100000
-# numpoints = 500000
 
 freq = 12.5
 # freq = 3.125
@@ -21,12 +20,12 @@ simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp
                             feedback=ffreq, debug=False, rin=0.3)
 
 numdiffs = 16
-numruns = 6
+numruns = 3
 
 # diffs = np.logspace(-11, 1, numdiffs)
 # diffs = np.logspace(-4, 0, numdiffs)
 # diffs = np.logspace(-10, -4, numdiffs)
-diffs = np.logspace(-10, 0, numdiffs)
+diffs = np.logspace(-9, 0, numdiffs)
 
 
 def parr_func(i, D, method):
@@ -41,34 +40,25 @@ def parr_func(i, D, method):
         elif method == 'kt':
             err, measx, truex, measy, truey, intvals = simulation_kt.main_tracking(D)
         errsum += err
-        # print('average int: ', np.mean(intvals))
     return errsum / numruns
-
-
-def fitfunc(D, B, nm):
-    return np.sqrt(2 * D / B + (nm ** 2 * B))
 
 
 errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb') for i, D in enumerate(diffs))
 errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs5.txt', errs)
-np.savetxt('errs_mf5.txt', errs_mf)
-np.savetxt('errs_kt5.txt', errs_kt)
+np.savetxt('errs.txt', errs)
+np.savetxt('errs_mf.txt', errs_mf)
+np.savetxt('errs_kt.txt', errs_kt)
 
 untracked = np.sqrt(200 * diffs)
-# param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
-# print(param[0], param[1])
-# tracked = fitfunc(diffs, param[0], param[1])
 
-cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
-cutoff = np.pi * 0.025 ** 2 * 0.1
+# cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
+# cutoff = np.pi * 0.025 ** 2 * 0.1
 
 plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_mf, '-o')
 plt.loglog(diffs, errs_kt, '-o')
 plt.loglog(diffs, untracked, '--', color='gray')
-# plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff)
 plt.show()

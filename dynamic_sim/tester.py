@@ -11,10 +11,10 @@ simulation_orb = TrackingSim(numpoints=100000, method='orbital', freq=freq, amp=
                              feedback=ffreq, iscat=False, rin=0.04, bg=0.00125)
 # simulation_orb = TrackingSim(numpoints=100000, method='knight', freq=freq, amp=24.0, waist=0.4, tracking=True,
 #                              feedback=ffreq, iscat=False, rin=0.3, stage=True, kalman=True)
-# simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
-#                              feedback=ffreq, rin=0.1, fwhm=0.36)
+simulation_orb = TrackingSim(numpoints=100000, method='minflux', freq=freq, amp=45.0, L=0.05, tracking=True,
+                             feedback=ffreq, rin=0.004, fwhm=0.36)
 
-err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-7)
+err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)
