@@ -1,5 +1,6 @@
 # Main simulation module. Instance of TrackingSim is created after which main_tracking can be called multiple times.
 import numpy as np
+import scipy
 from numpy.random import randn
 import warnings
 from filterpy.kalman import KalmanFilter
@@ -29,31 +30,33 @@ class TrackingSim:
         """
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
-                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None, contrast=None):
+                 feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None,
+                 contrast=None, bg=0):
 
         self.numpoints = numpoints
         self.method = method
         self.freq = freq
-
         self.amp = amp
         self.waist = waist
-
         self.L = L
         self.fwhm = fwhm
-
         self.tracking = tracking
         self.feedback = feedback
-
         self.iscat = iscat
         self.stage = stage
         self.kalman = kalman
-
         self.rin = rin
-
         self.debug = debug
-
         self.intfactor = intfactor
         self.contrast = contrast
+        self.bg = bg
+
+        self.dt = 0.001  # timestep in ms
+        self.cycle_steps = np.int(1 / (self.freq * self.dt))  # Number of time steps per feedback cycle
+
+        self.omega = 2 * np.pi * self.freq  # Angular frequency for orbital method
+        self.radius = self.waist / np.sqrt(2)  # Rotation radius
+        self.int_fact = self.waist ** 2 / (2 * self.radius)  # Factor used to compute position estimate
 
         kt_positions = [(0, 5), (2, 6), (4, 5), (5, 3), (4, 1), (2, 0), (0, 1), (2, 2), (0, 3), (1, 5),
                         (3, 4), (5, 5), (6, 3), (5, 1), (3, 0), (1, 1), (3, 2), (1, 3), (2, 5), (4, 4),
@@ -63,7 +66,15 @@ class TrackingSim:
         kt_positions = [np.subtract(pos, (2.5, 2.5)) for pos in kt_positions]
         kt_positions = [np.multiply(pos, 0.3) for pos in kt_positions]
         self.kt_positions = [tuple(pos) for pos in kt_positions]
-        self.mf_positions = [(0, 0), (-0.25 * self.L, 0.43301 * self.L), (-0.25 * self.L, -0.43301 * self.L), (0.5 * self.L, 0)]
+        # Number of time steps per KT scan point:
+        self.kt_steps = np.int(self.cycle_steps / (np.size(self.kt_positions) / 2))
+
+        self.mf_positions = [(0, 0), (-0.25 * self.L, 0.43301 * self.L), (-0.25 * self.L, -0.43301 * self.L),
+                             (0.5 * self.L, 0)]
+        # Number of time steps per MF scan point:
+        self.mf_steps = np.int(self.cycle_steps / 4)
+
+        self.feedback_steps = np.int(1 / (self.feedback * self.dt))  # Number of steps per feedback cycle
 
     def particle_kf(self, x, dt, r=0.0, q=0.1):
         """Initialise Kalman filter using filterpy.
@@ -92,10 +103,13 @@ class TrackingSim:
 
         #     kf.x = np.array([[x, vx, y, vy]]).T
         kf.x = x
+        kf.P = np.array([[0.0001, 0, 0, 0],
+                         [0, 0, 0, 0],
+                         [0, 0, 0, 0],
+                         [0, 0, 0, 0]])
         return kf
 
-    def meas_func(self, cycle_steps, i, int_fact, integralvals, intvals, kt_steps, measx, measy,
-                  mf_steps, omega, tvals, x0, y0):
+    def meas_func(self, cycle_steps, i, integralvals, intvals, kt_steps, measx, measy, omega, tvals, x0, y0):
         """Return estimated position using some scanning method"""
 
         integral = np.sum(intvals[i - cycle_steps:i])
@@ -104,8 +118,8 @@ class TrackingSim:
         if self.method == 'orbital':
             integral_sin = np.sum(intvals[i - cycle_steps:i] * np.sin(omega * tvals[i - cycle_steps:i]))
             integral_cos = np.sum(intvals[i - cycle_steps:i] * np.cos(omega * tvals[i - cycle_steps:i]))
-            measx = int_fact * (integral_cos / integral)
-            measy = int_fact * (integral_sin / integral)
+            measx = self.int_fact * (integral_cos / integral)
+            measy = self.int_fact * (integral_sin / integral)
 
         elif self.method == 'knight':
             if i != 0:
@@ -119,10 +133,10 @@ class TrackingSim:
                 measx, measy = 0, 0
 
         elif self.method == 'minflux':
-            pos3_int = np.sum(intvals[i - mf_steps:i]) / integral
-            pos2_int = np.sum(intvals[i - 2 * mf_steps:i - mf_steps]) / integral
-            pos1_int = np.sum(intvals[i - 3 * mf_steps:i - 2 * mf_steps]) / integral
-            pos0_int = np.sum(intvals[i - 4 * mf_steps:i - 3 * mf_steps]) / integral
+            pos3_int = np.sum(intvals[i - self.mf_steps:i]) / integral
+            pos2_int = np.sum(intvals[i - 2 * self.mf_steps:i - self.mf_steps]) / integral
+            pos1_int = np.sum(intvals[i - 3 * self.mf_steps:i - 2 * self.mf_steps]) / integral
+            pos0_int = np.sum(intvals[i - 4 * self.mf_steps:i - 3 * self.mf_steps]) / integral
 
             x0, y0 = self.mf_positions[0]
             x1, y1 = self.mf_positions[1]
@@ -140,15 +154,17 @@ class TrackingSim:
         return measx, measy, x0, y0
 
     def main_tracking(self, D):
+
         warnings.filterwarnings("ignore", category=RuntimeWarning)  # Prevent warnings like division by zero
-        x = np.array([[0, 0, 0, 0]]).T  # initial position and speed
+        if self.debug:
+            print('cycle_steps:', self.cycle_steps)
+            print('feedback steps:', self.feedback_steps)
+            print('kt_steps:', self.kt_steps)
+            print('mf_steps:', self.mf_steps)
+
+        x = np.array([[0, 0, 0, 0]]).T  # initial state
         y = np.array([[0, 0, 0, 0]]).T
         trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)  # Initialise trajectory object from Cython library
-
-        dt = 0.001  # timestep in ms
-        cycle_steps = np.int(1 / (self.freq * dt))  # Number of time steps per feedback cycle
-        if self.debug:
-            print('cycle_steps:', cycle_steps)
 
         # Initialise loop variables
         t = 0
@@ -166,31 +182,15 @@ class TrackingSim:
         intvals = np.zeros(self.numpoints)
         integralvals = np.zeros(self.numpoints)
 
-        # Orbital Method
-        theta = 0
-        omega = 2 * np.pi * self.freq
-        r = self.waist / np.sqrt(2)  # Rotation radius
-        int_fact = self.waist ** 2 / (2 * r)  # Factor used to compute position estimate
-        
-        # Knight's Tour
-        kt_steps = np.int(cycle_steps / (np.size(self.kt_positions) / 2))  # Number of time steps per KT scan point
-        posnum = 0  # Initialise current scan point
+        errx_vals = np.zeros(self.numpoints)
+        erry_vals = np.zeros(self.numpoints)
 
-        # Minflux
-        mf_steps = np.int(cycle_steps / 4)
+        kalman_steps = self.feedback_steps  # Kalman filter updates with same frequency as controller
+        kfx = self.particle_kf(x, kalman_steps * self.dt, r=self.rin, q=(2 * D))
+        kfy = self.particle_kf(y, kalman_steps * self.dt, r=self.rin, q=(2 * D))
 
-        feedback_steps = np.int(1 / (self.feedback * dt))  # Number of steps per feedback cycle
-
-        if self.debug:
-            print('feedback steps:', feedback_steps)
-            print('kt_steps:', kt_steps)
-            print('mf_steps:', mf_steps)
-
-        kalman_steps = feedback_steps  # Kalman filter updates with same frequency as controller
-        kfx = self.particle_kf(x, kalman_steps * dt, r=self.rin, q=(2 * D))
-        kfy = self.particle_kf(y, kalman_steps * dt, r=self.rin, q=(2 * D))
-
-        # Initialise loop variables
+        theta = 0  # Orbital method angle
+        posnum = 0  # Current scan point for KT or MF
         measx = 0
         measy = 0
         prev_measx = 0
@@ -202,24 +202,23 @@ class TrackingSim:
 
         # Main simulation loop
         for i in range(self.numpoints):
-            t += dt
+            t += self.dt
             tvals[i] = t
 
-            if not self.stage:
-                ux = 0
-                uy = 0
+            errx_vals[i] = kfx.x[0, 0] - kfx.x[1, 0]
+            erry_vals[i] = kfy.x[0, 0] - kfy.x[1, 0]
 
             # Calculate new positions for stage and particle
-            x, y = trajectory.step(dt, (ux, uy))
+            x, y = trajectory.step(self.dt, (ux, uy))
             yp = y[0]
             xp = x[0]
             if self.stage:
                 ys = y[1]
                 xs = x[1]
 
-            # Apply feedback (need to add LQR!)
+            # Apply feedback
             if self.tracking:
-                if i % feedback_steps == 0:
+                if i % self.feedback_steps == 0:
                     if self.stage:
                         if self.kalman:
                             ux = kfx.x[0, 0]
@@ -228,20 +227,24 @@ class TrackingSim:
                             ux = xs[0] + measx
                             uy = ys[0] + measy
                     else:
-                        xs = xs + measx
-                        ys = ys + measy
+                        if self.kalman:
+                            xs = kfx.x[0, 0]
+                            ys = kfy.x[0, 0]
+                        else:
+                            xs = xs + measx
+                            ys = ys + measy
             else:
                 xs = 0
                 ys = 0
 
             if self.method == 'orbital':
-                theta += dt * omega
-                x0 = r * np.cos(theta)
-                y0 = r * np.sin(theta)
+                theta += self.dt * self.omega
+                x0 = self.radius * np.cos(theta)
+                y0 = self.radius * np.sin(theta)
                 int_iter = intensity(xp, yp, xs + x0, ys + y0, self.amp, self.waist)
 
             elif self.method == 'knight':
-                if i % kt_steps == 0:
+                if i % self.kt_steps == 0:
                     x0, y0 = self.kt_positions[posnum]
                     if posnum == 39:
                         posnum = 0
@@ -250,7 +253,7 @@ class TrackingSim:
                 int_iter = intensity(xp, yp, xs + x0, ys + y0, self.amp, self.waist)
 
             elif self.method == 'minflux':
-                if i % mf_steps == 0:
+                if i % self.mf_steps == 0:
                     x0, y0 = self.mf_positions[posnum]
                     if posnum == 3:
                         posnum = 0
@@ -260,31 +263,32 @@ class TrackingSim:
 
             if self.iscat:
 
-                int_ms = self.intfactor * 2 * 10 * int_iter * dt
-
+                int_ms = self.intfactor * 2 * 10 * int_iter * self.dt
                 int_ms = np.random.poisson(int_ms)
 
-                bgval = (self.intfactor * 10 * dt) / self.contrast
-
+                bgval = (self.intfactor * 10 * self.dt) / self.contrast
                 bg_ms = np.random.poisson(bgval*1000) / 1000
                 bg_meas = np.random.poisson(bgval*1000) / 1000
+
                 contrast = (int_ms + bg_ms - bg_meas) / bg_meas
                 intvals[i] = contrast
             else:
                 int_ms = 10 * int_iter + 0  # SBR = 10
-                int_correct_iter = int_ms * dt
+                int_correct_iter = int_ms * self.dt
+                bg = np.random.poisson(self.bg)
                 int_correct_iter = np.random.poisson(int_correct_iter)
-                intvals[i] = int_correct_iter
+                intvals[i] = int_correct_iter + bg
 
-            if i % cycle_steps == 0:
-                measx, measy, x0, y0 = self.meas_func(cycle_steps, i, int_fact, integralvals, intvals,
-                                                      kt_steps, measx, measy, mf_steps, omega, tvals,
-                                                      x0, y0)
+            if i % self.cycle_steps == 0:
+                measx, measy, x0, y0 = self.meas_func(self.cycle_steps, i, integralvals, intvals, self.kt_steps,
+                                                      measx, measy, self.omega, tvals, x0, y0)
 
             if np.isnan(measx):
-                measx = prev_measx
+                # measx = prev_measx
+                measx = 0
             if np.isnan(measy):
-                measy = prev_measy
+                # measy = prev_measy
+                measy = 0
 
             prev_measx = measx
             prev_measy = measy
@@ -306,6 +310,7 @@ class TrackingSim:
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
-        return err, measx_vals, truex_vals, measy_vals, truey_vals, integralvals
-        # return err, stagex_vals, truex_vals, stagey_vals, truey_vals, integralvals
+        # return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
+        return err, stagex_vals, truex_vals, stagey_vals, truey_vals, intvals
+        # return err, kalmx_vals, truex_vals, kalmy_vals, truey_vals, intvals
 
