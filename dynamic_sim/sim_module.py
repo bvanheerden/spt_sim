@@ -94,27 +94,24 @@ class TrackingSim:
             """
         dt = self.feedback_steps * self.dt
 
-        kf = KalmanFilter(dim_x=4, dim_z=1, dim_u=1)
+        kf = KalmanFilter(dim_x=3, dim_z=1, dim_u=1)
 
-        kf.F = np.array([[1., 0., 0., 0.],
-                         [0., 1 - 2 * dt, dt, 0.],
-                         [0., -dt, 1., 0.],
-                         [dt, -dt, 0., 1.]])
+        kf.F = np.array([[1., 0., 0.],
+                         [0., 1 - 2 * dt, dt],
+                         [0., -dt, 1.]])
 
-        kf.H = np.array([[1., -1., 0, 0]])
+        kf.H = np.array([[1., -1., 0]])
 
-        kf.B = np.array([[0., 2 * dt, dt, 0]]).T
+        kf.B = np.array([[0., 2 * dt, dt]]).T
         kf.R *= r
-        kf.Q *= np.array([[q, 0, 0, 0],
-                          [0, 0, 0, 0],
-                          [0, 0, 0, 0],
-                          [0, 0, 0, 0]])
+        kf.Q *= np.array([[q, 0, 0],
+                          [0, 0, 0],
+                          [0, 0, 0]])
 
         kf.x = x
-        kf.P = np.array([[0.0001, 0, 0, 0],
-                         [0, 0, 0, 0],
-                         [0, 0, 0, 0],
-                         [0, 0, 0, 0]])
+        kf.P = np.array([[0.0001, 0, 0],
+                         [0, 0, 0],
+                         [0, 0, 0]])
         return kf
 
     def meas_func(self, i):
@@ -166,6 +163,7 @@ class TrackingSim:
         return measx, measy, integral
 
     def measure_pos(self, i, measx, measy, xp, xs, yp, ys):
+        """Calculate measured intensity or contrast, and get measured position"""
 
         int_iter = self.calc_intensity(i, xp, xs, yp, ys)
 
@@ -185,6 +183,8 @@ class TrackingSim:
             bg = np.random.poisson(self.bg)
             int_correct_iter = np.random.poisson(int_correct_iter)
             self.intvals[i] = int_correct_iter + bg
+
+        # Use intensity or contrast to get positon estimate:
         if i % self.cycle_steps == 0:
             measx, measy, integral = self.meas_func(i)
             self.integralvals[i] = integral
@@ -192,9 +192,12 @@ class TrackingSim:
             measx = 0
         if np.isnan(measy):
             measy = 0
+
         return measx, measy
 
     def calc_intensity(self, i, xp, xs, yp, ys):
+        """Calculate current intensity at particle position"""
+
         if self.method == 'orbital':
             self.x0 = self.radius * np.cos(self.theta)
             self.y0 = self.radius * np.sin(self.theta)
@@ -228,8 +231,8 @@ class TrackingSim:
             print('kt_steps:', self.kt_steps)
             print('mf_steps:', self.mf_steps)
 
-        x = np.array([[0, 0, 0, 0]]).T  # initial state
-        y = np.array([[0, 0, 0, 0]]).T
+        x = np.array([[0, 0, 0]]).T  # initial state
+        y = np.array([[0, 0, 0]]).T
         trajectory = ParticleTrajectory2D(x0=x, y0=y, D=D)  # Initialise trajectory object from Cython library
 
         # Initialise loop variables

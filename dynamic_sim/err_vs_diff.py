@@ -1,16 +1,13 @@
 # Runs a simulation for different values of D and plots against the error. Fixed bandwidth.
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
 
 numpoints = 100000
 
 freq = 12.5
-# freq = 3.125
 ffreq = 3.125
-# ffreq = 12.5
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
                              feedback=ffreq, iscat=False, debug=False, rin=0.04)
@@ -47,9 +44,9 @@ errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb') for i, D
 errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errs.txt', errs)
-np.savetxt('errs_mf.txt', errs_mf)
-np.savetxt('errs_kt.txt', errs_kt)
+np.savetxt('errstemp.txt', errs)
+np.savetxt('errs_mftemp.txt', errs_mf)
+np.savetxt('errs_kttemp.txt', errs_kt)
 
 untracked = np.sqrt(200 * diffs)
 
