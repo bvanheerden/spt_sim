@@ -37,7 +37,6 @@ class ParticleTrajectory2D(object):
         self.randomise = RandomState()
 
     def step(self, dt, u):
-        # print(randn())
         self.x = rk4(self.x, self.t, dt, fx, u[0]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
         self.y = rk4(self.y, self.t, dt, fx, u[1]) + np.array([[np.sqrt(2 * self.D * dt) * self.randomise.randn(), 0, 0, 0]]).T
         self.t += dt
@@ -46,7 +45,6 @@ class ParticleTrajectory2D(object):
 
 def intensity(double x, double y, double x0, double y0, double amp, double waist):
     cdef double r = np.linalg.norm([x - x0, y - y0])
-    # cdef double r = np.sqrt((x - x0) ** 2 + (y - y0) ** 2)
     cdef double retint
     retint = amp * np.exp(-4 * np.log(2) * ((r / waist) ** 2))
     return retint
