@@ -8,20 +8,28 @@ dill.settings['recurse'] = True
 
 class PositionMethod:
 
-    def __init__(self, filename, iscat=False):
+    def __init__(self, filename, iscat=False, bg=False):
         self.x, self.x0, self.y, self.y0, self.amp, self.fwhm, self.a, self.sigma = \
             sp.symbols('r x0 y y0 amp fwhm a sigma')
         self.r = sp.sqrt((self.x - self.x0) ** 2 + (self.y - self.y0) ** 2)
-        self.L, self.N, self.sigma_n = sp.symbols('L, N, sigma_N')
+        self.L, self.N, self.sigma_n, self.SBR = sp.symbols('L, N, sigma_N, SBR')
         self.pvector = None
         self.filename = filename
         self.iscat = iscat
-        self.sbr = 2
+        self.bg = bg
 
     def parameter(self, xpos, ypos):
         """calculate parameter vector for beam center at xpos, ypos"""
 
         p_i = self.shape.subs([(self.x0, xpos), (self.y0, ypos)])
+        # SBR = 110
+        # SBR = 12
+        # SBR = 1.9
+        # SBR = 0.49
+        # SBR = 0.12
+        # SBR = 5000
+        if self.bg:
+            p_i = (self.SBR / (self.SBR + 1)) * p_i + 1 / ((self.SBR + 1) * 4)
         return p_i
 
     def param_vector(self):
@@ -54,7 +62,11 @@ class PositionMethod:
 
     def lambdify(self, crb):
         if self.iscat:
-            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb, ['numpy', 'sympy'])
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n], crb,
+                                     ['numpy', 'sympy'])
+        elif self.bg:
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.SBR], crb,
+                                     ['numpy', 'sympy'])
         else:
             crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
         return crb_lambda
@@ -111,8 +123,8 @@ class PositionMethod:
 
 class MinFlux(PositionMethod):
 
-    def __init__(self, filename):
-        super().__init__(filename)
+    def __init__(self, filename, iscat=False, bg=False):
+        super().__init__(filename, iscat, bg)
         self.shape = self.doughnut(self.amp, self.r, self.fwhm)
         # self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
@@ -129,16 +141,18 @@ class MinFlux(PositionMethod):
 
         self.param_vector()
 
-    # def lambdify(self, crb):
-    #     crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.sigma_n],
-    #                              crb, ['numpy', 'sympy'])
-    #     return crb_lambda
+    def lambdify(self, crb):
+        if self.bg:
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.SBR], crb, ['numpy', 'sympy'])
+        else:
+            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
+        return crb_lambda
 
 
 class Orbital(PositionMethod):
 
-    def __init__(self, filename, iscat=False):
-        super().__init__(filename, iscat)
+    def __init__(self, filename, iscat=False, bg=False):
+        super().__init__(filename, iscat, bg)
         self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
