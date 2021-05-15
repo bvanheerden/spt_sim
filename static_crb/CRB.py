@@ -169,8 +169,8 @@ class Orbital(PositionMethod):
 
 class Knight(PositionMethod):
 
-    def __init__(self, filename, spacing, iscat=False):
-        super().__init__(filename, iscat)
+    def __init__(self, filename, spacing, iscat=False, bg=False):
+        super().__init__(filename, iscat, bg)
         self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         # self.shape = self.doughnut(self.amp, self.r, self.fwhm)
         self.spacing = spacing
