@@ -5,6 +5,9 @@ from scipy.stats import norm
 from scipy.signal import convolve
 import rsmf
 
+color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+
 latex = False
 
 if latex:

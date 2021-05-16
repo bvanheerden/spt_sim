@@ -3,8 +3,10 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-latex = False
+color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
+latex = False
 if latex:
     formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
@@ -12,7 +14,7 @@ if latex:
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
     figure = formatter.figure(width_ratio=0.7)
 else:
-    figure = plt.figure()
+    figure = plt.figure(figsize=[5, 3], dpi=150)
 
 dill.settings['recurse'] = True
 file_knight_100 = 'pickles/crb_lambda_knight_0.1'
@@ -29,8 +31,8 @@ file_knight_900_bg = 'pickles/crb_lambda_knight_0.9_bg'
 compute_crb = False
 
 if compute_crb:
-    knight = Knight(file_knight_900, 900)
-    knight = Knight(file_knight_900_bg, 900, bg=True)
+    knight = Knight(file_knight_100, 100)
+    knight = Knight(file_knight_100_bg, 100, bg=True)
 
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=1)
 ax1 = figure.add_subplot(spec[0, 0])
@@ -75,15 +77,15 @@ crb_lambda_knight_bg = dill.load(fileobject_knight_bg)
 crb900_bg = crb_lambda_knight_bg(0, y, 400, 100, 1200, 1, 20)
 
 plt.yscale('log')
-ax1.plot(y, crb300, label='L=300nm')
-ax1.plot(y, crb500, label='L=500nm')
-ax1.plot(y, crb700, label='L=700nm')
-ax1.plot(y, crb900, label='L=900nm')
+ax1.plot(y, crb300, label='L=300nm', lw=2)
+ax1.plot(y, crb500, label='L=500nm', lw=2)
+ax1.plot(y, crb700, label='L=700nm', lw=2)
+ax1.plot(y, crb900, label='L=900nm', lw=2)
 
-ax2.plot(y, crb300_bg, label='L=300nm')
-ax2.plot(y, crb500_bg, label='L=500nm')
-ax2.plot(y, crb700_bg, label='L=700nm')
-ax2.plot(y, crb900_bg, label='L=900nm')
+ax2.plot(y, crb300_bg, label='L=300nm', lw=2)
+ax2.plot(y, crb500_bg, label='L=500nm', lw=2)
+ax2.plot(y, crb700_bg, label='L=700nm', lw=2)
+ax2.plot(y, crb900_bg, label='L=900nm', lw=2)
 
 ax1.legend(loc='lower right', framealpha=0.7)
 ax2.legend(loc='lower right', framealpha=0.7)

@@ -3,6 +3,10 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
+color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
+color_list = ['#0077bb', '#33bbee', '#009988', '#ee7733', '#cc3311', '#ee3377', '#bbbbbb']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+
 latex = False
 
 if latex:
@@ -12,13 +16,13 @@ if latex:
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
     figure = formatter.figure(width_ratio=0.5)
 else:
-    figure = plt.figure()
+    figure = plt.figure(figsize=[8, 4], dpi=150)
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
 file_minflux_bg = 'pickles/crb_lambda_minflux_bg'
 
-compute_crb = False
+compute_crb = True
 
 if compute_crb:
     minflux = MinFlux(file_minflux, bg=False)
