@@ -3,7 +3,7 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-latex = False
+latex = True
 
 if latex:
     formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
@@ -22,13 +22,13 @@ file_camera = 'pickles/crb_lambda_camera'
 compute_crb = False
 
 if compute_crb:
-    orbital = Orbital(file_orbital)
-    print('orbital')
+    # orbital = Orbital(file_orbital)
+    # print('orbital')
     orbital_iscat = Orbital(file_orbital_iscat, iscat=True)
     print('orbital_iscat')
-    knight = Knight(file_knight, 300)
-    knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
-    print('knight')
+    # knight = Knight(file_knight, 300)
+    # knight_iscat = Knight(file_knight_iscat, 300, iscat=True)
+    # print('knight')
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
@@ -42,21 +42,26 @@ crb_lambda_knight = dill.load(fileobject_knight)
 fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
-contrast_1 = 1.02e-5  # LHCII
-contrast_11 = 4.47e-5  # LHCII-micelle
-contrast_2 = 0.00042  # PB
-contrast_3 = 1.65e-6  # EGFP
-contrast_4 = 0.057  # HIV-QD
+adjusted = True
 
-adjusted = False
 
 n = np.logspace(1, 9, num=20)
 if adjusted:
+    contrast_1 = 1.02e-5  # LHCII
+    contrast_11 = 4.47e-5  # LHCII-micelle
+    contrast_2 = 0.00042  # PB
+    contrast_3 = 1.65e-6  # EGFP
+    contrast_4 = 0.057  # HIV-QD
     n1 = np.logspace(2.5, 9, num=20)
     n11 = np.logspace(1, 9, num=20)
     n2 = np.logspace(2.2, 9, num=20)
     n3 = np.logspace(2.5, 9, num=20)
 else:
+    contrast_1 = 1.02e-5  # LHCII
+    contrast_11 = 4.47e-5  # LHCII-micelle
+    contrast_2 = 0.00042  # PB
+    contrast_3 = 1.65e-6  # EGFP
+    contrast_4 = 0.057  # HIV-QD
     n1 = np.logspace(3, 9, num=20)
     n11 = np.logspace(1.9, 9, num=20)
     n2 = np.logspace(2.2, 9, num=20)
@@ -151,8 +156,8 @@ fig.legend(bbox_to_anchor=(0.9, 0.85), loc='upper right')
 ax1.set_ylabel('CRB (nm)')
 ax2.set_ylabel('CRB (nm)')
 ax4.set_ylabel('CRB (nm)')
-ax4.set_xlabel('Aantal fotone (fluoressensie)')
-ax5.set_xlabel('Aantal fotone (fluoressensie)')
+ax4.set_xlabel('Number of photons (fluorescence)')
+ax5.set_xlabel('Number of photons (fluorescence)')
 ax1.set_title("LHCII")
 ax2.set_title("LHCII-misel")
 ax3.set_title("FB")
