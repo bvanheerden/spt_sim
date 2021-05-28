@@ -3,10 +3,12 @@ from static_crb.CRB import *
 from scipy.stats import norm
 from scipy.signal import convolve
 import rsmf
+import seaborn as sns
 
 color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
 color_list = ['#007982','#008373','#0b8b53','#528e25','#898a00','#c47b00', '#ff5900']
 color_list = ['#5f4690', '#349ca3', '#52a14c', '#e79406', '#b9474e', '#764276', '#666666']
+color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
 formatter = rsmf.CustomFormatter(columnwidth=345 * 0.01389, fontsizes=10,
