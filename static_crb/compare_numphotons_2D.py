@@ -5,6 +5,7 @@ import numpy as np
 from static_crb.CRB import *
 from matplotlib import ticker
 import matplotlib.colors as colors
+import matplotlib.patheffects as PathEffects
 
 matplotlib.rcParams.update({'font.size': 14})
 
@@ -80,7 +81,8 @@ for row, val in enumerate(mask):
 crb_diff = np.ma.array(crb_diff, mask=mask)
 
 fig, ax = plt.subplots()
-crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, cmap='bwr', norm=colors.TwoSlopeNorm(vcenter=0))
+ax.set_facecolor('lightgray')
+crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, cmap='coolwarm', norm=colors.TwoSlopeNorm(vcenter=0))
 ax.set_xscale('log')
 ax.set_ylabel('scattering cross-section')
 ax.set_xlabel('absorption cross-section')
@@ -91,11 +93,20 @@ colorbar1.set_label('CRB difference (iScat-Fluorescence)')
 
 # ax.axhline(3e-7)
 
-ax.plot(2.096e-7, 2.57605e-11, 'o', color='black')  # LHCII
-ax.plot(2.096e-7, 4.99173e-10, 'o', color='black')  # LHCII-micelle
-ax.plot(1.258e-5, 4.39747e-8, 'o', color='black')  # PB
-ax.plot(1.3e-8, 2.9e-13, 'o', color='black')  # GFP
-ax.plot(4.08e-8, 8.2e-4, 'o', color='black')  # HIV-QD
+point1 = (2.096e-7, 2.57605e-11)  # LHCII
+point2 = (2.096e-7, 4.99173e-10)  # LHCII-micelle
+point3 = (1.258e-5, 4.39747e-8)  # PB
+point4 = (1.3e-8, 2.9e-13)  # GFP
+point5 = (4.08e-8, 8.2e-4)  # HIV-QD
+points = [point1, point2, point3, point4, point5]
+labels = ['LHCII', 'LHCII-micelle', 'PB', 'GFP', 'HIV-QD']
+
+for i, point in enumerate(points):
+    ax.plot(point[0], point[1], 'o', color='white', markeredgecolor='black')
+    if labels[i] == 'HIV-QD':
+        ax.annotate(labels[i], point, (5, -20), textcoords='offset pixels', color='black')
+    else:
+        ax.annotate(labels[i], point, (5, 5), textcoords='offset pixels', color='black')
 
 # plt.savefig('../out/comp_fluor_iscat.png')
 plt.tight_layout()

@@ -52,7 +52,7 @@ crb_lambda_knight = dill.load(fileobject_knight)
 fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
-adjusted = False
+adjusted = True
 
 n = np.logspace(1, 9, num=20)
 if adjusted:
@@ -143,7 +143,7 @@ crbknight_iscat_4 = crb_lambda_knight_iscat(0, 1, 566, nscat_4, 400, 1, nsigma_4
 fit = 100 / np.sqrt(n)
 
 if latex:
-    fig = formatter.figure(width_ratio=0.8, aspect_ratio=0.8)
+    fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
 else:
     fig = plt.figure(figsize=[7, 5])
 ax1 = fig.add_subplot()
@@ -157,7 +157,7 @@ ax1.loglog(n3, crborb_iscat_3, label='GFP (iSCAT)')
 ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
 
 # plt.ylim(None, 100)
-fig.legend(bbox_to_anchor=(0.15, 0.15), loc='lower left', framealpha=0.5)
+fig.legend(bbox_to_anchor=(0.13, 0.10), loc='lower left', framealpha=0.0, ncol=1)
 ax1.set_ylabel('CRB (nm)')
 ax1.set_xlabel('Number of photons (fluorescence)')
 # ax1.text(100, 0.01, "LHCII")
@@ -192,7 +192,7 @@ multip_func_4 = lambda x: 88547 * x  # HIV-QD
 div_func_4 = lambda x: x / 88547  # LHCII
 
 secax1 = ax1.secondary_xaxis('top', functions=(multip_func_av, div_func_av))
-secax2 = ax1.secondary_xaxis(1.2, functions=(multip_func_4, div_func_4))
+secax2 = ax1.secondary_xaxis(1.13, functions=(multip_func_4, div_func_4))
 # secax3 = ax1.secondary_xaxis(1.2, functions=(multip_func_2, div_func_2))
 # secax4 = ax1.secondary_xaxis(1.3, functions=(multip_func_3, div_func_3))
 # secax5 = ax1.secondary_xaxis(1.4, functions=(multip_func_4, div_func_4))
