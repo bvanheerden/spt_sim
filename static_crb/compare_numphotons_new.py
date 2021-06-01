@@ -58,7 +58,7 @@ n = np.logspace(1, 9, num=20)
 if adjusted:
     contrast_1 = 4.75e-5  # LHCII
     contrast_11 = 2.09e-4  # LHCII-micelle
-    contrast_2 = 0.0004  # PB
+    contrast_2 = 4.00e-3  # PB
     contrast_3 = 6.36e-6  # EGFP
     contrast_4 = 0.057  # HIV-QD
     n1 = np.logspace(1.8, 9, num=50)

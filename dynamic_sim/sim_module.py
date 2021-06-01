@@ -31,7 +31,7 @@ class TrackingSim:
 
     def __init__(self, numpoints=10000, method='orbital', freq=50, amp=1.0, waist=0.532, L=1.0, fwhm=1.0, tracking=True,
                  feedback=50, iscat=False, stage=True, kalman=True, rin=0.1, debug=True, intfactor=None,
-                 contrast=None, bg=0):
+                 contrast=None, adjustment=1, bg=0, avint=0.01):
 
         self.numpoints = numpoints
         self.method = method
@@ -50,6 +50,8 @@ class TrackingSim:
         self.intfactor = intfactor
         self.contrast = contrast
         self.bg = bg
+        self.adjustment = adjustment
+        self.avint = avint
 
         self.dt = 0.001  # timestep in ms
         self.cycle_steps = np.int(1 / (self.freq * self.dt))  # Number of time steps per feedback cycle
@@ -82,6 +84,7 @@ class TrackingSim:
         self.posnum = 0  # Current scan point for KT or MF
         self.tvals = np.zeros(self.numpoints)
         self.intvals = np.zeros(self.numpoints)
+        self.avintvals = np.zeros(self.numpoints)
         self.integralvals = np.zeros(self.numpoints)
 
     def particle_kf(self, x, r=0.0, q=0.1):
@@ -166,23 +169,24 @@ class TrackingSim:
         """Calculate measured intensity or contrast, and get measured position"""
 
         int_iter = self.calc_intensity(i, xp, xs, yp, ys)
+        # TODO: remove the 10 here and add comments
+        int_fluo = 10 * int_iter * self.dt
 
         if self.iscat:
-            int_ms = self.intfactor * 2 * 10 * int_iter * self.dt
-            int_ms = np.random.poisson(int_ms)
+            int_scat = int_fluo * self.intfactor * self.adjustment  # increased intensity for iscat
+            int_scat = np.random.poisson(int_scat)
 
-            bgval = (self.intfactor * 10 * self.dt) / self.contrast
-            bg_ms = np.random.poisson(bgval * 1000) / 1000
-            bg_meas = np.random.poisson(bgval * 1000) / 1000
+            bgval = (self.intfactor * self.adjustment * self.avint) / self.contrast
+            bg_iter = np.random.poisson(bgval * 1000) / 1000
+            bg_meas = np.random.poisson(bgval * 1000) / 1000  # background measured for calculating contrast
 
-            contrast = (int_ms + bg_ms - bg_meas) / bg_meas
+            contrast = (int_scat + bg_iter - bg_meas) / bg_meas
             self.intvals[i] = contrast
+            self.avintvals[i] = int_fluo
         else:
-            int_ms = 10 * int_iter
-            int_correct_iter = int_ms * self.dt
             bg = np.random.poisson(self.bg)
-            int_correct_iter = np.random.poisson(int_correct_iter)
-            self.intvals[i] = int_correct_iter + bg
+            int_fluo = np.random.poisson(int_fluo)
+            self.intvals[i] = int_fluo + bg
 
         # Use intensity or contrast to get positon estimate:
         if i % self.cycle_steps == 0:
@@ -321,6 +325,8 @@ class TrackingSim:
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints
         # return err, measx_vals, truex_vals, measy_vals, truey_vals, intvals
+        print("Average int expected: ", self.avint)
+        print("Average int achieved: ", np.mean(self.avintvals))
         return err, stagex_vals, truex_vals, stagey_vals, truey_vals, self.intvals
         # return err, kalmx_vals, truex_vals, kalmy_vals, truey_vals, intvals
 

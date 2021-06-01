@@ -4,49 +4,62 @@ from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 import joblib
 from sim_module import TrackingSim
+import os
 
 freq = 12.5
 ffreq = 3.125
 
-numpoints = 10000
+numpoints = 100000
 
-# intfactor = 1.4e6  # HIV-QD
-intfactor = 33  # PB
-# intfactor = 48  # LHCII
-# intfactor = 213  # LHCII-mic
-# intfactor = 84  # GFP
+samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
+sample = 4
 
-# contrast = 0.057  # HIV-QD
-contrast = 4.2e-4  # PB
-# contrast = 1.02e-5  # LHCII
-# contrast = 4.47e-5  # LHCII-mic
-# contrast = 1.08e-6  # GFP
+adjusted = True
+
+if adjusted:
+    intfactors = [0.91, 4.0, 1.3, 2.0, 88548]
+    contrasts = [4.75e-5, 2.09e-4, 4.00e-3, 6.36e-6, 0.90]
+else:
+    intfactors = [3.1, 13.5, 2.1, 5.3, 88548]
+    contrasts = [1.61e-4, 7.07e-4, 6.53e-3, 1.71e-5, 0.90]
+
+intfactor = intfactors[sample]
+contrast = contrasts[sample]
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=1)
-simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                                   feedback=ffreq, iscat=True, debug=False, rin=1, intfactor=intfactor, contrast=contrast)
+                             feedback=ffreq, iscat=False, debug=False, rin=0.04)
+if adjusted:
+    simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
+                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.04,
+                                       intfactor=intfactor, contrast=contrast, adjustment=1000, avint=0.0125)
+else:
+    simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
+                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.04,
+                                       intfactor=intfactor, contrast=contrast, avint=0.0125)
 
-diffs = np.logspace(-19, 2, 18)
-# diffs = np.logspace(-4, 2, 12)
-diffs = np.logspace(-15, 1, 8)
+diffs = np.logspace(-13, 0, 16)
+# diffs = np.logspace(-13, -5, 8)
 
 
 def parr_func(i, D, method, sim):
     print('run ', i, 'of 18')
     errsum = 0
-    for j in range(1):
+    for j in range(3):
         err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
         errsum += err
-    return errsum / 1
+    return errsum / 3
 
 
 def fitfunc(D, B, nm):
     return np.sqrt(2 * D / B + (nm ** 2 * B))
 
 
-errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
+# errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
 errs_iscat = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
+
+duration = 1  # seconds
+freq = 440  # Hz
+os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
 
 # untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
@@ -56,10 +69,14 @@ errs_iscat = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', si
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
 
-# np.savetxt('errs_fluo_gfp1.txt', errs)
-# np.savetxt('errs_iscat_pb1.txt', errs_iscat)
+# np.savetxt('errs_fluo4.txt', errs)
 
-plt.loglog(diffs, errs, '-o')
+if adjusted:
+    np.savetxt('errs_iscat_' + samples[sample] + '_adjust4.txt', errs_iscat)
+else:
+    np.savetxt('errs_iscat_' + samples[sample] + '4.txt', errs_iscat)
+
+# plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')
 # plt.loglog(diffs, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
