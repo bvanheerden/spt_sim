@@ -6,8 +6,16 @@ from static_crb.CRB import *
 from matplotlib import ticker
 import matplotlib.colors as colors
 import matplotlib.patheffects as PathEffects
+import rsmf
 
-matplotlib.rcParams.update({'font.size': 14})
+# matplotlib.rcParams.update({'font.size': 14})
+latex = True
+
+if latex:
+    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                     pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+    matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -72,6 +80,7 @@ crborb_iscat_1 = crb_lambda_orbital_iscat(0, 1, 566, nscat, 400, 1, nsigma)
 
 print(crborb_1)
 crb_diff = - np.log(crborb_iscat_1) + np.log(crborb_1)
+crb_diff = np.log(crborb_1 / crborb_iscat_1)
 mask = np.zeros_like(crb_diff, dtype=bool)
 for row, val in enumerate(mask):
     for col, val in enumerate(val):
@@ -80,16 +89,20 @@ for row, val in enumerate(mask):
 
 crb_diff = np.ma.array(crb_diff, mask=mask)
 
-fig, ax = plt.subplots()
+if latex:
+    fig = formatter.figure(width_ratio=0.7)
+else:
+    fig = plt.figure(figsize=[7, 5])
+ax = fig.add_subplot()
 ax.set_facecolor('lightgray')
-crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, cmap='coolwarm', norm=colors.TwoSlopeNorm(vcenter=0))
+crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, cmap='RdBu', norm=colors.TwoSlopeNorm(vcenter=1))
 ax.set_xscale('log')
-ax.set_ylabel('scattering cross-section')
-ax.set_xlabel('absorption cross-section')
+ax.set_ylabel('Scattering cross-section')
+ax.set_xlabel('Absorption cross-section')
 ax.set_yscale('log')
 
 colorbar1 = fig.colorbar(crbcont)
-colorbar1.set_label('CRB difference (iScat-Fluorescence)')
+colorbar1.set_label(r'Logarithm of CRB ratio $\log(\sigma_{scat}/\sigma_{fluo})$')
 
 # ax.axhline(3e-7)
 
@@ -108,6 +121,6 @@ for i, point in enumerate(points):
     else:
         ax.annotate(labels[i], point, (5, 5), textcoords='offset pixels', color='black')
 
-# plt.savefig('../out/comp_fluor_iscat.png')
 plt.tight_layout()
+plt.savefig('../out/comp_fluor_iscat.pdf')
 plt.show()

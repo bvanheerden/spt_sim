@@ -7,9 +7,12 @@ import joblib
 from sim_module import TrackingSim
 import rsmf
 
-# formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
-#                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
-# matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+
+formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 matplotlib.rcParams.update({'font.size': 11})
 
@@ -38,16 +41,16 @@ cutoff2 = (3.75 * 0.4) ** 2 * 3.125 * 0.001
 # cutoff1 = 0.03
 # cutoff2 = 0.2
 
-plt.figure(figsize=(4, 3), dpi=150)
-# fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs*1000, errs, marker='.', label='Orbital', lw=1)
-plt.loglog(diffs*1000, errs_kt, marker='.', label="Knight's Tour", lw=1, color='C2')
-plt.loglog(diffs*1000, errs_mf, marker='.', label='MINFLUX', lw=1, color='C1')
+# plt.figure(figsize=(4, 3), dpi=150)
+fig = formatter.figure(width_ratio=0.8)
+plt.loglog(diffs*1000, errs, marker='o', label='Orbital', lw=1)
+plt.loglog(diffs*1000, errs_kt, marker='o', label="Knight's Tour", lw=1, color='C2')
+plt.loglog(diffs*1000, errs_mf, marker='o', label='MINFLUX', lw=1, color='C1')
 # plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
 # plt.ylabel(r'Gemiddelde fout (\textmu m)')
 plt.xlabel(r'Diffusion coefficient (\textmu m$^2$s$^{-1}$)')
 plt.ylabel(r'Average error (\textmu m)')
-plt.loglog(diffs*1000, untracked, '--', color='gray')
+# plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff * 1000)
 # plt.axvline(cutoff1 * 1000)
@@ -57,6 +60,6 @@ plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.axhline(0.166)
 plt.legend()
 plt.tight_layout()
-# plt.savefig('out/err_diff_fluo.pdf')
+plt.savefig('../out/err_diff_fluo.pdf')
 # plt.savefig('out/poster/err_diff_fluo.pdf')
 plt.show()

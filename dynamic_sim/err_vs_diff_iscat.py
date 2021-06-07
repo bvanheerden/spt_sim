@@ -12,9 +12,11 @@ ffreq = 3.125
 numpoints = 100000
 
 samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
+rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
+rvals = [0.008, 0.001, 0.0005, 0.1, 0.0005]
 sample = 4
 
-adjusted = True
+adjusted = False
 
 if adjusted:
     intfactors = [0.91, 4.0, 1.3, 2.0, 88548]
@@ -25,29 +27,30 @@ else:
 
 intfactor = intfactors[sample]
 contrast = contrasts[sample]
+rval = rvals[sample]
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
                              feedback=ffreq, iscat=False, debug=False, rin=0.04)
 if adjusted:
     simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
-                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.04,
+                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=rval,
                                        intfactor=intfactor, contrast=contrast, adjustment=1000, avint=0.0125)
 else:
     simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
                                        tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.04,
                                        intfactor=intfactor, contrast=contrast, avint=0.0125)
 
-diffs = np.logspace(-13, 0, 16)
+diffs = np.logspace(-9, 0, 16)
 # diffs = np.logspace(-13, -5, 8)
 
 
 def parr_func(i, D, method, sim):
     print('run ', i, 'of 18')
     errsum = 0
-    for j in range(3):
+    for j in range(15):
         err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
         errsum += err
-    return errsum / 3
+    return errsum / 15
 
 
 def fitfunc(D, B, nm):
@@ -69,12 +72,12 @@ os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
 cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 0.1
 
-# np.savetxt('errs_fluo4.txt', errs)
+# np.savetxt('files/errs_fluo1.txt', errs)
 
 if adjusted:
-    np.savetxt('errs_iscat_' + samples[sample] + '_adjust4.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '_adjust2.txt', errs_iscat)
 else:
-    np.savetxt('errs_iscat_' + samples[sample] + '4.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '2.txt', errs_iscat)
 
 # plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')
