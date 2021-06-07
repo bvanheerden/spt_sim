@@ -188,7 +188,7 @@ class TrackingSim:
             int_fluo = np.random.poisson(int_fluo)
             self.intvals[i] = int_fluo + bg
 
-        # Use intensity or contrast to get positon estimate:
+        # Use intensity or contrast to get position estimate:
         if i % self.cycle_steps == 0:
             measx, measy, integral = self.meas_func(i)
             self.integralvals[i] = integral
