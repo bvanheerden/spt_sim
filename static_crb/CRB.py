@@ -141,25 +141,25 @@ class MinFlux(PositionMethod):
 
         self.param_vector()
 
-    def lambdify(self, crb):
-        if self.bg:
-            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.SBR], crb, ['numpy', 'sympy'])
-        else:
-            crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
-        return crb_lambda
+    # def lambdify(self, crb):
+    #     if self.bg:
+    #         crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp, self.SBR], crb, ['numpy', 'sympy'])
+    #     else:
+    #         crb_lambda = sp.lambdify([self.x, self.y, self.L, self.N, self.fwhm, self.amp], crb, ['numpy', 'sympy'])
+    #     return crb_lambda
 
 
 class Orbital(PositionMethod):
 
-    def __init__(self, filename, iscat=False, bg=False):
+    def __init__(self, filename, iscat=False, bg=False, numpoints=60):
         super().__init__(filename, iscat, bg)
+        self.numpoints = numpoints
         self.shape = self.amp * sp.exp(-4 * np.log(2) * ((self.r / self.fwhm) ** 2))
         self.get_pvector()
         self.return_lambda()
 
     def get_pvector(self):
-        alpha = np.linspace(0, 360, 60, endpoint=False)
-        print(alpha)
+        alpha = np.linspace(0, 360, self.numpoints, endpoint=False)
         alpha = np.deg2rad(alpha)
         self.xpositions = self.L / 2 * np.cos(alpha)
         self.ypositions = self.L / 2 * np.sin(alpha)
