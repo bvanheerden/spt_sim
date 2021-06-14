@@ -9,7 +9,7 @@ ffreq = 3.125
 
 samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
 
-adjusted = True
+adjusted = False
 
 if adjusted:
     intfactors = [0.91, 4.0, 1.3, 2.0, 88548]
@@ -34,6 +34,8 @@ simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=freq
                                    tracking=True, feedback=ffreq, iscat=True, debug=False, rin=rin,
                                    intfactor=intfactor, contrast=contrast, adjustment=1000, avint=0.0124)
 
+err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(2.5e-6)
+
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)
@@ -42,7 +44,7 @@ simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=freq
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.01)
 # err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.0001)
 # err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.1)
-err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.1)
+# err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.1)
 
 # binnedints = np.zeros(100)
 # for i in range(100):

@@ -41,6 +41,7 @@ else:
                                        intfactor=intfactor, contrast=contrast, avint=0.0125)
 
 diffs = np.logspace(-9, 0, 16)
+print(diffs[4])
 # diffs = np.logspace(-13, -5, 8)
 
 
