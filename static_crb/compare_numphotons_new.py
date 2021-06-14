@@ -54,56 +54,66 @@ crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
 adjusted = True
 
-n = np.logspace(1, 9, num=20)
 if adjusted:
+    nfact1 = 0.91 * 1000  # LHCII
+    nfact11 = 3.99 * 1000  # LHCII-micelle
+    nfact2 = 1.27 * 1000  # PB
+    nfact3 = 1.98 * 1000  # EGFP
+    nfact4 = 88547 * 1000  # HIV-QD
+
     contrast_1 = 4.75e-5  # LHCII
     contrast_11 = 2.09e-4  # LHCII-micelle
     contrast_2 = 4.00e-3  # PB
     contrast_3 = 6.36e-6  # EGFP
     contrast_4 = 0.057  # HIV-QD
-    n1 = np.logspace(1.8, 9, num=50)
-    n1_kt = np.logspace(1.67, 9, num=50)
-    n11 = np.logspace(1, 9, num=50)
-    n11_kt = np.logspace(1, 9, num=50)
-    n2 = np.logspace(1, 9, num=20)
-    n2_kt = np.logspace(1, 9, num=50)
-    n3 = np.logspace(2.3, 9, num=50)
-    n3_kt = np.logspace(2.21, 9, num=50)
 else:
+    nfact1 = 3.1 # LHCII
+    nfact11 = 13.5 # LHCII-micelle
+    nfact2 = 2.1 # PB
+    nfact3 = 5.3 # EGFP
+    nfact4 = 88547 # HIV-QD
+
     contrast_1 = 1.61e-4  # LHCII
     contrast_11 = 7.07e-4  # LHCII-micelle
     contrast_2 = 0.00663  # PB
     contrast_3 = 1.71e-5  # EGFP
     contrast_4 = 0.903  # HIV-QD
-    n1 = np.logspace(3.6, 9, num=50)
-    n1_kt = np.logspace(2.86, 9, num=50)
-    n11 = np.logspace(2.3, 9, num=50)
-    n11_kt = np.logspace(1.89, 9, num=50)
-    n2 = np.logspace(2.2, 9, num=50)
-    n2_kt = np.logspace(1.87, 9, num=50)
-    n3 = np.logspace(4.4, 9, num=50)
-    n3_kt = np.logspace(3.7, 9, num=50)
-n4 = np.logspace(0, 9, num=50)
+
+asymp1 = 2 / contrast_1
+asymp1_plot = asymp1 / nfact1
+asymp11 = 2 / contrast_11
+asymp11_plot = asymp11 / nfact11
+asymp2 = 2 / contrast_2
+asymp2_plot = asymp2 / nfact2
+asymp3 = 2 / contrast_3
+asymp3_plot = asymp3 / nfact3
+print(asymp1, np.log10(asymp1))
+
+n = np.logspace(-0.7, 9, num=20)
 
 if adjusted:
-    nscat_1 = 0.91 * n1 * 1000  # LHCII
-    nscat_1_kt = 0.91 * n1_kt * 1000  # LHCII
-    nscat_11 = 3.99 * n11 * 1000  # LHCII-micelle
-    nscat_11_kt = 3.99 * n11_kt * 1000  # LHCII-micelle
-    nscat_2 = 1.27 * n2 * 1000  # PB
-    nscat_2_kt = 1.27 * n2_kt * 1000  # PB
-    nscat_3 = 1.98 * n3 * 1000  # EGFP
-    nscat_3_kt = 1.98 * n3_kt * 1000  # EGFP
+    numplotpoints = 2500
 else:
-    nscat_1 = 3.1 * n1  # LHCII
-    nscat_1_kt = 3.1 * n1_kt  # LHCII
-    nscat_11 = 13.5 * n11  # LHCII-micelle
-    nscat_11_kt = 13.5 * n11_kt  # LHCII-micelle
-    nscat_2 = 2.1 * n2  # PB
-    nscat_2_kt = 2.1 * n2_kt  # PB
-    nscat_3 = 5.3 * n3  # EGFP
-    nscat_3_kt = 5.3 * n3_kt  # EGFP
-nscat_4 = 88547 * n4  # HIV-QD
+    numplotpoints = 200
+n1 = np.logspace(np.log10(asymp1_plot), 9, num=numplotpoints)
+n1_kt = np.logspace(np.log10(asymp1_plot), 9, num=numplotpoints)
+n11 = np.logspace(np.log10(asymp11_plot), 9, num=numplotpoints)
+n11_kt = np.logspace(np.log10(asymp11_plot), 9, num=numplotpoints)
+n2 = np.logspace(np.log10(asymp2_plot), 9, num=numplotpoints)
+n2_kt = np.logspace(np.log10(asymp2_plot), 9, num=numplotpoints)
+n3 = np.logspace(np.log10(asymp3_plot), 9, num=numplotpoints)
+n3_kt = np.logspace(np.log10(asymp3_plot), 9, num=numplotpoints)
+n4 = np.logspace(-0.7, 9, num=100)
+
+nscat_1 = nfact1 * n1  # LHCII
+nscat_1_kt = nfact1 * n1_kt  # LHCII
+nscat_11 = nfact11 * n11  # LHCII-micelle
+nscat_11_kt = nfact11 * n11_kt  # LHCII-micelle
+nscat_2 = nfact2 * n2  # PB
+nscat_2_kt = nfact2 * n2_kt  # PB
+nscat_3 = nfact3 * n3  # EGFP
+nscat_3_kt = nfact3 * n3_kt  # EGFP
+nscat_4 = nfact4 * n4  # HIV-QD
 
 nsigma_1 = np.sqrt(2 * nscat_1 / contrast_1)
 nsigma_1_kt = np.sqrt(2 * nscat_1_kt / contrast_1)
@@ -155,6 +165,11 @@ ax1.loglog(n11, crborb_iscat_11, label='LHCII-micelle (iSCAT)')
 ax1.loglog(n2, crborb_iscat_2, label='PB (iSCAT)')
 ax1.loglog(n3, crborb_iscat_3, label='GFP (iSCAT)')
 ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
+
+# ax1.vlines(asymp1_plot, 10, 800, color='C1', linestyles='--', lw=1.0)
+# ax1.vlines(asymp11_plot, 10, 800, color='C2', linestyles='--', lw=1.0)
+# ax1.vlines(asymp2_plot, 10, 800, color='C3', linestyles='--', lw=1.0)
+# ax1.vlines(asymp3_plot, 10, 800, color='C4', linestyles='--', lw=1.0)
 
 # plt.ylim(None, 100)
 fig.legend(bbox_to_anchor=(0.13, 0.10), loc='lower left', framealpha=0.0, ncol=1)
@@ -210,9 +225,8 @@ for ax in fig.get_axes():
         
 if adjusted:
     pass
-    # ax1.text(1e6, 10, '$I_s = 5 I_f$', fontsize=16)
-    # ax2.text(1e6, 10, '$I_s = 10 I_f$', fontsize=16)
-    # ax3.text(1e6, 10, '$I_s = 5000 I_f$', fontsize=16)
+
+ax1.set_ylim(None, 5e3)
 
 plt.subplots_adjust(hspace=0.4)
 plt.tight_layout()

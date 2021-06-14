@@ -86,6 +86,7 @@ class TrackingSim:
         self.intvals = np.zeros(self.numpoints)
         self.avintvals = np.zeros(self.numpoints)
         self.integralvals = np.zeros(self.numpoints)
+        self.bgvals = np.zeros(self.numpoints)
 
     def particle_kf(self, x, r=0.0, q=0.1):
         """Initialise Kalman filter using filterpy.
@@ -124,6 +125,7 @@ class TrackingSim:
         kt_steps = self.kt_steps
         omega = self.omega
         intvals = self.intvals
+        bgvals = self.bgvals
         tvals = self.tvals
         integral = np.sum(intvals[i - cycle_steps:i])
 
@@ -183,6 +185,7 @@ class TrackingSim:
             contrast = (int_scat + bg_iter - bg_meas) / bg_meas
             self.intvals[i] = contrast
             self.avintvals[i] = int_fluo
+            self.bgvals[i] = bg_meas
         else:
             bg = np.random.poisson(self.bg)
             int_fluo = np.random.poisson(int_fluo)
@@ -302,6 +305,16 @@ class TrackingSim:
             else:
                 xs = 0
                 ys = 0
+
+            # Stage limit
+            if xs > 20:
+                xs = 20
+            elif xs < -20:
+                xs = -20
+            if ys > 20:
+                ys = 20
+            elif ys < -20:
+                ys = -20
 
             # Get measured postion
             measx, measy = self.measure_pos(i, measx, measy, xp, xs, yp, ys)

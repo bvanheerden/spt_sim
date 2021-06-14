@@ -14,7 +14,7 @@ numpoints = 100000
 samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
 rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
 rvals = [0.008, 0.001, 0.0005, 0.1, 0.0005]
-sample = 4
+sample = 3
 
 adjusted = False
 
@@ -47,10 +47,12 @@ diffs = np.logspace(-9, 0, 16)
 def parr_func(i, D, method, sim):
     print('run ', i, 'of 18')
     errsum = 0
-    for j in range(15):
+    for j in range(200):
+        if j % 20 == 0:
+            print(j)
         err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
         errsum += err
-    return errsum / 15
+    return errsum / 200
 
 
 def fitfunc(D, B, nm):

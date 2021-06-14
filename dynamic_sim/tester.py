@@ -40,8 +40,9 @@ simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=freq
 # err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.0001)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.001)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.01)
-err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.0001)
-# err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.1)
+# err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.0001)
+# err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.1)
+err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.1)
 
 # binnedints = np.zeros(100)
 # for i in range(100):
