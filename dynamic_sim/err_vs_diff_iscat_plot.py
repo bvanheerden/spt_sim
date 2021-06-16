@@ -11,7 +11,7 @@ import os
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -19,17 +19,17 @@ matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 # matplotlib.rcParams.update({'font.size': 13})
 
 errs = np.loadtxt('files/errs_fluo1.txt')
-errs_gfp = np.loadtxt('files/errs_iscat_gfp2.txt')
-errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd2.txt')
-errs_lhcii = np.loadtxt('files/errs_iscat_lhcii2.txt')
-errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic2.txt')
-errs_pb = np.loadtxt('files/errs_iscat_pb2.txt')
+# errs_gfp = np.loadtxt('files/errs_iscat_gfp2.txt')
+# errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd2.txt')
+# errs_lhcii = np.loadtxt('files/errs_iscat_lhcii2.txt')
+# errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic2.txt')
+# errs_pb = np.loadtxt('files/errs_iscat_pb2.txt')
 
-# errs_gfp = np.loadtxt('files/errs_iscat_gfp_adjust2.txt')
-# errs_lhcii = np.loadtxt('files/errs_iscat_lhcii_adjust2.txt')
-# errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic_adjust2.txt')
-# errs_pb = np.loadtxt('files/errs_iscat_pb_adjust2.txt')
-# errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd_adjust2.txt')
+errs_gfp = np.loadtxt('files/errs_iscat_gfp_adjust3.txt')
+errs_lhcii = np.loadtxt('files/errs_iscat_lhcii_adjust3.txt')
+errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic_adjust3.txt')
+errs_pb = np.loadtxt('files/errs_iscat_pb_adjust3.txt')
+errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd_adjust3.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 # diffs = np.logspace(-19, 2, 18)
@@ -59,6 +59,6 @@ plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.axvline(cutoff)
 plt.legend(ncol=2)
 plt.tight_layout()
-# plt.savefig('../out/err_diff_iscat_adjust.pdf')
-plt.savefig('../out/err_diff_iscat.pdf')
+plt.savefig('../out/err_diff_iscat_adjust.pdf')
+# plt.savefig('../out/err_diff_iscat.pdf')
 plt.show()

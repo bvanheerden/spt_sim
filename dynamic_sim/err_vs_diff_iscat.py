@@ -16,7 +16,7 @@ rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
 rvals = [0.008, 0.001, 0.0005, 0.1, 0.0005]
 sample = 3
 
-adjusted = False
+adjusted = True
 
 if adjusted:
     intfactors = [0.91, 4.0, 1.3, 2.0, 88548]
@@ -42,18 +42,19 @@ else:
 
 diffs = np.logspace(-9, 0, 16)
 print(diffs[4])
+# diffs = [diffs[4], 1e-6]
 # diffs = np.logspace(-13, -5, 8)
 
 
 def parr_func(i, D, method, sim):
     print('run ', i, 'of 18')
     errsum = 0
-    for j in range(200):
+    for j in range(500):
         if j % 20 == 0:
             print(j)
         err, measx, truex, measy, truey, intvals = sim.main_tracking(D)
         errsum += err
-    return errsum / 200
+    return errsum / 500
 
 
 def fitfunc(D, B, nm):
@@ -61,11 +62,11 @@ def fitfunc(D, B, nm):
 
 
 # errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
-errs_iscat = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
+errs_iscat = joblib.Parallel(n_jobs=6)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
 
-duration = 1  # seconds
-freq = 440  # Hz
-os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
+# duration = 1  # seconds
+# freq = 440  # Hz
+# os.system('play -nq -t alsa synth {} sine {}'.format(duration, freq))
 
 # untracked = np.sqrt(2000 * diffs)
 # param, pcov = curve_fit(fitfunc, diffs[:7], errs[:7])
@@ -78,9 +79,9 @@ cutoff = np.pi * 0.025 ** 2 * 0.1
 # np.savetxt('files/errs_fluo1.txt', errs)
 
 if adjusted:
-    np.savetxt('files/errs_iscat_' + samples[sample] + '_adjust2.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '_adjust3.txt', errs_iscat)
 else:
-    np.savetxt('files/errs_iscat_' + samples[sample] + '2.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '3.txt', errs_iscat)
 
 # plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')

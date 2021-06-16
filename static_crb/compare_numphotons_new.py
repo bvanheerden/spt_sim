@@ -16,7 +16,7 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 latex = True
 
 if latex:
-    formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+    formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -59,7 +59,7 @@ if adjusted:
     nfact11 = 3.99 * 1000  # LHCII-micelle
     nfact2 = 1.27 * 1000  # PB
     nfact3 = 1.98 * 1000  # EGFP
-    nfact4 = 88547 * 1000  # HIV-QD
+    nfact4 = 88547 #* 1000  # HIV-QD
 
     contrast_1 = 4.75e-5  # LHCII
     contrast_11 = 2.09e-4  # LHCII-micelle
@@ -67,11 +67,11 @@ if adjusted:
     contrast_3 = 6.36e-6  # EGFP
     contrast_4 = 0.057  # HIV-QD
 else:
-    nfact1 = 3.1 # LHCII
-    nfact11 = 13.5 # LHCII-micelle
-    nfact2 = 2.1 # PB
-    nfact3 = 5.3 # EGFP
-    nfact4 = 88547 # HIV-QD
+    nfact1 = 3.1  # LHCII
+    nfact11 = 13.5  # LHCII-micelle
+    nfact2 = 2.1  # PB
+    nfact3 = 5.3  # EGFP
+    nfact4 = 88547  # HIV-QD
 
     contrast_1 = 1.61e-4  # LHCII
     contrast_11 = 7.07e-4  # LHCII-micelle
@@ -89,21 +89,22 @@ asymp3 = 2 / contrast_3
 asymp3_plot = asymp3 / nfact3
 print(asymp1, np.log10(asymp1))
 
-n = np.logspace(-0.7, 9, num=20)
+endpower = 7  # x-axis ends at 10^7
+n = np.logspace(-0.7, endpower, num=20)
 
 if adjusted:
     numplotpoints = 2500
 else:
     numplotpoints = 200
-n1 = np.logspace(np.log10(asymp1_plot), 9, num=numplotpoints)
-n1_kt = np.logspace(np.log10(asymp1_plot), 9, num=numplotpoints)
-n11 = np.logspace(np.log10(asymp11_plot), 9, num=numplotpoints)
-n11_kt = np.logspace(np.log10(asymp11_plot), 9, num=numplotpoints)
-n2 = np.logspace(np.log10(asymp2_plot), 9, num=numplotpoints)
-n2_kt = np.logspace(np.log10(asymp2_plot), 9, num=numplotpoints)
-n3 = np.logspace(np.log10(asymp3_plot), 9, num=numplotpoints)
-n3_kt = np.logspace(np.log10(asymp3_plot), 9, num=numplotpoints)
-n4 = np.logspace(-0.7, 9, num=100)
+n1 = np.logspace(np.log10(asymp1_plot), endpower, num=numplotpoints)
+n1_kt = np.logspace(np.log10(asymp1_plot), endpower, num=numplotpoints)
+n11 = np.logspace(np.log10(asymp11_plot), endpower, num=numplotpoints)
+n11_kt = np.logspace(np.log10(asymp11_plot), endpower, num=numplotpoints)
+n2 = np.logspace(np.log10(asymp2_plot), endpower, num=numplotpoints)
+n2_kt = np.logspace(np.log10(asymp2_plot), endpower, num=numplotpoints)
+n3 = np.logspace(np.log10(asymp3_plot), endpower, num=numplotpoints)
+n3_kt = np.logspace(np.log10(asymp3_plot), endpower, num=numplotpoints)
+n4 = np.logspace(-0.7, endpower, num=100)
 
 nscat_1 = nfact1 * n1  # LHCII
 nscat_1_kt = nfact1 * n1_kt  # LHCII
@@ -153,7 +154,7 @@ crbknight_iscat_4 = crb_lambda_knight_iscat(0, 1, 566, nscat_4, 400, 1, nsigma_4
 fit = 100 / np.sqrt(n)
 
 if latex:
-    fig = formatter.figure(width_ratio=0.8, aspect_ratio=1)
+    fig = formatter.figure(width_ratio=0.6, aspect_ratio=1.0)
 else:
     fig = plt.figure(figsize=[7, 5])
 ax1 = fig.add_subplot()
@@ -172,7 +173,7 @@ ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
 # ax1.vlines(asymp3_plot, 10, 800, color='C4', linestyles='--', lw=1.0)
 
 # plt.ylim(None, 100)
-fig.legend(bbox_to_anchor=(0.13, 0.10), loc='lower left', framealpha=0.0, ncol=1)
+fig.legend(bbox_to_anchor=(0.15, 0.12), loc='lower left', framealpha=0.0, ncol=1)
 ax1.set_ylabel('CRB (nm)')
 ax1.set_xlabel('Number of photons (fluorescence)')
 # ax1.text(100, 0.01, "LHCII")
@@ -192,17 +193,19 @@ if adjusted:
     div_func_2 = lambda x: x / (1.27 * 1000)  # LHCII
     multip_func_3 = lambda x: 1.98 * x * 1000  # EGFP
     div_func_3 = lambda x: x / (1.98 * 1000)  # LHCII
+    # multip_func_4 = lambda x: 88547 * x * 1000  # HIV-QD
+    # div_func_4 = lambda x: x / (88547 * 1000) # LHCII
 else:
     multip_func_av = lambda x: 6 * x  # LHCII
-    div_func_av = lambda x: x / (6 * 1000)  # LHCII
+    div_func_av = lambda x: x / 6   # LHCII
     multip_func_1 = lambda x: 3.1 * x  # LHCII
-    div_func_1 = lambda x: x / (3.1 * 1000)  # LHCII
+    div_func_1 = lambda x: x / 3.1   # LHCII
     multip_func_11 = lambda x: 13.5 * x  # LHCII-micelle
-    div_func_11 = lambda x: x / (13.5 * 1000)  # LHCII
+    div_func_11 = lambda x: x / 13.5   # LHCII
     multip_func_2 = lambda x: 2.1 * x  # PB
-    div_func_2 = lambda x: x / (2.1 * 1000)  # LHCII
+    div_func_2 = lambda x: x / 2.1   # LHCII
     multip_func_3 = lambda x: 5.3 * x  # EGFP
-    div_func_3 = lambda x: x / (5.3 * 1000)  # LHCII
+    div_func_3 = lambda x: x / 5.3   # LHCII
 multip_func_4 = lambda x: 88547 * x  # HIV-QD
 div_func_4 = lambda x: x / 88547  # LHCII
 
@@ -226,7 +229,7 @@ for ax in fig.get_axes():
 if adjusted:
     pass
 
-ax1.set_ylim(None, 5e3)
+ax1.set_ylim(None, 1e3)
 
 plt.subplots_adjust(hspace=0.4)
 plt.tight_layout()

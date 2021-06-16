@@ -10,15 +10,15 @@ import rsmf
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 matplotlib.rcParams.update({'font.size': 11})
 
-errs = np.loadtxt('errstemp.txt')
-errs_mf = np.loadtxt('errs_mftemp.txt')
-errs_kt = np.loadtxt('errs_kttemp.txt')
+errs = np.loadtxt('files/errstemp.txt')
+errs_mf = np.loadtxt('files/errs_mftemp.txt')
+errs_kt = np.loadtxt('files/errs_kttemp.txt')
 
 # errs = np.concatenate((np.loadtxt('errs8.txt').flatten(), np.loadtxt('errs9.txt').flatten()[:]))
 # errs_mf = np.concatenate((np.loadtxt('errs_mf8.txt').flatten(), np.loadtxt('errs_mf9.txt').flatten()[:]))

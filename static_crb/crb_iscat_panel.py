@@ -6,7 +6,7 @@ import rsmf
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
+formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
@@ -86,7 +86,7 @@ crb300_mf = crb_lambda_minflux(1, y, 300, nscat, 800, 1, nsigma)
 crb500_mf = crb_lambda_minflux(0, y, 500, nscat, 800, 1, nsigma)
 crb700_mf = crb_lambda_minflux(0, y, 700, nscat, 800, 1, nsigma)
 
-fig = formatter.figure(width_ratio=1.0, aspect_ratio=0.4)
+fig = formatter.figure(width_ratio=0.8, aspect_ratio=0.4)
 spec = matplotlib.gridspec.GridSpec(ncols=3, nrows=1)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[0, 1], sharey=ax1)
