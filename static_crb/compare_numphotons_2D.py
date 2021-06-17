@@ -119,13 +119,22 @@ point3 = (1.258e-5, 1.60e-8)  # PB
 point4 = (1.3e-8, 4.04e-14)  # GFP
 point5 = (4.08e-8, 8.2e-4)  # HIV-QD
 point6 = (1.02e-5, 1.07e-7)  # FluoSphere
-points = [point1, point2, point3, point4, point5, point6]
-labels = ['LHCII', 'LHCII-micelle', 'PB', 'GFP', 'HIV-QD', 'Microsphere']
+point7 = (5e-7, 1.00e-6)  # Qdot
+point8 = (1.2e-7, 2.25e-12)  # LH2
+point9 = (3.4e-8, 6.2e-12)  # LH2
+points = [point1, point2, point3, point4, point5, point6, point7, point8, point9]
+labels = ['LHCII', 'LHCII-micelle', 'PB', 'GFP', 'HIV-QD', 'Microsphere', 'Qdot', 'LH2', 'Fibrinogen-Alexa647']
 
 for i, point in enumerate(points):
     ax.plot(point[0], point[1], 'o', color='white', markeredgecolor='black')
     if labels[i] == 'HIV-QD':
         ax.annotate(labels[i], point, (5, -20), textcoords='offset pixels', color='black')
+    elif labels[i] == 'Microsphere':
+        ax.annotate(labels[i], point, (-80, 0), textcoords='offset pixels', color='black')
+    elif labels[i] == 'LH2':
+        ax.annotate(labels[i], point, (-25, -15), textcoords='offset pixels', color='black')
+    elif labels[i] == 'Fibrinogen-Alexa647':
+        ax.annotate(labels[i], point, (-50, 10), textcoords='offset pixels', color='black')
     else:
         ax.annotate(labels[i], point, (5, 5), textcoords='offset pixels', color='black')
 
