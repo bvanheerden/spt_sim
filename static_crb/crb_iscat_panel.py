@@ -80,11 +80,12 @@ crb500 = crb_lambda_orbital(0, y, 500, nscat, 353, 1, nsigma)
 crb700 = crb_lambda_orbital(0, y, 700, nscat, 494, 1, nsigma)
 crb900 = crb_lambda_orbital(0, y, 900, nscat, 636, 1, nsigma)
 
-crb50_mf = crb_lambda_minflux(0, y, 50, nscat, 800, 1, nsigma)
-crb100_mf = crb_lambda_minflux(0, y, 100, nscat, 800, 1, nsigma)
-crb300_mf = crb_lambda_minflux(1, y, 300, nscat, 800, 1, nsigma)
-crb500_mf = crb_lambda_minflux(0, y, 500, nscat, 800, 1, nsigma)
-crb700_mf = crb_lambda_minflux(0, y, 700, nscat, 800, 1, nsigma)
+mf_beam = 800
+crb50_mf = crb_lambda_minflux(0, y, 50, nscat, mf_beam, 1, nsigma)
+crb100_mf = crb_lambda_minflux(0, y, 100, nscat, mf_beam, 1, nsigma)
+crb300_mf = crb_lambda_minflux(0, y, 300, nscat, mf_beam, 1, nsigma)
+crb500_mf = crb_lambda_minflux(0, y, 500, nscat, mf_beam, 1, nsigma)
+crb700_mf = crb_lambda_minflux(0, y, 700, nscat, mf_beam, 1, nsigma)
 
 fig = formatter.figure(width_ratio=0.8, aspect_ratio=0.4)
 spec = matplotlib.gridspec.GridSpec(ncols=3, nrows=1)
@@ -125,7 +126,12 @@ ax3.text(140, 180, '500', fontsize=10, color='C3')
 ax3.text(230, 300, '700', fontsize=10, color='C4')
 
 ax3.set_yscale('log')
-ax3.set_ylim(10, None)
+ax3.set_ylim(None, 2000)
+
+ticklocs = 10 ** np.arange(1, 4, 0.1)
+ticklocs = [50, 70, 90]
+ax3.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
+ax3.tick_params(which='minor', length=2, color='black')
 
 # plt.legend(loc='lower right', framealpha=0.5)
 ax1.set_xlabel('x (nm)')
