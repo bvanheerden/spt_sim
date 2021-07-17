@@ -100,7 +100,7 @@ for c in crbcont.collections:
     c.set_edgecolor("face")
 ax.set_xscale('log')
 ax.set_ylabel('Scattering cross-section')
-ax.set_xlabel('Absorption cross-section')
+ax.set_xlabel(r'Absorption cross-section $\times$ quantum yield')
 ax.set_yscale('log')
 
 colorbar1 = fig.colorbar(crbcont)
@@ -123,7 +123,7 @@ point7 = (5e-7, 1.00e-6)  # Qdot
 point8 = (1.2e-7, 2.25e-12)  # LH2
 point9 = (3.4e-8, 6.2e-12)  # LH2
 points = [point1, point2, point3, point4, point5, point6, point7, point8, point9]
-labels = ['LHCII', 'LHCII-micelle', 'PB', 'GFP', 'HIV-QD', 'Microsphere', 'Qdot', 'LH2', 'Fibrinogen-Alexa647']
+labels = ['LHCII', 'LHCII-micelle', 'PB', 'GFP', 'HIV-QD', 'Microsphere', 'QD', 'LH2', 'Fibrinogen-Alexa647']
 
 for i, point in enumerate(points):
     ax.plot(point[0], point[1], 'o', color='white', markeredgecolor='black')

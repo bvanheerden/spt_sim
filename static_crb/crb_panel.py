@@ -15,7 +15,7 @@ formatter = rsmf.CustomFormatter(columnwidth=345 * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
-matplotlib.rcParams.update({'font.family': 'serif'})
+# matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
@@ -264,7 +264,7 @@ ax8.text(-400, 9, 'Orb 566', fontsize=10, color='C3')
 
 for ax in fig.get_axes():
     for line in ax.lines:
-        line.set_lw(1.5)
+        line.set_lw(1.3)
 
 plt.tight_layout()
 plt.savefig('../out/crb_panel_art.pdf')
