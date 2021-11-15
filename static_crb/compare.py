@@ -5,7 +5,8 @@ import matplotlib
 from static_crb.CRB import *
 import rsmf
 
-color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
+# color_list = ['#4477AA', '#66CCEE', '#228833', '#CC6677', '#EE6677', '#AA3377', '#BBBBBB']
+color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
 latex = False
@@ -17,7 +18,7 @@ if latex:
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
 else:
-    matplotlib.rcParams.update({'font.size': 11})
+    matplotlib.rcParams.update({'font.size': 13})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -79,19 +80,22 @@ ax1 = figure.add_subplot(spec[0, 0])
 ax2 = figure.add_subplot(spec[0, 1], sharey=ax1)
 
 ax1.set_yscale('log')
-ax1.plot(y, crborb, label='Orbital L=566nm')
-ax1.plot(y, crbknight, label="Knight's Tour L=1500nm")
-ax1.plot(y, crbmf, label='MINFLUX L=50nm')
-ax1.plot(y, crbmf_large, label='MINFLUX L=566nm')
+ax1.plot(y, crborb, label='Orbital', lw=2)
+ax1.plot(y, crbknight, label="Knight's Tour", lw=2, color='C2')
+ax1.plot(y, crbmf, label='MINFLUX', lw=2, color='C1')
+# ax1.plot(y, crbmf_large, label='MINFLUX L=566nm')
 
 ax2.plot(y, crborb_bg, label='Orbital L=566nm')
 ax2.plot(y, crbknight_bg, label="Knight's Tour L=1500nm")
 ax2.plot(y, crbmf_bg, label='MINFLUX L=50nm')
-ax2.plot(y, crbmf_large_bg, label='MINFLUX L=566nm')
+# ax2.plot(y, crbmf_large_bg, label='MINFLUX L=566nm')
 
 ax1.legend(loc='lower left', framealpha=0.7, handlelength=1.0)
 ax1.set_xlabel('Distance (nm)')
+ax2.set_xlabel('Distance (nm)')
 ax1.set_ylabel('CRB (nm)')
+ax1.set_title('SBR = $\infty$')
+ax2.set_title('SBR = 20')
 
 plt.xlim(-500, 500)
 plt.ylim(0.9, None)

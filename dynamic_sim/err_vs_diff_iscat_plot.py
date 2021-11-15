@@ -16,7 +16,7 @@ formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 
-# matplotlib.rcParams.update({'font.size': 13})
+matplotlib.rcParams.update({'font.size': 10})
 
 errs = np.loadtxt('files/errs_fluo1.txt')
 # errs_gfp = np.loadtxt('files/errs_iscat_gfp2.txt')
@@ -45,19 +45,21 @@ cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 12.5
 
 # plt.figure(figsize=(6, 4), dpi=150)
-fig = formatter.figure(width_ratio=0.8)
-plt.loglog(diffs*1000, errs, '-o', label='Fluorescence')
-plt.loglog(diffs*1000, errs_lhcii, '-o', label="LHCII")
-plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Micelle")
-plt.loglog(diffs*1000, errs_pb, '-o', label="PB")
-plt.loglog(diffs*1000, errs_gfp, '-o', label='GFP')
-plt.loglog(diffs*1000, errs_hiv, '-o', label="HIV-QD")
+fig = formatter.figure(width_ratio=0.53, aspect_ratio=0.7)
+fluo, = plt.loglog(diffs*1000, errs, '-o', label='Fluorescence')
+lhcii, = plt.loglog(diffs*1000, errs_lhcii, '-o', label="LHCII")
+mic, = plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Micelle")
+pb, = plt.loglog(diffs*1000, errs_pb, '-o', label="PB")
+gfp, = plt.loglog(diffs*1000, errs_gfp, '-o', label='GFP')
+hiv, = plt.loglog(diffs*1000, errs_hiv, '-o', label="HIV-QD")
 plt.xlabel(r'Diffusion coefficient (\textmu m$^2$s$^{-1}$)')
 plt.ylabel(r'Average tracking error (\textmu m)')
 plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff)
-plt.legend(ncol=2)
+legend1 = plt.legend([fluo, lhcii, mic], ['Fluorescence', 'LHCII', 'LHCII-micelle'], ncol=1)
+plt.legend([pb, gfp, hiv], ['PB', 'GFP', 'HIV-QD'], ncol=1, loc='lower right')
+plt.gca().add_artist(legend1)
 plt.tight_layout()
 plt.savefig('../out/err_diff_iscat_adjust.pdf')
 # plt.savefig('../out/err_diff_iscat.pdf')
