@@ -11,11 +11,14 @@ color_list = ['#5f4690', '#349ca3', '#52a14c', '#e79406', '#b9474e', '#764276', 
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=345 * 0.01389, fontsizes=10,
+# col_width = 345  # For dissertation I think
+col_width = 470  # For journal draft
+
+formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
-# matplotlib.rcParams.update({'font.family': 'serif'})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
@@ -127,7 +130,7 @@ crbmf_bg = crb_lambda_minflux_bg(0, y1, 50, 100, 800, 1, sbr)
 crborb_bg = crb_lambda_orbital_bg(0, y1, 566, 100, 400, 1, sbr)
 
 # fig = plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=1.0, aspect_ratio=1.7)
+fig = formatter.figure(width_ratio=0.7, aspect_ratio=1.7)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=4)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0], sharex=ax1)
@@ -138,6 +141,9 @@ ax6 = fig.add_subplot(spec[1, 1], sharex=ax5, sharey=ax2)
 ax7 = fig.add_subplot(spec[2, 1], sharex=ax5, sharey=ax3)
 ax8 = fig.add_subplot(spec[3, 1], sharex=ax5, sharey=ax4)
 
+loc = matplotlib.ticker.MultipleLocator(base=10)
+formatter = plt.LogFormatter(labelOnlyBase=False, minor_thresholds=(2,1))
+
 ax1.set_yscale('log')
 ax1.plot(y, crb100, label='$L=300$ nm')
 ax1.plot(y, crb200, label='$L=500$ nm')
@@ -145,10 +151,12 @@ ax1.plot(y, crb200, label='$L=500$ nm')
 ax1.plot(y, crb800, label='$L=700$ nm')
 ax1.plot(y, crb1600, label='$L=900$ nm')
 # ax1.legend(loc='upper center', framealpha=0.5, ncol=2, handlelength=1.0, labelspacing=0.3)
-ax1.set_ylabel('CRB (nm)')
 ax1.set_xlim(-500, 500)
 ax1.set_ylim(6, 80)
-ax1.text(-570, 60, 'a', fontweight='bold', fontsize='12')
+ax1.text(-570, 90, 'a', fontweight='bold', fontsize='12')
+ax1.set_xlabel('Position (nm)')
+ax1.set_ylabel('CRB (nm)')
+ax1.yaxis.set_major_locator(loc)
 
 ax1.text(160, 12, '300', fontsize=10, color='C0')
 ax1.text(230, 18, '500', fontsize=10, color='C1')
@@ -163,6 +171,9 @@ ax2.plot(y, crb900_kt, label='$L=900$ nm')
 # ax3.legend(loc='lower right', framealpha=0.5, ncol=2, handlelength=1.0, labelspacing=0.3)
 ax2.text(-570, 70, 'c', fontweight='bold', fontsize='12')
 ax2.set_ylabel('CRB (nm)')
+ax2.set_xlabel('Position (nm)')
+ax2.yaxis.set_major_locator(loc)
+ax2.yaxis.set_major_formatter(formatter)
 
 ax2.text(320, 18, '300', fontsize=10, color='C0')
 ax2.text(320, 30, '500', fontsize=10, color='C1')
@@ -208,10 +219,13 @@ ax5.plot(y, crb200_bg, label='$L=500$ nm')
 ax5.plot(y, crb800_bg, label='$L=700$ nm')
 ax5.plot(y, crb1600_bg, label='$L=900$ nm')
 # ax1.legend(loc='upper center', framealpha=0.5, ncol=2, handlelength=1.0, labelspacing=0.3)
-ax5.set_ylabel('CRB (nm)')
 ax5.set_xlim(-500, 500)
 ax5.set_ylim(6, 80)
-ax5.text(-570, 60, 'b', fontweight='bold', fontsize='12')
+ax5.text(-570, 90, 'b', fontweight='bold', fontsize='12')
+ax5.set_xlabel('Position (nm)')
+ax5.set_ylabel('CRB (nm)')
+ax5.yaxis.set_major_locator(loc)
+ax5.yaxis.set_major_formatter(formatter)
 
 ax5.text(100, 9, '300', fontsize=10, color='C0')
 ax5.text(170, 14, '500', fontsize=10, color='C1')
@@ -225,6 +239,10 @@ ax6.plot(y, crb700_kt_bg, label='$L=700$ nm')
 ax6.plot(y, crb900_kt_bg, label='$L=900$ nm')
 # ax3.legend(loc='lower right', framealpha=0.5, ncol=2, handlelength=1.0, labelspacing=0.3)
 ax6.text(-570, 70, 'd', fontweight='bold', fontsize='12')
+ax6.set_xlabel('Position (nm)')
+ax6.set_ylabel('CRB (nm)')
+ax6.yaxis.set_major_locator(loc)
+ax6.yaxis.set_major_formatter(formatter)
 
 ax6.text(320, 17, '300', fontsize=10, color='C0')
 ax6.text(320, 29, '500', fontsize=10, color='C1')
@@ -240,7 +258,7 @@ ax7.plot(y, crb1600_mf_bg, label='$L=700$ nm')
 # ax2.legend(loc='upper center', framealpha=0.5, ncol=2, handlelength=1.0, labelspacing=0.3)
 ax7.text(-570, 2000, 'f', fontweight='bold', fontsize='12')
 ax7.set_xlabel('Position (nm)')
-ax3.set_ylabel('CRB (nm)')
+ax7.set_ylabel('CRB (nm)')
 
 ax7.text(-120, 4, '50', fontsize=10, color='C0')
 ax7.text(35, 4, '100', fontsize=10, color='C1')
@@ -256,6 +274,7 @@ ax8.plot(y1, crborb_bg, label='Orbital: $L=566$ nm')
 # ax4.legend(loc='upper center', framealpha=0.5, handlelength=1.0, labelspacing=0.3)
 ax8.text(-570, 2000, 'h', fontweight='bold', fontsize='12')
 ax8.set_xlabel('Position (nm)')
+ax8.set_ylabel('CRB (nm)')
 
 ax8.text(180, 8, 'KT 1500', fontsize=10, color='C0')
 ax8.text(-120, 3, 'MF 50', fontsize=10, color='C1')
@@ -267,7 +286,7 @@ for ax in fig.get_axes():
         line.set_lw(1.3)
 
 plt.tight_layout()
-plt.savefig('../out/crb_panel_art.pdf')
+plt.savefig('../out/crb_panel.pdf')
 # plt.show()
 
 

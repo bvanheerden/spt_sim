@@ -6,10 +6,15 @@ import rsmf
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
+# col_width = 345  # For dissertation I think
+col_width = 470  # For journal draft
+# col_width = 483.7  # For SPIE paper I think
+
+formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital_iscat'
@@ -187,9 +192,9 @@ ax6.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
 ax6.tick_params(which='minor', length=2, color='black')
 
 # plt.legend(loc='lower right', framealpha=0.5)
-# ax1.set_xlabel('x (nm)')
-# ax2.set_xlabel('x (nm)')
-ax3.set_xlabel('x (nm)')
+ax1.set_xlabel('Position (nm)')
+ax2.set_xlabel('Position (nm)')
+ax3.set_xlabel('Position (nm)')
 ax1.set_ylabel('CRB (nm)')
 ax3.set_ylabel('CRB (nm)')
 ax3.set_ylabel('CRB (nm)')

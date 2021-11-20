@@ -16,10 +16,14 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 latex = True
 
 if latex:
-    formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
+    # col_width = 345  # For dissertation I think
+    col_width = 470  # For journal draft
+    # col_width = 483.7  # For SPIE paper I think
+    formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+    matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -52,7 +56,7 @@ crb_lambda_knight = dill.load(fileobject_knight)
 fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
-adjusted = True
+adjusted = False
 
 if adjusted:
     nfact1 = 0.91 * 1000  # LHCII
@@ -65,7 +69,7 @@ if adjusted:
     contrast_11 = 2.09e-4  # LHCII-micelle
     contrast_2 = 4.00e-3  # PB
     contrast_3 = 6.36e-6  # EGFP
-    contrast_4 = 0.057  # HIV-QD
+    contrast_4 = 0.903  # HIV-QD
 else:
     nfact1 = 3.1  # LHCII
     nfact11 = 13.5  # LHCII-micelle

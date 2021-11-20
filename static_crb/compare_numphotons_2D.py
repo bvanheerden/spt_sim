@@ -12,10 +12,14 @@ import rsmf
 latex = True
 
 if latex:
-    formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
+    # col_width = 345  # For dissertation I think
+    col_width = 470  # For journal draft
+    # col_width = 483.7  # For SPIE paper I think
+    formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
     matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+    matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_minflux = 'pickles/crb_lambda_minflux'
@@ -99,8 +103,8 @@ crbcont = ax.contourf(sigma_qyv, sigma_scatv, crb_diff, 100, cmap='RdBu', norm=c
 for c in crbcont.collections:
     c.set_edgecolor("face")
 ax.set_xscale('log')
-ax.set_ylabel('Scattering cross-section')
-ax.set_xlabel(r'Absorption cross-section $\times$ quantum yield')
+ax.set_ylabel(r'Scattering cross-section (\textmu m$^2$)')
+ax.set_xlabel(r'Absorption cross-section (\textmu m$^2$)')
 ax.set_yscale('log')
 
 colorbar1 = fig.colorbar(crbcont)

@@ -10,11 +10,17 @@ import rsmf
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
-formatter = rsmf.CustomFormatter(columnwidth=483.7 * 0.01389, fontsizes=10,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
-matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+# col_width = 345  # For dissertation I think
+col_width = 470  # For journal draft
+# col_width = 483.7  # For SPIE paper I think
+# col_width = 418  # I don't know anymore
 
-matplotlib.rcParams.update({'font.size': 11})
+formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+
+matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
+# matplotlib.rcParams.update({'font.size': 11})
 
 errs = np.loadtxt('files/errstemp.txt')
 errs_mf = np.loadtxt('files/errs_mftemp.txt')
