@@ -17,7 +17,7 @@ simulation_kt = TrackingSim(numpoints=numpoints, method='knight', freq=freq, amp
                             feedback=ffreq, debug=False, rin=0.3)
 
 numdiffs = 16
-numruns = 3
+numruns = 6
 
 # diffs = np.logspace(-11, 1, numdiffs)
 # diffs = np.logspace(-4, 0, numdiffs)
@@ -44,9 +44,9 @@ errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb') for i, D
 errs_mf = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'mf') for i, D in enumerate(diffs))
 errs_kt = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'kt') for i, D in enumerate(diffs))
 
-np.savetxt('errstemp.txt', errs)
-np.savetxt('errs_mftemp.txt', errs_mf)
-np.savetxt('errs_kttemp.txt', errs_kt)
+np.savetxt('files/errstemp.txt', errs)
+np.savetxt('files/errs_mftemp.txt', errs_mf)
+np.savetxt('files/errs_kttemp.txt', errs_kt)
 
 untracked = np.sqrt(200 * diffs)
 

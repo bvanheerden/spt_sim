@@ -19,21 +19,22 @@ formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 # matplotlib.rcParams.update({'font.size': 10})
 
 errs = np.loadtxt('files/errs_fluo1.txt')
-# errs_gfp = np.loadtxt('files/errs_iscat_gfp2.txt')
-# errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd2.txt')
-# errs_lhcii = np.loadtxt('files/errs_iscat_lhcii2.txt')
-# errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic2.txt')
-# errs_pb = np.loadtxt('files/errs_iscat_pb2.txt')
-
-errs_gfp = np.loadtxt('files/errs_iscat_gfp_adjust3.txt')
-errs_lhcii = np.loadtxt('files/errs_iscat_lhcii_adjust3.txt')
-errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic_adjust3.txt')
-errs_pb = np.loadtxt('files/errs_iscat_pb_adjust3.txt')
-errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd_adjust3.txt')
+errs_gfp = np.loadtxt('files/errs_iscat_gfp2.txt')
+errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd2.txt')
+errs_lhcii = np.loadtxt('files/errs_iscat_lhcii2.txt')
+errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic2.txt')
+errs_pb = np.loadtxt('files/errs_iscat_pb2.txt')
+#
+# errs_gfp = np.loadtxt('files/errs_iscat_gfp_adjust3.txt')
+# errs_lhcii = np.loadtxt('files/errs_iscat_lhcii_adjust3.txt')
+# errs_lhcii_mic = np.loadtxt('files/errs_iscat_lhcii-mic_adjust3.txt')
+# errs_pb = np.loadtxt('files/errs_iscat_pb_adjust3.txt')
+# errs_hiv = np.loadtxt('files/errs_iscat_hiv-qd_adjust3.txt')
 
 # diffs = np.logspace(-12, 0, 12)
 # diffs = np.logspace(-19, 2, 18)
@@ -49,7 +50,7 @@ cutoff = np.pi * (0.4 / np.sqrt(2)) ** 2 * 0.1
 cutoff = np.pi * 0.025 ** 2 * 12.5
 
 # plt.figure(figsize=(6, 4), dpi=150)
-fig = formatter.figure(width_ratio=0.53, aspect_ratio=0.7)
+fig = formatter.figure(width_ratio=0.7, aspect_ratio=0.7)
 fluo, = plt.loglog(diffs*1000, errs, '-o', label='Fluorescence')
 lhcii, = plt.loglog(diffs*1000, errs_lhcii, '-o', label="LHCII")
 mic, = plt.loglog(diffs*1000, errs_lhcii_mic, '-o', label="LHCII-Micelle")
@@ -61,10 +62,15 @@ plt.ylabel(r'Average tracking error (\textmu m)')
 plt.loglog(diffs*1000, untracked, '--', color='gray')
 # plt.loglog(diffs, tracked, '--', color='black')
 # plt.axvline(cutoff)
-legend1 = plt.legend([fluo, lhcii, mic], ['Fluorescence', 'LHCII', 'LHCII-micelle'], ncol=1)
-plt.legend([pb, gfp, hiv], ['PB', 'GFP', 'HIV-QD'], ncol=1, loc='lower right')
-plt.gca().add_artist(legend1)
+# plt.legend(loc='upper left')
+plt.legend(loc='lower right')
+
+# For poster:
+# legend1 = plt.legend([fluo, lhcii, mic], ['Fluorescence', 'LHCII', 'LHCII-micelle'], ncol=1)
+# plt.legend([pb, gfp, hiv], ['PB', 'GFP', 'HIV-QD'], ncol=1, loc='lower right')
+# plt.gca().add_artist(legend1)
+
 plt.tight_layout()
-plt.savefig('../out/err_diff_iscat_adjust.pdf')
-# plt.savefig('../out/err_diff_iscat.pdf')
+# plt.savefig('../out/err_diff_iscat_adjust.pdf')
+plt.savefig('../out/err_diff_iscat.pdf')
 plt.show()

@@ -48,10 +48,10 @@ cutoff2 = (3.75 * 0.4) ** 2 * 3.125 * 0.001
 # cutoff2 = 0.2
 
 # plt.figure(figsize=(4, 3), dpi=150)
-fig = formatter.figure(width_ratio=0.6)
-plt.loglog(diffs*1000, errs, marker='o', label='Orbital', lw=1.5)
-plt.loglog(diffs*1000, errs_kt, marker='o', label="Knight's Tour", lw=1.5, color='C2')
-plt.loglog(diffs*1000, errs_mf, marker='o', label='MINFLUX', lw=1.5, color='C1')
+fig = formatter.figure(width_ratio=0.7)
+plt.loglog(diffs*1000, errs, marker='o', label='Orbital', lw=1)
+plt.loglog(diffs*1000, errs_kt, marker='o', label="Knight's Tour", lw=1, color='C2')
+plt.loglog(diffs*1000, errs_mf, marker='o', label='MINFLUX', lw=1, color='C1')
 # plt.xlabel(r'Diffusiekoëffisient (\textmu m$^2$s$^{-1}$)')
 # plt.ylabel(r'Gemiddelde fout (\textmu m)')
 plt.xlabel(r'Diffusion coefficient (\textmu m$^2$s$^{-1}$)')
