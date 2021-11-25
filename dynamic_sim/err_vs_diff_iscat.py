@@ -14,7 +14,7 @@ numpoints = 100000
 samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
 rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
 rvals = [0.008, 0.001, 0.0005, 0.1, 0.0005]
-sample = 4
+sample = 0
 
 adjusted = False
 
@@ -48,7 +48,7 @@ numruns = 5
 
 
 def parr_func(i, D, method, sim):
-    print('run ', i, 'of 16')
+    print('D ', i, 'of 16')
     errsum = 0
     for j in range(numruns):
         print(j)
@@ -64,7 +64,8 @@ def fitfunc(D, B, nm):
 
 
 # errs = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb) for i, D in enumerate(diffs))
-errs_iscat = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb', simulation_orb_iscat) for i, D in enumerate(diffs))
+errs_iscat = joblib.Parallel(n_jobs=8)(joblib.delayed(parr_func)(i, D, 'orb',
+                                                                 simulation_orb_iscat) for i, D in enumerate(diffs))
 
 # duration = 1  # seconds
 # freq = 440  # Hz

@@ -117,6 +117,10 @@ ax4 = fig.add_subplot(spec[0, 1], sharey=ax1)
 ax5 = fig.add_subplot(spec[1, 1], sharex=ax4, sharey=ax2)
 ax6 = fig.add_subplot(spec[2, 1], sharex=ax4, sharey=ax3)
 
+loc = matplotlib.ticker.MultipleLocator(base=10)
+formatter = plt.LogFormatter(labelOnlyBase=False, minor_thresholds=(1, 0.6))
+formatter_mf = plt.LogFormatter(labelOnlyBase=True)
+
 ax1.plot(y, crb300_5, label='L=300nm')
 ax1.plot(y, crb500_5, label='L=500nm')
 ax1.plot(y, crb700_5, label='L=700nm')
@@ -127,6 +131,9 @@ ax1.text(200, 25, '500', fontsize=10, color='C1')
 ax1.text(200, 37, '700', fontsize=10, color='C2')
 ax1.text(200, 50, '900', fontsize=10, color='C3')
 
+ax1.yaxis.set_major_locator(loc)
+ax1.yaxis.set_major_formatter(formatter)
+
 ax2.plot(y, crb300_kt_5, label='L=300nm')
 ax2.plot(y, crb500_kt_5, label='L=500nm')
 ax2.plot(y, crb700_kt_5, label='L=700nm')
@@ -136,6 +143,9 @@ ax2.text(200, 17, '300', fontsize=10, color='C0')
 ax2.text(200, 28, '500', fontsize=10, color='C1')
 ax2.text(200, 40, '700', fontsize=10, color='C2')
 ax2.text(200, 53, '900', fontsize=10, color='C3')
+
+ax2.yaxis.set_major_locator(loc)
+ax2.yaxis.set_major_formatter(formatter)
 
 ax3.plot(y, crb50_mf_5, label='L=50')
 ax3.plot(y, crb100_mf_5, label='L=100nm')
@@ -164,6 +174,9 @@ ax4.text(200, 40, '500', fontsize=10, color='C1')
 ax4.text(200, 55, '700', fontsize=10, color='C2')
 ax4.text(200, 75, '900', fontsize=10, color='C3')
 
+ax4.yaxis.set_major_locator(loc)
+ax4.yaxis.set_major_formatter(formatter)
+
 ax5.plot(y, crb300_kt, label='L=300nm')
 ax5.plot(y, crb500_kt, label='L=500nm')
 ax5.plot(y, crb700_kt, label='L=700nm')
@@ -173,6 +186,9 @@ ax5.text(200, 25, '300', fontsize=10, color='C0')
 ax5.text(200, 43, '500', fontsize=10, color='C1')
 ax5.text(200, 62, '700', fontsize=10, color='C2')
 ax5.text(200, 80, '900', fontsize=10, color='C3')
+
+ax5.yaxis.set_major_locator(loc)
+ax5.yaxis.set_major_formatter(formatter)
 
 ax6.plot(y, crb50_mf, label='L=50')
 ax6.plot(y, crb100_mf, label='L=100nm')
@@ -188,17 +204,19 @@ ax6.text(230, 300, '700', fontsize=10, color='C4')
 
 ax3.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
 ax3.tick_params(which='minor', length=2, color='black')
+ax3.yaxis.set_major_formatter(formatter_mf)
+
 ax6.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
 ax6.tick_params(which='minor', length=2, color='black')
 
 # plt.legend(loc='lower right', framealpha=0.5)
-ax1.set_xlabel('Position (nm)')
-ax2.set_xlabel('Position (nm)')
+# ax1.set_xlabel('Position (nm)')
+# ax2.set_xlabel('Position (nm)')
 ax3.set_xlabel('Position (nm)')
 ax1.set_ylabel('CRB (nm)')
+ax2.set_ylabel('CRB (nm)')
 ax3.set_ylabel('CRB (nm)')
-ax3.set_ylabel('CRB (nm)')
-ax6.set_xlabel('x (nm)')
+ax6.set_xlabel('Position (nm)')
 
 ax1.text(-470, 100, 'a', fontweight='bold', fontsize='12')
 ax4.text(-470, 100, 'b', fontweight='bold', fontsize='12')
@@ -210,6 +228,14 @@ ax6.text(-470, 1500, 'f', fontweight='bold', fontsize='12')
 for ax in fig.get_axes():
     for line in ax.lines:
         line.set_lw(1.3)
+
+# Remove ugly ticks at 110 nm
+yticks = ax1.yaxis.get_major_ticks()
+yticks[10].label1.set_visible(False)
+yticks[10].tick1line.set_visible(False)
+yticks = ax4.yaxis.get_major_ticks()
+yticks[10].label1.set_visible(False)
+yticks[10].tick1line.set_visible(False)
 
 plt.tight_layout()
 plt.savefig('../out/crb_iscat_panel.pdf')

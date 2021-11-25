@@ -56,7 +56,7 @@ crb_lambda_knight = dill.load(fileobject_knight)
 fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
-adjusted = False
+adjusted = True
 
 if adjusted:
     nfact1 = 0.91 * 1000  # LHCII
@@ -233,7 +233,11 @@ for ax in fig.get_axes():
 if adjusted:
     pass
 
-ax1.set_ylim(None, 1e3)
+if adjusted:
+    ax1.set_ylim(4e-6, 1e3)
+else:
+    ax1.set_ylim(None, 1e3)
+ax1.set_xlim(2e-1, 1e7)
 
 plt.subplots_adjust(hspace=0.4)
 plt.tight_layout()

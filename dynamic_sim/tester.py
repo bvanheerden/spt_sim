@@ -34,9 +34,9 @@ simulation_orb_iscat = TrackingSim(numpoints=100000, method='orbital', freq=freq
                                    tracking=True, feedback=ffreq, iscat=True, debug=False, rin=rin,
                                    intfactor=intfactor, contrast=contrast, adjustment=1000, avint=0.0124)
 
-err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(2.5e-6)
+# err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(2.5e-6)
 
-# err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)
+err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(1e-5)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0)
 # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)
 # err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(0.0001)
@@ -50,6 +50,7 @@ err, measx, truex, measy, truey, intvals = simulation_orb_iscat.main_tracking(2.
 # for i in range(100):
 #         binnedints[i] = np.sum(intvals[1000 * i:1000 * (i + 1)])
 
+print(len(measx))
 print(np.mean(intvals))
 print('average intensity:', np.sum(intvals) / 100, ' counts/ms')
 print('Meas variance:', np.std(measx) ** 2)

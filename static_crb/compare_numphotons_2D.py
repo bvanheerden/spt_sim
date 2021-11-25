@@ -104,7 +104,7 @@ for c in crbcont.collections:
     c.set_edgecolor("face")
 ax.set_xscale('log')
 ax.set_ylabel(r'Scattering cross-section (\textmu m$^2$)')
-ax.set_xlabel(r'Absorption cross-section (\textmu m$^2$)')
+ax.set_xlabel(r'Absorption cross-section $\times$ fluorescence quantum yield (\textmu m$^2$)')
 ax.set_yscale('log')
 
 colorbar1 = fig.colorbar(crbcont)
@@ -138,7 +138,7 @@ for i, point in enumerate(points):
     elif labels[i] == 'LH2':
         ax.annotate(labels[i], point, (-25, -15), textcoords='offset pixels', color='black')
     elif labels[i] == 'Fibrinogen-Alexa647':
-        ax.annotate(labels[i], point, (-50, 10), textcoords='offset pixels', color='black')
+        ax.annotate(labels[i], point, (-53, 10), textcoords='offset pixels', color='black')
     else:
         ax.annotate(labels[i], point, (5, 5), textcoords='offset pixels', color='black')
 

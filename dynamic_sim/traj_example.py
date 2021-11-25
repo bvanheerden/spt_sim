@@ -39,8 +39,8 @@ if simulate:
     np.savetxt('intensity.txt', binnedints)
 
 else:
-    traj = np.loadtxt('trajectory_almost.txt')
-    binnedints = np.loadtxt('intensity_almost.txt')
+    traj = np.loadtxt('trajectory_good.txt')
+    binnedints = np.loadtxt('intensity_good.txt')
     measx, truex, measy, truey = traj[:, 0], traj[:, 1], traj[:, 2], traj[:, 3]
 
 t = np.linspace(0, 500, 250)
@@ -54,15 +54,15 @@ ax1.plot(t, measx[::10])
 ax1.plot(t, truex[::10])
 ax2.plot(t, measy[::10])
 ax2.plot(t, truey[::10])
-ax3.plot(t, binnedints)
+ax3.plot(t, binnedints / 2)
 ax3.set_ylim((0, None))
 
 ax3.set_xlabel('Time (ms)')
 ax1.set_ylabel(r'$x$ Position ($\mathrm{\mu}$m)')
 ax2.set_ylabel(r'$y$ Position ($\mathrm{\mu}$m)')
-ax3.set_ylabel('Intensity (counts/s)')
+ax3.set_ylabel('Intensity (kcounts/s)')
 
-plt.savefig('../out/traj_ex_almost.pdf')
+plt.savefig('../out/traj_ex_good.pdf')
 
 # plt.show()
 

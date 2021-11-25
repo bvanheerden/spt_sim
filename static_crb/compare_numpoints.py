@@ -10,6 +10,7 @@ formatter = rsmf.CustomFormatter(columnwidth=418.25368 * 0.01389, fontsizes=12,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
+matplotlib.rcParams.update({'font.family': 'serif'})
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital_iscat'
@@ -60,8 +61,11 @@ ax1.text(200, 61, '40 points', fontsize=10, color='C1')
 ax1.text(200, 50, '60 points', fontsize=10, color='C2')
 ax1.text(200, 43, '80 points', fontsize=10, color='C3')
 
-ax1.set_xlabel('x (nm)')
+ax1.set_xlabel('Position (nm)')
 ax1.set_ylabel('CRB (nm)')
+
+for line in ax1.lines:
+    line.set_lw(1.3)
 
 plt.tight_layout()
 plt.savefig('../out/orbital_crb_iscat_numpoints.pdf')
