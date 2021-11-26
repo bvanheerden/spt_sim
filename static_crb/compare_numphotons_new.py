@@ -63,7 +63,7 @@ if adjusted:
     nfact11 = 3.99 * 1000  # LHCII-micelle
     nfact2 = 1.27 * 1000  # PB
     nfact3 = 1.98 * 1000  # EGFP
-    nfact4 = 88547 #* 1000  # HIV-QD
+    nfact4 = 88547 * 1000  # HIV-QD
 
     contrast_1 = 4.75e-5  # LHCII
     contrast_11 = 2.09e-4  # LHCII-micelle
@@ -164,12 +164,12 @@ else:
 ax1 = fig.add_subplot()
 
 ax1.set_yscale('log')
-l1 = ax1.loglog(n, crborb_1, label='Fluorescence')
-l2 = ax1.loglog(n1, crborb_iscat_1, label='LHCII (iSCAT)')
-ax1.loglog(n11, crborb_iscat_11, label='LHCII-micelle (iSCAT)')
-ax1.loglog(n2, crborb_iscat_2, label='PB (iSCAT)')
-ax1.loglog(n3, crborb_iscat_3, label='GFP (iSCAT)')
-ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
+fluo, = ax1.loglog(n, crborb_1, label='Fluorescence')
+lhcii, = ax1.loglog(n1, crborb_iscat_1, label='LHCII (iSCAT)')
+mic, = ax1.loglog(n11, crborb_iscat_11, label='LHCII-micelle (iSCAT)')
+pb, = ax1.loglog(n2, crborb_iscat_2, label='PB (iSCAT)')
+gfp, = ax1.loglog(n3, crborb_iscat_3, label='GFP (iSCAT)')
+hiv, = ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
 
 # ax1.vlines(asymp1_plot, 10, 800, color='C1', linestyles='--', lw=1.0)
 # ax1.vlines(asymp11_plot, 10, 800, color='C2', linestyles='--', lw=1.0)
@@ -177,7 +177,15 @@ ax1.loglog(n4, crborb_iscat_4, label='HIV-QD (iSCAT)')
 # ax1.vlines(asymp3_plot, 10, 800, color='C4', linestyles='--', lw=1.0)
 
 # plt.ylim(None, 100)
-fig.legend(bbox_to_anchor=(0.15, 0.12), loc='lower left', framealpha=0.0, ncol=1)
+if adjusted:
+    legend1 = plt.legend([pb, gfp, hiv], ['PB (iSCAT)', 'GFP (iSCAT)', 'HIV-QD (iSCAT)'], ncol=1, loc='lower left',
+                         framealpha=0)
+    plt.legend([fluo, lhcii, mic], ['Fluorescence', 'LHCII (iSCAT)', 'LHCII-micelle (iSCAT)'], ncol=1, loc='upper right',
+               framealpha=0)
+    plt.gca().add_artist(legend1)
+    # plt.legend(loc='upper right', framealpha=0.0, ncol=1)
+else:
+    fig.legend(bbox_to_anchor=(0.15, 0.12), loc='lower left', framealpha=0.0, ncol=1)
 ax1.set_ylabel('CRB (nm)')
 ax1.set_xlabel('Number of photons (fluorescence)')
 # ax1.text(100, 0.01, "LHCII")
@@ -185,6 +193,10 @@ ax1.set_xlabel('Number of photons (fluorescence)')
 # ax1.text(100, 0.01, "PB")
 # ax1.text(100, 0.1, "GFP")
 # ax1.text(10, 0.0001, "HIV-QD")
+if adjusted:
+    ax1.text(2e2, 1.5e-5, r'(iSCAT photons $\times 10^4$)', color='C5', rotation=-23.5)
+else:
+    ax1.text(2e3, 1.5e-4, r'(iSCAT photons $\times 10^4$)', color='C5', rotation=-23.5)
 
 if adjusted:
     multip_func_av = lambda x: 2 * x * 1000  # LHCII
@@ -210,16 +222,16 @@ else:
     div_func_2 = lambda x: x / 2.1   # LHCII
     multip_func_3 = lambda x: 5.3 * x  # EGFP
     div_func_3 = lambda x: x / 5.3   # LHCII
-multip_func_4 = lambda x: 88547 * x  # HIV-QD
-div_func_4 = lambda x: x / 88547  # LHCII
+# multip_func_4 = lambda x: 88547 * x  # HIV-QD
+# div_func_4 = lambda x: x / 88547  # LHCII
 
 secax1 = ax1.secondary_xaxis('top', functions=(multip_func_av, div_func_av))
-secax2 = ax1.secondary_xaxis(1.13, functions=(multip_func_4, div_func_4))
+# secax2 = ax1.secondary_xaxis(1.13, functions=(multip_func_4, div_func_4))
 # secax3 = ax1.secondary_xaxis(1.2, functions=(multip_func_2, div_func_2))
 # secax4 = ax1.secondary_xaxis(1.3, functions=(multip_func_3, div_func_3))
 # secax5 = ax1.secondary_xaxis(1.4, functions=(multip_func_4, div_func_4))
-secax2.set_xlabel('Number of iSCAT photons (HIV-QD)')
-secax1.set_xlabel('Average number of iSCAT photons (Other samples)')
+# secax2.set_xlabel('Number of iSCAT photons (HIV-QD)')
+secax1.set_xlabel('Average number of iSCAT photons')
 # secax1.tick_params(axis='x', colors='C1')
 # secax2.tick_params(axis='x', colors='C2')
 # secax3.tick_params(axis='x', colors='C3')
