@@ -8,6 +8,11 @@ import rsmf
 # col_width = 345  # For dissertation I think
 col_width = 470  # For journal draft
 
+color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
+# color_list = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33']
+# plt.rcParams['axes.prop_cycle'] = plt.cycler(color=sns.color_palette())
+plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
+
 formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
@@ -38,31 +43,72 @@ if simulate:
     np.savetxt('trajectory.txt', savearr)
     np.savetxt('intensity.txt', binnedints)
 
+    traj_good = np.loadtxt('trajectory_good.txt')
+    binnedints_good = np.loadtxt('intensity_good.txt')
+    measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
+    traj_almost = np.loadtxt('trajectory_almost.txt')
+    binnedints_almost = np.loadtxt('intensity_almost.txt')
+    measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
+                                                             traj_almost[:, 3]
+
 else:
-    traj = np.loadtxt('trajectory_good.txt')
-    binnedints = np.loadtxt('intensity_good.txt')
-    measx, truex, measy, truey = traj[:, 0], traj[:, 1], traj[:, 2], traj[:, 3]
+    traj_good = np.loadtxt('trajectory_good.txt')
+    binnedints_good = np.loadtxt('intensity_good.txt')
+    measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
+    traj_almost = np.loadtxt('trajectory_almost.txt')
+    binnedints_almost = np.loadtxt('intensity_almost.txt')
+    measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
+                                                             traj_almost[:, 3]
 
 t = np.linspace(0, 500, 250)
+t_ins = np.linspace(0, 500, 2500)  # t values for insert plot
 
-fig = formatter.figure(width_ratio=0.7, aspect_ratio=0.8)
-spec = matplotlib.gridspec.GridSpec(ncols=1, nrows=3)
+fig = formatter.figure(width_ratio=1.0, aspect_ratio=0.6)
+spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0], sharex=ax1)
 ax3 = fig.add_subplot(spec[2, 0], sharex=ax1)
-ax1.plot(t, measx[::10])
-ax1.plot(t, truex[::10])
-ax2.plot(t, measy[::10])
-ax2.plot(t, truey[::10])
-ax3.plot(t, binnedints / 2)
+ax4 = fig.add_subplot(spec[0, 1])
+ax5 = fig.add_subplot(spec[1, 1], sharex=ax4)
+ax6 = fig.add_subplot(spec[2, 1], sharex=ax4)
+
+ax1.plot(t, measx_good[::10], color='C0')
+ax1.plot(t, truex_good[::10], '--', color='C3')
+ax2.plot(t, measy_good[::10], color='C0')
+ax2.plot(t, truey_good[::10], '--', color='C3')
+ax3.plot(t, binnedints_good / 2)
 ax3.set_ylim((0, None))
+ax3.set_xlim((0, 500))
+
+ax4.plot(t, measx_almost[::10])
+ax4.plot(t, truex_almost[::10], '--', color='C3')
+ax5.plot(t, measy_almost[::10])
+ax5.plot(t, truey_almost[::10], '--', color='C3')
+ax6.plot(t, binnedints_almost / 2)
+ax6.set_ylim((0, None))
+ax6.set_xlim((0, 500))
+
+axin = ax5.inset_axes([0.06, 0.55, 0.3, 0.4])
+axin.plot(t_ins[1200:1400], measy_almost[1200:1400])
+axin.plot(t_ins[1200:1400], truey_almost[1200:1400], '--', color='C3')
+axin.set_xticklabels([])
+axin.set_yticklabels([])
+ax5.indicate_inset_zoom(axin, edgecolor='black')
+
+ax1.tick_params(axis='x', labelbottom=False)
+ax2.tick_params(axis='x', labelbottom=False)
+ax4.tick_params(axis='x', labelbottom=False)
+ax5.tick_params(axis='x', labelbottom=False)
 
 ax3.set_xlabel('Time (ms)')
-ax1.set_ylabel(r'$x$ Position ($\mathrm{\mu}$m)')
-ax2.set_ylabel(r'$y$ Position ($\mathrm{\mu}$m)')
+ax6.set_xlabel('Time (ms)')
+ax1.set_ylabel(r'$x$ position ($\mathrm{\mu}$m)')
+ax2.set_ylabel(r'$y$ position ($\mathrm{\mu}$m)')
 ax3.set_ylabel('Intensity (kcounts/s)')
 
-plt.savefig('../out/traj_ex_good.pdf')
+fig.subplots_adjust(hspace=0.0)
+plt.tight_layout()
+plt.savefig('../out/traj_ex_combined.pdf')
 
 # plt.show()
 

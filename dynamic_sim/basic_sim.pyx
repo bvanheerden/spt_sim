@@ -1,3 +1,5 @@
+# Cython library for basic simulation functions (runge-kutta method)
+# To compile, run python setup.py build_ext --inplace
 import numpy as np
 # cimport numpy as np
 from numpy.random import RandomState

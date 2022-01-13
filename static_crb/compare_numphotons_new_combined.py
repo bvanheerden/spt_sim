@@ -2,7 +2,7 @@
 import matplotlib
 from static_crb.CRB import *
 import rsmf
-import seaborn as sns
+import dill
 
 # color_list = ['#5f4690', '#349ca3', '#52a14c', '#e79406', '#b9474e', '#764276', '#666666']
 # color_list = ['#5f4690', '#2f92a0', '#309350', '#edad08', '#d35f2b', '#963d7b', '#666666']
