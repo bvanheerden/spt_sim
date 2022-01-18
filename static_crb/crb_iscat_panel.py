@@ -157,7 +157,7 @@ ax3.text(40, 15, '50', fontsize=10, color='C0')
 ax3.text(50, 30, '100', fontsize=10, color='C1')
 ax3.text(70, 50, '300', fontsize=10, color='C2')
 ax3.text(140, 100, '500', fontsize=10, color='C3')
-ax3.text(230, 160, '700', fontsize=10, color='C4')
+ax3.text(220, 150, '700', fontsize=10, color='C4')
 
 ax1.set_yscale('log')
 ax2.set_yscale('log')
@@ -200,7 +200,7 @@ ax6.text(40, 20, '50', fontsize=10, color='C0')
 ax6.text(50, 50, '100', fontsize=10, color='C1')
 ax6.text(70, 100, '300', fontsize=10, color='C2')
 ax6.text(140, 180, '500', fontsize=10, color='C3')
-ax6.text(230, 300, '700', fontsize=10, color='C4')
+ax6.text(220, 300, '700', fontsize=10, color='C4')
 
 ax3.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
 ax3.tick_params(which='minor', length=2, color='black')
@@ -218,12 +218,22 @@ ax2.set_ylabel('CRB (nm)')
 ax3.set_ylabel('CRB (nm)')
 ax6.set_xlabel('Position (nm)')
 
-ax1.text(-470, 100, 'a', fontweight='bold', fontsize='12')
-ax4.text(-470, 100, 'b', fontweight='bold', fontsize='12')
-ax2.text(-470, 100, 'c', fontweight='bold', fontsize='12')
-ax5.text(-470, 100, 'd', fontweight='bold', fontsize='12')
-ax3.text(-470, 1500, 'e', fontweight='bold', fontsize='12')
-ax6.text(-470, 1500, 'f', fontweight='bold', fontsize='12')
+ax1.text(-440, 90, 'a', fontweight='bold', fontsize='12')
+ax4.text(-440, 90, 'b', fontweight='bold', fontsize='12')
+ax2.text(-440, 90, 'c', fontweight='bold', fontsize='12')
+ax5.text(-440, 90, 'd', fontweight='bold', fontsize='12')
+ax3.text(-440, 1200, 'e', fontweight='bold', fontsize='12')
+ax6.text(-440, 1200, 'f', fontweight='bold', fontsize='12')
+
+fig.text(0.4, 0.97, 'Orbital method', fontsize=12)
+fig.text(0.35, 0.65, "Knight's Tour method", fontsize=12)
+fig.text(0.45, 0.33, "MINFLUX", fontsize=12)
+
+fig.text(0.12, 0.96, r'$C_f=5\%$', fontsize=10)
+fig.text(0.85, 0.96, r'$C_f=1\%$', fontsize=10)
+
+ax1.set_xlim((-300, 300))
+ax4.set_xlim((-300, 300))
 
 for ax in fig.get_axes():
     for line in ax.lines:
@@ -238,4 +248,5 @@ yticks[10].label1.set_visible(False)
 yticks[10].tick1line.set_visible(False)
 
 plt.tight_layout()
+plt.subplots_adjust(hspace=0.35, wspace=0.27, top=0.95)
 plt.savefig('../out/crb_iscat_panel.pdf')

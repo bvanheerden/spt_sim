@@ -108,7 +108,7 @@ ax.set_xlabel(r'Absorption cross-section $\times$ fluorescence quantum yield (\t
 ax.set_yscale('log')
 
 colorbar1 = fig.colorbar(crbcont)
-colorbar1.set_label(r'Logarithm of CRB ratio $\log(\sigma_{scat}/\sigma_{fluo})$')
+colorbar1.set_label(r'$\log(\textit{CRB}_{scat}/\textit{CRB}_{fluo})$')
 
 # ax.axhline(3e-7)
 

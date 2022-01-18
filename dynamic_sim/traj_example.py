@@ -5,6 +5,8 @@ import numpy as np
 from sim_module import TrackingSim
 import rsmf
 
+# plt.rc('text', usetex=True)
+
 # col_width = 345  # For dissertation I think
 col_width = 470  # For journal draft
 
@@ -14,8 +16,9 @@ color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', 
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
 formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
-                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
+                                 pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc} \usepackage{amsfonts} \usepackage{siunitx}')
 
+# plt.rc('text.latex', preamble=r'\usepackage{upgreek}')
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 matplotlib.rcParams.update({'font.family': 'serif'})
 
@@ -72,8 +75,8 @@ ax4 = fig.add_subplot(spec[0, 1])
 ax5 = fig.add_subplot(spec[1, 1], sharex=ax4)
 ax6 = fig.add_subplot(spec[2, 1], sharex=ax4)
 
-ax1.plot(t, measx_good[::10], color='C0')
-ax1.plot(t, truex_good[::10], '--', color='C3')
+ax1.plot(t, measx_good[::10], color='C0', label='Particle position')
+ax1.plot(t, truex_good[::10], '--', color='C3', label='Stage position')
 ax2.plot(t, measy_good[::10], color='C0')
 ax2.plot(t, truey_good[::10], '--', color='C3')
 ax3.plot(t, binnedints_good / 2)
@@ -102,9 +105,14 @@ ax5.tick_params(axis='x', labelbottom=False)
 
 ax3.set_xlabel('Time (ms)')
 ax6.set_xlabel('Time (ms)')
-ax1.set_ylabel(r'$x$ position ($\mathrm{\mu}$m)')
-ax2.set_ylabel(r'$y$ position ($\mathrm{\mu}$m)')
+ax1.set_ylabel(r'$x$ position (\SI{}{\micro\meter})')
+ax2.set_ylabel(r'$y$ position (\SI{}{\micro\meter})')
 ax3.set_ylabel('Intensity (kcounts/s)')
+# fig.legend()
+
+# ax1.set_title(r'$D=0.1\mathrm{\mu}\mathrm{m}\cdot\mathrm{s}^{-1}')
+ax1.set_title(r'$D=\SI{0.1}{\micro\meter\squared\per\second}')
+ax4.set_title(r'$D=\SI{5}{\micro\meter\squared\per\second}')
 
 fig.subplots_adjust(hspace=0.0)
 plt.tight_layout()
