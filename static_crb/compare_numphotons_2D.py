@@ -94,7 +94,7 @@ for row, val in enumerate(mask):
 crb_diff = np.ma.array(crb_diff, mask=mask)
 
 if latex:
-    fig = formatter.figure(width_ratio=0.7)
+    fig = formatter.figure(width_ratio=0.8)
 else:
     fig = plt.figure(figsize=[7, 5])
 ax = fig.add_subplot()
