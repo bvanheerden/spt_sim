@@ -225,12 +225,12 @@ ax5.text(-440, 90, 'd', fontweight='bold', fontsize='12')
 ax3.text(-440, 1200, 'e', fontweight='bold', fontsize='12')
 ax6.text(-440, 1200, 'f', fontweight='bold', fontsize='12')
 
-fig.text(0.4, 0.97, 'Orbital method', fontsize=12)
-fig.text(0.35, 0.65, "Knight's Tour method", fontsize=12)
+fig.text(0.43, 0.95, 'Orbital method', fontsize=12)
+fig.text(0.35, 0.64, "Knight's Tour method", fontsize=12)
 fig.text(0.45, 0.33, "MINFLUX", fontsize=12)
 
-fig.text(0.12, 0.96, r'$C_f=5\%$', fontsize=10)
-fig.text(0.85, 0.96, r'$C_f=1\%$', fontsize=10)
+fig.text(0.24, 0.97, r'$C_f=5\%$', fontsize=10)
+fig.text(0.74, 0.97, r'$C_f=1\%$', fontsize=10)
 
 ax1.set_xlim((-300, 300))
 ax4.set_xlim((-300, 300))
@@ -248,5 +248,5 @@ yticks[10].label1.set_visible(False)
 yticks[10].tick1line.set_visible(False)
 
 plt.tight_layout()
-plt.subplots_adjust(hspace=0.35, wspace=0.27, top=0.95)
+plt.subplots_adjust(hspace=0.35, wspace=0.27, top=0.93)
 plt.savefig('../out/crb_iscat_panel.pdf')

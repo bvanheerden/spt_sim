@@ -300,19 +300,19 @@ ax6.text(-540, 60, 'd', fontweight='bold', fontsize='12')
 ax7.text(-540, 2000, 'f', fontweight='bold', fontsize='12')
 ax8.text(-540, 2000, 'h', fontweight='bold', fontsize='12')
 
-fig.text(0.4, 0.98, 'Orbital method', fontsize=12)
-fig.text(0.35, 0.74, "Knight's Tour method", fontsize=12)
-fig.text(0.45, 0.49, "MINFLUX", fontsize=12)
+fig.text(0.4, 0.945, 'Orbital method', fontsize=12)
+fig.text(0.35, 0.71, "Knight's Tour method", fontsize=12)
+fig.text(0.45, 0.475, "MINFLUX", fontsize=12)
 
-fig.text(0.12, 0.98, r'$\textrm{SBR}=\infty$', fontsize=10)
-fig.text(0.82, 0.98, r'$\textrm{SBR}=20$', fontsize=10)
+fig.text(0.22, 0.96, r'$\textrm{SBR}=\infty$', fontsize=10)
+fig.text(0.71, 0.96, r'$\textrm{SBR}=20$', fontsize=10)
 
 for ax in fig.get_axes():
     for line in ax.lines:
         line.set_lw(1.3)
 
 plt.tight_layout()
-plt.subplots_adjust(hspace=0.4, wspace=0.2, top=0.97)
+plt.subplots_adjust(hspace=0.4, wspace=0.2, top=0.93)
 plt.savefig('../out/crb_panel.pdf')
 # plt.show()
 
