@@ -8,7 +8,8 @@ import rsmf
 # plt.rc('text', usetex=True)
 
 # col_width = 345  # For dissertation I think
-col_width = 470  # For journal draft
+# col_width = 470  # For journal draft (Interface)
+col_width = 510  # For journal draft (JCP)
 
 color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', '#6f4070']
 # color_list = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33']
@@ -66,7 +67,7 @@ else:
 t = np.linspace(0, 500, 250)
 t_ins = np.linspace(0, 500, 2500)  # t values for insert plot
 
-fig = formatter.figure(width_ratio=1.0, aspect_ratio=0.6)
+fig = formatter.figure(width_ratio=0.9, aspect_ratio=0.6)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=3)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0], sharex=ax1)

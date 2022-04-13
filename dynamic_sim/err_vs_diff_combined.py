@@ -12,9 +12,10 @@ color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', 
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
 # col_width = 345  # For dissertation I think
-col_width = 470  # For journal draft
+# col_width = 470  # For journal draft (Interface)
 # col_width = 483.7  # For SPIE paper I think
 # col_width = 418  # I don't know anymore
+col_width = 510  # For journal draft (JCP)
 formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
 
@@ -57,7 +58,7 @@ untracked = np.sqrt(200 * diffs)
 # cutoff = np.pi * 0.025 ** 2 * 12.5
 
 # plt.figure(figsize=(6, 4), dpi=150)
-fig = formatter.figure(width_ratio=1.0, aspect_ratio=0.7)
+fig = formatter.figure(width_ratio=0.9, aspect_ratio=0.7)
 ax1 = fig.add_subplot(221)
 ax2 = fig.add_subplot(222, sharey=ax1)
 ax3 = fig.add_subplot(223, sharex=ax1)

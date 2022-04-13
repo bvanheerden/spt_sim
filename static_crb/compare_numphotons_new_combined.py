@@ -17,7 +17,8 @@ latex = True
 
 if latex:
     # col_width = 345  # For dissertation I think
-    col_width = 470  # For journal draft
+    col_width = 470  # For journal draft (Interface)
+    col_width = 510  # For journal draft (JCP)
     # col_width = 483.7  # For SPIE paper I think
     formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
@@ -57,7 +58,7 @@ fileobject_knight_iscat = open(file_knight_iscat, 'rb')
 crb_lambda_knight_iscat = dill.load(fileobject_knight_iscat)
 
 if latex:
-    fig = formatter.figure(width_ratio=1.0, aspect_ratio=0.6)
+    fig = formatter.figure(width_ratio=0.9, aspect_ratio=0.6)
 else:
     fig = plt.figure(figsize=[7, 5])
 

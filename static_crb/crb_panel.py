@@ -11,7 +11,8 @@ color_list = ['#1d6996', '#73af48', '#edad08', '#e17c05', '#cc503e', '#94346e', 
 plt.rcParams['axes.prop_cycle'] = plt.cycler(color=color_list)
 
 # col_width = 345  # For dissertation I think
-col_width = 470  # For journal draft
+# col_width = 470  # For journal draft (Interface)
+col_width = 510  # For journal draft (JCP)
 
 formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                  pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')

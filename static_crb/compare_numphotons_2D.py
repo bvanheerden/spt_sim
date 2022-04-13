@@ -13,7 +13,8 @@ latex = True
 
 if latex:
     # col_width = 345  # For dissertation I think
-    col_width = 470  # For journal draft
+    # col_width = 470  # For journal draft (Interface)
+    col_width = 510  # For journal draft (JCP)
     # col_width = 483.7  # For SPIE paper I think
     formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
                                      pgf_preamble=r'\usepackage{lmodern} \usepackage[utf8x]{inputenc}')
@@ -94,7 +95,7 @@ for row, val in enumerate(mask):
 crb_diff = np.ma.array(crb_diff, mask=mask)
 
 if latex:
-    fig = formatter.figure(width_ratio=0.8)
+    fig = formatter.figure(width_ratio=0.7)
 else:
     fig = plt.figure(figsize=[7, 5])
 ax = fig.add_subplot()
@@ -144,4 +145,4 @@ for i, point in enumerate(points):
 
 plt.tight_layout()
 plt.savefig('../out/comp_fluor_iscat.pdf')
-plt.show()
+# plt.show()
