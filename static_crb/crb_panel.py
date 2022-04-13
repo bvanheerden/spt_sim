@@ -130,7 +130,7 @@ crbmf_bg = crb_lambda_minflux_bg(0, y1, 50, 100, 800, 1, sbr)
 crborb_bg = crb_lambda_orbital_bg(0, y1, 566, 100, 400, 1, sbr)
 
 # fig = plt.figure(figsize=(8, 5))
-fig = formatter.figure(width_ratio=0.7, aspect_ratio=1.7)
+fig = formatter.figure(width_ratio=0.65, aspect_ratio=1.6)
 spec = matplotlib.gridspec.GridSpec(ncols=2, nrows=4)
 ax1 = fig.add_subplot(spec[0, 0])
 ax2 = fig.add_subplot(spec[1, 0], sharex=ax1)
