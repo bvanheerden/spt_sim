@@ -100,13 +100,21 @@ class TrackingSim:
 
         kf = KalmanFilter(dim_x=3, dim_z=1, dim_u=1)
 
+        # kf.F = np.array([[1., 0., 0.],
+        #                  [0., 1., dt],
+        #                  [0., -8 * dt, 1 - 2 * dt]])
+        # kf.F = np.array([[1., 0., 0.],
+        #                  [0., 1 - 2 * dt, dt],
+        #                  [0., -dt, 1.]])
         kf.F = np.array([[1., 0., 0.],
-                         [0., 1 - 2 * dt, dt],
-                         [0., -dt, 1.]])
+                         [0., 1 - 2 * dt, 3.9 * dt],
+                         [0., -3.9 * dt, 1.]])
 
         kf.H = np.array([[1., -1., 0]])
 
-        kf.B = np.array([[0., 2 * dt, dt]]).T
+        # kf.B = np.array([[0., 0., 8 * dt]]).T
+        # kf.B = np.array([[0., 2 * dt, 1 * dt]]).T
+        kf.B = np.array([[0., 2 * dt, 3.9 * dt]]).T
         kf.R *= r
         kf.Q *= np.array([[q, 0, 0],
                           [0, 0, 0],
@@ -270,6 +278,8 @@ class TrackingSim:
         ys = y[1]  # Stage y position
         ux = 0  # Control x input
         uy = 0  # Control y input
+        errsum_x = 0.
+        errsum_y = 0.
 
         # Main simulation loop
         for i in range(self.numpoints):
@@ -286,15 +296,19 @@ class TrackingSim:
                 xs = x[1]
 
             # Apply feedback
+            errsum_x += kfx.x[0, 0] - xs[0]
+            errsum_y += kfy.x[0, 0] - ys[0]
             if self.tracking:
                 if i % self.feedback_steps == 0:
                     if self.stage:
                         if self.kalman:
                             ux = kfx.x[0, 0]
                             uy = kfy.x[0, 0]
+                            # ux = xs[0] + 0.005 * (kfx.x[0, 0] - xs[0]) + 0.000001 * errsum_x
+                            # uy = ys[0] + 0.005 * (kfy.x[0, 0] - ys[0]) + 0.000001 * errsum_y
                         else:
-                            ux = xs[0] + measx
-                            uy = ys[0] + measy
+                            ux = xs[0] + 0.3*measx
+                            uy = ys[0] + 0.3*measy
                     else:
                         if self.kalman:
                             xs = kfx.x[0, 0]
@@ -334,6 +348,13 @@ class TrackingSim:
             stagey_vals[i] = ys
             kalmx_vals[i] = kfx.x[0]
             kalmy_vals[i] = kfy.x[0]
+            # try:
+            #     errsum_x += kfx.x[0, 0] - xs[0]
+            #     errsum_y += kfy.x[0, 0] - ys[0]
+            # except TypeError:
+            #     errsum_x += kfx.x[0, 0] - xs
+            #     errsum_y += kfy.x[0, 0] - ys
+            #     print(xs)
 
         # err = np.sum(np.sqrt((measx_vals - truex_vals) ** 2 + (measy_vals - truey_vals) ** 2)) / self.numpoints
         err = np.sum(np.sqrt((stagex_vals - truex_vals) ** 2 + (stagey_vals - truey_vals) ** 2)) / self.numpoints

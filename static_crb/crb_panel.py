@@ -43,7 +43,7 @@ file_knight_900_bg = 'pickles/crb_lambda_knight_0.9_bg'
 # minflux = MinFlux(file_minflux)
 # print('minflux')
 
-sbr = 20
+sbr = 10
 
 fileobject_orbital = open(file_orbital, 'rb')
 crb_lambda_orbital = dill.load(fileobject_orbital)
@@ -306,7 +306,7 @@ fig.text(0.35, 0.71, "Knight's Tour method", fontsize=12)
 fig.text(0.45, 0.475, "MINFLUX", fontsize=12)
 
 fig.text(0.22, 0.96, r'$\textrm{SBR}=\infty$', fontsize=10)
-fig.text(0.71, 0.96, r'$\textrm{SBR}=20$', fontsize=10)
+fig.text(0.71, 0.96, fr'$\textrm{{SBR}}={sbr}$', fontsize=10)
 
 for ax in fig.get_axes():
     for line in ax.lines:

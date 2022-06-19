@@ -24,9 +24,15 @@ def rk4(y, x, dx, f, u):
 
 def fx(xfull, t, u):
     """Compute derivative using ODE formula"""
+    # xdot = np.array([[0, 0, 0],
+    #                  [0, 0, 1],
+    #                  [0, -8, -2]]) @ xfull + np.array([[0, 0, 8]]).T * u
+    # xdot = np.array([[0, 0, 0],
+    #                  [0, -2, 1],
+    #                  [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
     xdot = np.array([[0, 0, 0],
-                     [0, -2, 1],
-                     [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
+                     [0, -2, 3.9],
+                     [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
     return xdot
 
 
