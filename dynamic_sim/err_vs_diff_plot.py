@@ -22,9 +22,9 @@ matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 matplotlib.rcParams.update({'font.family': 'serif'})
 # matplotlib.rcParams.update({'font.size': 11})
 
-errs = np.loadtxt('files/errs_new1.txt')
-errs_mf = np.loadtxt('files/errs_mf_new.txt')
-errs_kt = np.loadtxt('files/errs_kt_new.txt')
+errs = np.loadtxt('files/errs_new5.txt')
+errs_mf = np.loadtxt('files/errs_mf_new5.txt')
+errs_kt = np.loadtxt('files/errs_kt_new5.txt')
 
 # errs = np.concatenate((np.loadtxt('errs8.txt').flatten(), np.loadtxt('errs9.txt').flatten()[:]))
 # errs_mf = np.concatenate((np.loadtxt('errs_mf8.txt').flatten(), np.loadtxt('errs_mf9.txt').flatten()[:]))

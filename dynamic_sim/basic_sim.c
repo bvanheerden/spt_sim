@@ -1494,8 +1494,8 @@ static PyObject *__pyx_pf_9basic_sim_4intensity(CYTHON_UNUSED PyObject *__pyx_se
 static PyObject *__pyx_pf_9basic_sim_6mf_intensity(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_x, double __pyx_v_y, double __pyx_v_x0, double __pyx_v_y0, double __pyx_v_fwhm, double __pyx_v_amp); /* proto */
 static PyObject *__pyx_float_6_;
 static PyObject *__pyx_float_0_5;
-static PyObject *__pyx_float_3_9;
-static PyObject *__pyx_float_neg_3_9;
+static PyObject *__pyx_float_4_0;
+static PyObject *__pyx_float_neg_4_0;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_neg_2;
@@ -2089,8 +2089,8 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
  *     #                  [0, -2, 1],
  *     #                  [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
  *     xdot = np.array([[0, 0, 0],             # <<<<<<<<<<<<<<
- *                      [0, -2, 3.9],
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
+ *                      [0, -2, 4.0],
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2112,8 +2112,8 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   /* "basic_sim.pyx":34
  *     #                  [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
  *     xdot = np.array([[0, 0, 0],
- *                      [0, -2, 3.9],             # <<<<<<<<<<<<<<
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
+ *                      [0, -2, 4.0],             # <<<<<<<<<<<<<<
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u
  *     return xdot
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 34, __pyx_L1_error)
@@ -2124,14 +2124,14 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __Pyx_INCREF(__pyx_int_neg_2);
   __Pyx_GIVEREF(__pyx_int_neg_2);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_int_neg_2);
-  __Pyx_INCREF(__pyx_float_3_9);
-  __Pyx_GIVEREF(__pyx_float_3_9);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_float_3_9);
+  __Pyx_INCREF(__pyx_float_4_0);
+  __Pyx_GIVEREF(__pyx_float_4_0);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_float_4_0);
 
   /* "basic_sim.pyx":35
  *     xdot = np.array([[0, 0, 0],
- *                      [0, -2, 3.9],
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u             # <<<<<<<<<<<<<<
+ *                      [0, -2, 4.0],
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u             # <<<<<<<<<<<<<<
  *     return xdot
  * 
  */
@@ -2140,9 +2140,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_5, 0, __pyx_int_0);
-  __Pyx_INCREF(__pyx_float_neg_3_9);
-  __Pyx_GIVEREF(__pyx_float_neg_3_9);
-  PyList_SET_ITEM(__pyx_t_5, 1, __pyx_float_neg_3_9);
+  __Pyx_INCREF(__pyx_float_neg_4_0);
+  __Pyx_GIVEREF(__pyx_float_neg_4_0);
+  PyList_SET_ITEM(__pyx_t_5, 1, __pyx_float_neg_4_0);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_5, 2, __pyx_int_0);
@@ -2151,8 +2151,8 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
  *     #                  [0, -2, 1],
  *     #                  [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
  *     xdot = np.array([[0, 0, 0],             # <<<<<<<<<<<<<<
- *                      [0, -2, 3.9],
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
+ *                      [0, -2, 4.0],
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u
  */
   __pyx_t_6 = PyList_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
@@ -2184,8 +2184,8 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
 
   /* "basic_sim.pyx":35
  *     xdot = np.array([[0, 0, 0],
- *                      [0, -2, 3.9],
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u             # <<<<<<<<<<<<<<
+ *                      [0, -2, 4.0],
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u             # <<<<<<<<<<<<<<
  *     return xdot
  * 
  */
@@ -2205,9 +2205,9 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_6, 1, __pyx_int_2);
-  __Pyx_INCREF(__pyx_float_3_9);
-  __Pyx_GIVEREF(__pyx_float_3_9);
-  PyList_SET_ITEM(__pyx_t_6, 2, __pyx_float_3_9);
+  __Pyx_INCREF(__pyx_float_4_0);
+  __Pyx_GIVEREF(__pyx_float_4_0);
+  PyList_SET_ITEM(__pyx_t_6, 2, __pyx_float_4_0);
   __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_6);
@@ -2243,8 +2243,8 @@ static PyObject *__pyx_pf_9basic_sim_2fx(CYTHON_UNUSED PyObject *__pyx_self, PyO
   __pyx_t_5 = 0;
 
   /* "basic_sim.pyx":36
- *                      [0, -2, 3.9],
- *                      [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
+ *                      [0, -2, 4.0],
+ *                      [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u
  *     return xdot             # <<<<<<<<<<<<<<
  * 
  * 
@@ -3859,8 +3859,8 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_float_6_ = PyFloat_FromDouble(6.); if (unlikely(!__pyx_float_6_)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_float_0_5 = PyFloat_FromDouble(0.5); if (unlikely(!__pyx_float_0_5)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_float_3_9 = PyFloat_FromDouble(3.9); if (unlikely(!__pyx_float_3_9)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __pyx_float_neg_3_9 = PyFloat_FromDouble(-3.9); if (unlikely(!__pyx_float_neg_3_9)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_float_4_0 = PyFloat_FromDouble(4.0); if (unlikely(!__pyx_float_4_0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_float_neg_4_0 = PyFloat_FromDouble(-4.0); if (unlikely(!__pyx_float_neg_4_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_2 = PyInt_FromLong(-2); if (unlikely(!__pyx_int_neg_2)) __PYX_ERR(0, 1, __pyx_L1_error)

@@ -6,15 +6,15 @@ import joblib
 from sim_module import TrackingSim
 import os
 
-freq = 12.5
-ffreq = 3.125
+freq = 8.3333333
+ffreq = freq
 
 numpoints = 100000
 
 samples = ['lhcii', 'lhcii-mic', 'pb', 'gfp', 'hiv-qd']
-rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
+# rvals = [0.02, 0.005, 0.002, 0.05, 0.001]
 rvals = [0.008, 0.001, 0.0005, 0.1, 0.0005]
-sample = 0
+sample = 2
 
 adjusted = False
 
@@ -30,19 +30,19 @@ contrast = contrasts[sample]
 rval = rvals[sample]
 
 simulation_orb = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                             feedback=ffreq, iscat=False, debug=False, rin=0.04)
+                             feedback=ffreq, iscat=False, debug=False, rin=0.5)
 if adjusted:
     simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
                                        tracking=True, feedback=ffreq, iscat=True, debug=False, rin=rval,
                                        intfactor=intfactor, contrast=contrast, adjustment=1000, avint=0.0125)
 else:
     simulation_orb_iscat = TrackingSim(numpoints=numpoints, method='orbital', freq=freq, amp=5.0, waist=0.4,
-                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.04,
+                                       tracking=True, feedback=ffreq, iscat=True, debug=False, rin=0.5,
                                        intfactor=intfactor, contrast=contrast, avint=0.0125)
 
 diffs = np.logspace(-9, 0, 16)
 print(diffs[4])
-numruns = 5
+numruns = 100
 # diffs = [diffs[4], 1e-6]
 # diffs = np.logspace(-13, -5, 8)
 
@@ -82,9 +82,9 @@ cutoff = np.pi * 0.025 ** 2 * 0.1
 # np.savetxt('files/errs_fluo1.txt', errs)
 
 if adjusted:
-    np.savetxt('files/errs_iscat_' + samples[sample] + '_adjust3.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '_adjust_new.txt', errs_iscat)
 else:
-    np.savetxt('files/errs_iscat_' + samples[sample] + '2.txt', errs_iscat)
+    np.savetxt('files/errs_iscat_' + samples[sample] + '_new.txt', errs_iscat)
 
 # plt.loglog(diffs, errs, '-o')
 plt.loglog(diffs, errs_iscat, '-o')

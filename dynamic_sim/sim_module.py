@@ -107,14 +107,14 @@ class TrackingSim:
         #                  [0., 1 - 2 * dt, dt],
         #                  [0., -dt, 1.]])
         kf.F = np.array([[1., 0., 0.],
-                         [0., 1 - 2 * dt, 3.9 * dt],
-                         [0., -3.9 * dt, 1.]])
+                         [0., 1 - 2 * dt, 4.0 * dt],
+                         [0., -4.0 * dt, 1.]])
 
         kf.H = np.array([[1., -1., 0]])
 
         # kf.B = np.array([[0., 0., 8 * dt]]).T
         # kf.B = np.array([[0., 2 * dt, 1 * dt]]).T
-        kf.B = np.array([[0., 2 * dt, 3.9 * dt]]).T
+        kf.B = np.array([[0., 2 * dt, 4.0 * dt]]).T
         kf.R *= r
         kf.Q *= np.array([[q, 0, 0],
                           [0, 0, 0],

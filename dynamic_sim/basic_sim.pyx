@@ -31,8 +31,8 @@ def fx(xfull, t, u):
     #                  [0, -2, 1],
     #                  [0, -1, 0]]) @ xfull + np.array([[0, 2, 1]]).T * u
     xdot = np.array([[0, 0, 0],
-                     [0, -2, 3.9],
-                     [0, -3.9, 0]]) @ xfull + np.array([[0, 2, 3.9]]).T * u
+                     [0, -2, 4.0],
+                     [0, -4.0, 0]]) @ xfull + np.array([[0, 2, 4.0]]).T * u
     return xdot
 
 
