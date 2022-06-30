@@ -1,4 +1,6 @@
 import matplotlib
+import numpy as np
+
 from static_crb.CRB import *
 from scipy.stats import norm
 from scipy.signal import convolve
@@ -19,6 +21,15 @@ formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
 
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 matplotlib.rcParams.update({'font.family': 'serif'})
+
+
+def sbr_l_mf(sbr, l0, l, fwhm):
+    return (l ** 2 / l0 ** 2) * np.exp(np.log(2) / (fwhm ** 2) * (l0 ** 2 - l ** 2)) * sbr
+
+
+def sbr_l_orb(sbr, l0, l, fwhm0, fwhm):
+    return np.exp(np.log(2) * ((l0 ** 2 / fwhm0 ** 2) - (l ** 2 / fwhm ** 2))) * sbr
+
 
 dill.settings['recurse'] = True
 file_orbital = 'pickles/crb_lambda_orbital'
@@ -65,9 +76,10 @@ crb800 = crb_lambda_orbital(0, y, 700, 100, 494, 1)
 crb1600 = crb_lambda_orbital(0, y, 900, 100, 636, 1)
 
 crb100_bg = crb_lambda_orbital_bg(0, y, 300, 100, 212, 1, sbr)
-crb200_bg = crb_lambda_orbital_bg(0, y, 500, 100, 353, 1, sbr)
-crb800_bg = crb_lambda_orbital_bg(0, y, 700, 100, 494, 1, sbr)
-crb1600_bg = crb_lambda_orbital_bg(0, y, 900, 100, 636, 1, sbr)
+crb200_bg = crb_lambda_orbital_bg(0, y, 500, 100, 353, 1, sbr_l_orb(sbr, 300, 500, 212, 353))
+crb800_bg = crb_lambda_orbital_bg(0, y, 700, 100, 494, 1, sbr_l_orb(sbr, 300, 700, 212, 494))
+crb1600_bg = crb_lambda_orbital_bg(0, y, 900, 100, 636, 1, sbr_l_orb(sbr, 300, 900, 212, 636))
+print(sbr_l_orb(sbr, 300, 900, 212, 636))
 
 fileobject_knight = open(file_knight_100, 'rb')
 crb_lambda_knight = dill.load(fileobject_knight)
@@ -109,11 +121,12 @@ crb200_mf = crb_lambda_minflux(0, y, 100, 100, 800, 1)
 crb400_mf = crb_lambda_minflux(0, y, 300, 100, 800, 1)
 crb800_mf = crb_lambda_minflux(0, y, 500, 100, 800, 1)
 crb1600_mf = crb_lambda_minflux(0, y, 700, 100, 800, 1)
-crb100_mf_bg = crb_lambda_minflux_bg(0, y, 50, 100, 800, 1, sbr)
-crb200_mf_bg = crb_lambda_minflux_bg(0, y, 100, 100, 800, 1, sbr)
-crb400_mf_bg = crb_lambda_minflux_bg(0, y, 300, 100, 800, 1, sbr)
-crb800_mf_bg = crb_lambda_minflux_bg(0, y, 500, 100, 800, 1, sbr)
-crb1600_mf_bg = crb_lambda_minflux_bg(0, y, 700, 100, 800, 1, sbr)
+crb100_mf_bg = crb_lambda_minflux_bg(0, y, 50, 100, 800, 1, sbr_l_mf(sbr, 100, 50, 800))
+crb200_mf_bg = crb_lambda_minflux_bg(0, y, 100, 100, 800, 1, sbr)#sbr_l_mf(sbr, 50, 100, 800))
+crb400_mf_bg = crb_lambda_minflux_bg(0, y, 300, 100, 800, 1, sbr_l_mf(sbr, 100, 300, 800))
+crb800_mf_bg = crb_lambda_minflux_bg(0, y, 500, 100, 800, 1, sbr_l_mf(sbr, 100, 500, 800))
+crb1600_mf_bg = crb_lambda_minflux_bg(0, y, 700, 100, 800, 1, sbr_l_mf(sbr, 100, 700, 800))
+print(sbr_l_mf(sbr, 100, 700, 800))
 
 fileobject_knight = open(file_knight_300, 'rb')
 crb_lambda_knight = dill.load(fileobject_knight)
@@ -123,10 +136,10 @@ crb_lambda_knight_bg = dill.load(fileobject_knight_bg)
 crbknight_bg = crb_lambda_knight_bg(0, y1, 50, 100, 400, 1, sbr)
 
 crbmf_large = crb_lambda_minflux(0, y1, 566, 100, 800, 1)
-crbmf = crb_lambda_minflux(0, y1, 50, 100, 800, 1)
+crbmf = crb_lambda_minflux(0, y1, 100, 100, 800, 1)
 crborb = crb_lambda_orbital(0, y1, 566, 100, 400, 1)
 crbmf_large_bg = crb_lambda_minflux_bg(0, y1, 566, 100, 800, 1, sbr)
-crbmf_bg = crb_lambda_minflux_bg(0, y1, 50, 100, 800, 1, sbr)
+crbmf_bg = crb_lambda_minflux_bg(0, y1, 100, 100, 800, 1, sbr)
 crborb_bg = crb_lambda_orbital_bg(0, y1, 566, 100, 400, 1, sbr)
 
 # fig = plt.figure(figsize=(8, 5))
@@ -197,7 +210,7 @@ ax3.text(290, 20, '700', fontsize=10, color='C4')
 
 ax4.set_yscale('log')
 ax4.plot(y1, crbknight, label="KT: $L=1500$ nm")
-ax4.plot(y1, crbmf, label='MINFLUX: $L=50$ nm')
+ax4.plot(y1, crbmf, label='MINFLUX: $L=100$ nm')
 ax4.plot(y1, crbmf_large, label='MINFLUX: $L=566$ nm')
 ax4.plot(y1, crborb, label='Orbital: $L=566$ nm')
 # ax4.legend(loc='upper center', framealpha=0.5, handlelength=1.0, labelspacing=0.3)
@@ -205,8 +218,8 @@ ax4.set_xlabel('Position (nm)')
 ax4.set_ylabel('CRB (nm)')
 
 ax4.text(120, 8, 'KT 1500', fontsize=10, color='C0')
-ax4.text(40, 2, 'MF 50', fontsize=10, color='C1')
-ax4.text(160, 70, 'MF 566', fontsize=10, color='C2')
+ax4.text(40, 4, 'MF 100', fontsize=10, color='C1')
+ax4.text(-100, 40, 'MF 566', fontsize=10, color='C2')
 ax4.text(-350, 9, 'Orb 566', fontsize=10, color='C3')
 
 ax5.set_yscale('log')
@@ -254,7 +267,7 @@ ax7.plot(y, crb1600_mf_bg, label='$L=700$ nm')
 # ax7.set_xlabel('Position (nm)')
 # ax7.set_ylabel('CRB (nm)')
 
-ax7.text(-120, 4, '50', fontsize=10, color='C0')
+ax7.text(130, 250, '50', fontsize=10, color='C0')
 ax7.text(35, 4, '100', fontsize=10, color='C1')
 ax7.text(110, 7, '300', fontsize=10, color='C2')
 ax7.text(180, 13, '500', fontsize=10, color='C3')
@@ -262,7 +275,7 @@ ax7.text(290, 20, '700', fontsize=10, color='C4')
 
 ax8.set_yscale('log')
 ax8.plot(y1, crbknight_bg, label="KT: $L=1500$ nm")
-ax8.plot(y1, crbmf_bg, label='MINFLUX: $L=50$ nm')
+ax8.plot(y1, crbmf_bg, label='MINFLUX: $L=100$ nm')
 ax8.plot(y1, crbmf_large_bg, label='MINFLUX: $L=566$ nm')
 ax8.plot(y1, crborb_bg, label='Orbital: $L=566$ nm')
 # ax4.legend(loc='upper center', framealpha=0.5, handlelength=1.0, labelspacing=0.3)
@@ -270,8 +283,8 @@ ax8.set_xlabel('Position (nm)')
 # ax8.set_ylabel('CRB (nm)')
 
 ax8.text(130, 8, 'KT 1500', fontsize=10, color='C0')
-ax8.text(-120, 3, 'MF 50', fontsize=10, color='C1')
-ax8.text(170, 70, 'MF 566', fontsize=10, color='C2')
+ax8.text(-120, 4, 'MF 100', fontsize=10, color='C1')
+ax8.text(-100, 40, 'MF 566', fontsize=10, color='C2')
 ax8.text(-370, 9, 'Orb 566', fontsize=10, color='C3')
 
 ax3.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(10, 'auto'))
@@ -295,11 +308,11 @@ ax3.set_ylim((None, 4000))
 ax1.text(-570, 65, 'a', fontweight='bold', fontsize='12')
 ax2.text(-570, 60, 'c', fontweight='bold', fontsize='12')
 ax3.text(-570, 2000, 'e', fontweight='bold', fontsize='12')
-ax4.text(-570, 2000, 'g', fontweight='bold', fontsize='12')
+ax4.text(-570, 1000, 'g', fontweight='bold', fontsize='12')
 ax5.text(-540, 65, 'b', fontweight='bold', fontsize='12')
 ax6.text(-540, 60, 'd', fontweight='bold', fontsize='12')
 ax7.text(-540, 2000, 'f', fontweight='bold', fontsize='12')
-ax8.text(-540, 2000, 'h', fontweight='bold', fontsize='12')
+ax8.text(-540, 1000, 'h', fontweight='bold', fontsize='12')
 
 fig.text(0.4, 0.945, 'Orbital method', fontsize=12)
 fig.text(0.35, 0.71, "Knight's Tour method", fontsize=12)
@@ -313,7 +326,7 @@ for ax in fig.get_axes():
         line.set_lw(1.3)
 
 plt.tight_layout()
-plt.subplots_adjust(hspace=0.4, wspace=0.2, top=0.93)
+plt.subplots_adjust(hspace=0.3, wspace=0.2, top=0.93)
 plt.savefig('../out/crb_panel.pdf')
 # plt.show()
 

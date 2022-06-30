@@ -23,16 +23,16 @@ formatter = rsmf.CustomFormatter(columnwidth=col_width * 0.01389, fontsizes=10,
 matplotlib.rcParams.update({'font.size': formatter.fontsizes.footnotesize})
 matplotlib.rcParams.update({'font.family': 'serif'})
 
-freq = 12.5
-ffreq = 3.125
+freq = 8.333333333
+ffreq = freq
 simulate = False
 
 if simulate:
     simulation_orb = TrackingSim(numpoints=500000, method='orbital', freq=freq, amp=5.0, waist=0.4, tracking=True,
-                                 feedback=ffreq, iscat=False, rin=0.04, bg=0)
+                                 feedback=ffreq, iscat=False, rin=0.5, bg=0)
 
     # err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0001)
-    err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.0052)
+    err, measx, truex, measy, truey, intvals = simulation_orb.main_tracking(0.02)
 
     binnedints = np.zeros(250)
     for i, val in enumerate(binnedints):
@@ -44,25 +44,26 @@ if simulate:
     print(err)
 
     savearr = np.column_stack([measx[::200], truex[::200], measy[::200], truey[::200]])
-    np.savetxt('trajectory.txt', savearr)
-    np.savetxt('intensity.txt', binnedints)
+    np.savetxt('trajectory_almost.txt', savearr)
+    np.savetxt('intensity_almost.txt', binnedints)
 
-    traj_good = np.loadtxt('trajectory_good.txt')
-    binnedints_good = np.loadtxt('intensity_good.txt')
-    measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
-    traj_almost = np.loadtxt('trajectory_almost.txt')
-    binnedints_almost = np.loadtxt('intensity_almost.txt')
-    measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
-                                                             traj_almost[:, 3]
+    # traj_good = np.loadtxt('trajectory_good.txt')
+    # binnedints_good = np.loadtxt('intensity_good.txt')
+    # measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
+    # traj_almost = np.loadtxt('trajectory_almost.txt')
+    # binnedints_almost = np.loadtxt('intensity_almost.txt')
+    # measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
+    #                                                          traj_almost[:, 3]
+    #
+# else:
 
-else:
-    traj_good = np.loadtxt('trajectory_good.txt')
-    binnedints_good = np.loadtxt('intensity_good.txt')
-    measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
-    traj_almost = np.loadtxt('trajectory_almost.txt')
-    binnedints_almost = np.loadtxt('intensity_almost.txt')
-    measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
-                                                             traj_almost[:, 3]
+traj_good = np.loadtxt('trajectory_good.txt')
+binnedints_good = np.loadtxt('intensity_good.txt')
+measx_good, truex_good, measy_good, truey_good = traj_good[:, 0], traj_good[:, 1], traj_good[:, 2], traj_good[:, 3]
+traj_almost = np.loadtxt('trajectory_almost.txt')
+binnedints_almost = np.loadtxt('intensity_almost.txt')
+measx_almost, truex_almost, measy_almost, truey_almost = traj_almost[:, 0], traj_almost[:, 1], traj_almost[:, 2], \
+                                                         traj_almost[:, 3]
 
 t = np.linspace(0, 500, 250)
 t_ins = np.linspace(0, 500, 2500)  # t values for insert plot
@@ -92,12 +93,12 @@ ax6.plot(t, binnedints_almost / 2)
 ax6.set_ylim((0, None))
 ax6.set_xlim((0, 500))
 
-axin = ax5.inset_axes([0.06, 0.55, 0.3, 0.4])
-axin.plot(t_ins[1200:1400], measy_almost[1200:1400])
-axin.plot(t_ins[1200:1400], truey_almost[1200:1400], '--', color='C3')
-axin.set_xticklabels([])
-axin.set_yticklabels([])
-ax5.indicate_inset_zoom(axin, edgecolor='black')
+# axin = ax5.inset_axes([0.4, 0.55, 0.3, 0.4])
+# axin.plot(t_ins[1400:1700], measy_almost[1400:1700])
+# axin.plot(t_ins[1400:1700], truey_almost[1400:1700], '--', color='C3')
+# axin.set_xticklabels([])
+# axin.set_yticklabels([])
+# ax5.indicate_inset_zoom(axin, edgecolor='black')
 
 ax1.tick_params(axis='x', labelbottom=False)
 ax2.tick_params(axis='x', labelbottom=False)
@@ -113,7 +114,7 @@ ax3.set_ylabel('Intensity (kcounts/s)')
 
 # ax1.set_title(r'$D=0.1\mathrm{\mu}\mathrm{m}\cdot\mathrm{s}^{-1}')
 ax1.set_title(r'$D=\SI{0.1}{\micro\meter\squared\per\second}')
-ax4.set_title(r'$D=\SI{5}{\micro\meter\squared\per\second}')
+ax4.set_title(r'$D=\SI{20}{\micro\meter\squared\per\second}')
 
 fig.subplots_adjust(hspace=0.0)
 plt.tight_layout()
